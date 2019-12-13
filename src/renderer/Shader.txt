@@ -1,0 +1,91 @@
+	
+Shader Pipeline
+	add stage
+	validate
+	
+Uniform Blocks
+	Buffer
+
+Vertex Data
+	positions
+	primitive type
+	restart
+	
+index data
+
+Material
+
+Buffer
+	Create
+	Store
+	Access (Sub) Data
+	Map Range
+	Discard
+
+Textures
+	buffer
+	load
+	setSampler
+	
+	AnsiString LoadData(AnsiString fname, TStringList * cmd_list)
+{
+	TStringList s;
+	s.LoadFromFile(fname);
+	
+	//first apply dynamic consts
+	if (cmd_list != 0)
+	{
+		for (int i=0; i < cmd_list->Count; i++)
+		{
+			AnsiString var_name = get_before_char(cmd_list->Strings[i], ",", true );
+			AnsiString var_value = get_after_char(cmd_list->Strings[i], ",", true );
+		
+		for (int n=0; n<s.Count;n++)
+		if (Pos(var_name, s.Strings[n]) > 0)
+		s.Strings[n] = StringReplace(s.Strings[n], var_name, var_value);
+		
+		
+		}
+		
+	}
+	
+	
+	
+	
+	bool found = true;
+//	if (Pos("form", fname)>0) ALOG(s.GetText());
+//parse file for #include directives and remove them	
+while (found)
+for (int i=0; i<s.Count;i++)
+{
+	found = false;
+	if (Pos("#include", s.Strings[i])>0)
+	{
+		TStringList p;
+		AnsiString fn = get_text_between("\"", "\"", s.Strings[i]);
+		ALOG("Including: "+fn);
+	if (	p.LoadFromFile(fn)== -1) ALOG("bad filename");
+
+		if (p.Count > 0)
+		{
+			s.Strings[i] = "";
+			int iline = i+1;
+			for (int l=0; l<p.Count;l++)
+			{
+				s.Strings.insert(s.Strings.begin()+iline, p.Strings[l]);
+				s.Count = s.Count+1;
+				iline = iline+1;
+			}
+			
+			found = true;
+
+			break;
+		}
+	}
+	
+}
+	
+	
+	return s.GetText();
+	
+}

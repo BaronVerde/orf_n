@@ -1,0 +1,44 @@
+
+Here is my initial brainstorming for the forces that shape the surface of a solar system body. The goal is to identify parameters and find a naive algorithmic solution. I just post the initial thoughts, maybe (hopefully) it catches interest, maybe not.
+
+--------------------
+
+Simplifications: no plate tectonics, no hydro- or cryosphere, no atmosphere, no biosphere, or else this would lead too far too soon. Must have room to improve ;-)
+
+Then i would assume:
+
+- Mass and elemental composition determines shape and differenciation.
+
+- Number of surface craters depends on time, though most form in the early phases of a solar system.
+Bigger ones earlier, smaller ones later.
+
+- Primordial heat, heat transport and radiation will lead to temperature and density differences ...
+
+- ... leading to interior convection ...
+
+- ... which can result in lava flows, burying surface features.
+
+- When cooling and solidifying has given enough "structural integrity", volcanic edifices can arise ...
+
+- ... or, depending on ?, plate tectonics can start.
+
+- Uplift here must have subsidence there.
+
+- Uplift equals crustal thinning, eventually tear, subsidence equals filling with sediments.
+
+- Small impacts will erode and supply regolith, ...
+
+- ... as will the accretion of dust and erosion through radiation and particle bombardment.
+
+- Surface dust and small particles can be gravitationally transported, or spread by impacts.
+
+- Ad- and co-hesion will define the slopes necessary for movement.
+
+- While primordial heat leaves the body, the heat budget is more and more dominated by radiogenic heat and surface solar irradiation.
+
+
+
+Example:
+
+https://erode.evsc.virginia.edu/mars.htm
+

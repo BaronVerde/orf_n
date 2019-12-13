@@ -1,0 +1,25 @@
+
+// Backup for unneeded parts of the terrain vertex shader
+
+// Sample heightmap function with built in filtering:
+float sampleHeightmap( vec2 uv, bool useFilter ) {
+	if( useFilter ) {
+		// Use filter in case of usampler2d to avoid discrete steps, ziggurat like hills
+		vec2 heightmapSize = g_heightmapTextureInfo.xy;
+		vec2 texelSize = g_heightmapTextureInfo.zw;
+		uv = uv * heightmapSize - vec2( 0.5f, 0.5f );
+		vec2 uvf = floor( uv );
+		vec2 f = uv - uvf;
+		uv = ( uvf + vec2( 0.5f, 0.5f ) ) * texelSize;
+		float t00 = texture( g_tileHeightmap, uv ).r;
+		float t10 = texture( g_tileHeightmap, vec2( uv.x + texelSize.x, uv.y ) ).r;
+		float tA = mix( t00, t10, f.x );
+		float t01 = texture( g_tileHeightmap, vec2( uv.x, uv.y + texelSize.y ) ).r;
+		float t11 = texture( g_tileHeightmap, vec2( uv.x + texelSize.x, uv.y + texelSize.y ) ).r;
+		float tB = mix( t01, t11, f.x );
+		return mix( tA, tB, f.y ) * u_heightFactor;
+	} else
+		// Assumes linear filtering being enabled in sampler
+		return texture( g_tileHeightmap, uv ).r * u_heightFactor;
+}
+

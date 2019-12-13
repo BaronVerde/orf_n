@@ -1,0 +1,28 @@
+
+Terrain tiles:
+
+- wann laden ?
+	bei Annäherung (Höhe über Grund)
+	bei horizontaler Bewegung (Länge/Breite)
+	bei Sichtbarkeit (Sichtlinie/occlusion culling)
+	
+- wann entladen ?
+	geringe Nachfrage
+	älteste zuerst
+	Resource queue voll
+
+
+
+Shader:
+
+- laden:
+	mit erster Anfrage
+	bei weiterer Anfrage nicht neu laden
+	
+- entladen:
+	wenn nicht mehr referenziert
+
+
+
+Texturen (später):
+

@@ -1,0 +1,134 @@
+
+#include "Buffer.h"
+#include <vector>
+#include "Base/Logbook.h"
+#include "Omath/vec3.h"
+#include <typeinfo>
+
+#pragma once
+
+namespace orf_n {
+
+template<typename T>
+class VertexArray : protected Buffer {
+public:
+	// @todo all this is temporary and neds better handling
+	const GLuint HIGH_ATTRIB_LOCATION{ 0 };
+	const GLuint LOW_ATTRIB_LOCATION{ 1 };
+	// long int; offset into the buffer; usually 0 as a buffer is dedicated to a vertex array.
+	const GLintptr OFFSET{ 0 };
+
+	/**
+	 * @brief Create a new vertex array.
+	 * @param vertexData Vector of either omath::vec3 or omath::vec2 with position data.
+	 * If type is vec3 and hasHighLowComponent is true, the positions are expected
+	 * as high and low interleaved vectors. Vertex array will then hold the double values as
+	 * too floats, interleaved, high at location HIGH_ATTRIB_LOCATION, low at LOW_ATTRIB_LOCATION.
+	 * @param bindingIndex Vertex shader binding index.
+	 * @param hasHighLowComponent If true, vertex data is expected as interleaved vectors
+	 * representing the high and low part of each position.
+	 * @param type Type of array data. If STATIC_DATA, data must be provided on creation,
+	 * DYNAMIC_DATA can be copied in later via updateSubData()
+	 */
+	VertexArray( const std::vector<T> &vertexData,
+				 const GLuint bindingIndex = 0,
+				 const bool hasHighLowComponent = false,
+				 const bufferDataType_t type = STATIC_DATA ) :
+					 Buffer( GL_ARRAY_BUFFER,
+							 (GLuint)( vertexData.size() * sizeof( T ) ),
+							 vertexData.data(),
+							 type == STATIC_DATA ? 0x0000 : GL_DYNAMIC_STORAGE_BIT ),
+							 m_bindingIndex{ bindingIndex },
+							 m_hasHighLowComponent{ hasHighLowComponent } {
+
+		glCreateVertexArrays( 1, &m_vaoName );
+		// Offset is 0 and stride is sizeof(one or two element)
+		size_t stride;
+		if( typeid( T ) == typeid( omath::vec3 ) ) {
+			if( m_hasHighLowComponent ) {
+				stride = 2 * sizeof( T );
+			} else {
+				stride = sizeof( T );
+			}
+		}
+
+		glVertexArrayVertexBuffer( m_vaoName, m_bindingIndex, m_bufferName, OFFSET, (GLsizei)stride );
+		// In any case, location index 0 will be filled.
+		glVertexArrayAttribBinding( m_vaoName, HIGH_ATTRIB_LOCATION, m_bindingIndex );
+
+		// Do not normalize if floating point data, else do so
+		if( m_hasHighLowComponent ) {
+			if( typeid( T ) == typeid( omath::vec3 ) )
+				// Add low component attribute location
+				glVertexArrayAttribBinding( m_vaoName, LOW_ATTRIB_LOCATION, m_bindingIndex );
+			else
+				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR,
+						"Vertex array: only float vec3 can have high/low components !" );
+		} else {
+			// Only has one (high) component
+			if( typeid( T ) == typeid( omath::vec3 ) )
+				glVertexArrayAttribFormat( m_vaoName, 0, 3, GL_FLOAT, GL_FALSE, 0 );
+			else if( typeid( T ) == typeid( omath::vec2 ) )
+				glVertexArrayAttribFormat( m_vaoName, 0, 2, GL_FLOAT, GL_FALSE, 0 );
+			else if( typeid( T ) == typeid( float ) )
+				glVertexArrayAttribFormat( m_vaoName, 0, 1, GL_FLOAT, GL_FALSE, 0 );
+			else
+				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR,
+						"Unknown data type for vertex array. Must be float, vec2, vec3 !" );
+		}
+
+		enable();
+	}
+
+	VertexArray( const VertexArray &v ) = delete;
+
+	virtual ~VertexArray() {
+		disable();
+		glDeleteVertexArrays( 1, &m_vaoName );
+	}
+
+	/**
+	 * @brief Binds the array to the current context.
+	 */
+	virtual void bind() const override final {
+		glBindVertexArray( m_vaoName );
+	}
+
+	virtual void unBind() const override final {
+		glBindVertexArray( 0 );
+	}
+
+	/**
+	 * Copy data to the buffer if type was dynamicData during creation.
+	 * Tyke care that data matches the one declared in ctor !
+	 * @param data Pointer to the data to be copied
+	 * @param size Use all of the buffer if 0, else size in byte
+	 * @param offset In bytes from the beginning of the buffer
+	 */
+	virtual void updateSubData( const void *data,
+			const GLuint size = 0, const GLint offset = 0 ) const override final {
+		glNamedBufferSubData( m_bufferName, offset, size, data );
+	}
+
+	void enable() const {
+		glEnableVertexArrayAttrib( m_vaoName, HIGH_ATTRIB_LOCATION );
+		if( m_hasHighLowComponent )
+			glEnableVertexArrayAttrib( m_vaoName, LOW_ATTRIB_LOCATION );
+	}
+
+	void disable() const {
+		glDisableVertexArrayAttrib( m_vaoName, HIGH_ATTRIB_LOCATION );
+		if( m_hasHighLowComponent )
+			glDisableVertexArrayAttrib( m_vaoName, LOW_ATTRIB_LOCATION );
+	}
+
+private:
+	GLuint m_vaoName;
+
+	GLuint m_bindingIndex{ 0 };
+
+	bool m_hasHighLowComponent{ false };
+
+};
+
+}

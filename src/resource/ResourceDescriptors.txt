@@ -1,0 +1,43 @@
+
+Examples:
+
+Texture:
+
+# Begin texture descriptor file
+Type: texture2D
+Name: picture7
+Source: resources/textures/picture7.png
+
+# Attributes, may be type specific
+# Attribute: attribute_name; attribute_datatype; attribute_value
+Attribute: width: UINT; 512
+Attribute: format; UINT; GL_RGB
+
+# many more eventually ...
+
+----------------------
+
+Tile:
+
+
+Texture:
+	manual
+		type, e.g. TEXTURE2D
+		data file, e.g. resources/textures/picture7.png		
+	calculated by loader:
+		formnat
+		internal format
+		size
+		mipmaps
+
+Shader:
+	manual
+		type, e.g. VERTEX_SHADER
+		data file, e.g. resources/shaders/blinnphong.vert.glsl
+	calculated by loader:
+
+Mesh:
+	manual
+		type, e.g. VERTEX_MESH3D
+		data file
+		attribute
