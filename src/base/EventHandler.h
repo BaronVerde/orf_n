@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include <base/GlfwWindow.h>
 #include <vector>
+
+struct GLFWwindow;
 
 namespace orf_n {
 

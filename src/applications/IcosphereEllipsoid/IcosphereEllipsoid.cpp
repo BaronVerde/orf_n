@@ -1,15 +1,16 @@
 
-#include <applications/IcosphereEllipsoid/IcosphereEllipsoid.h>
-#include <base/Globals.h>	// deltaTime
-#include <base/Logbook.h>
-#include <omath/mat4.h>
-#include <renderer/Color.h>
-#include <renderer/Sampler.h>
-#include <renderer/Uniform.h>
-#include <scene/Scene.h>
+#include "IcosphereEllipsoid.h"
+#include "glad/glad.h"
+#include "base/Logbook.h"
+#include "base/Globals.h"
+#include "omath/mat4.h"
+#include "renderer/Color.h"
+#include "renderer/Sampler.h"
+#include "renderer/Uniform.h"
+#include "scene/Scene.h"
 #include <iostream>
 #include <fstream>
-#include <cstdio>
+//#include <cstdio>
 //#include "Geometry/ViewFrustum.h"
 
 using namespace orf_n;
@@ -90,7 +91,7 @@ void IcosphereEllipsoid::render() {
 	float nearPlane{ cam->getNearPlane() };
 	float farPlane{ cam->getFarPlane() };
 	float movementSpeed{ cam->getMovementSpeed() };
-	if( globals::showAppUI ) {
+	if( orf_n::globals::showAppUI ) {
 		ImGui::Begin( "Ellipsoid Params" );
 		//ImGui::Checkbox( "Origin in frustum: ", &m_visible );
 		ImGui::SliderFloat( "Near plane", &nearPlane, 0.01f, 100.0f );

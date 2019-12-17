@@ -1,13 +1,12 @@
 
-#include <base/Logbook.h>
-#include <geometry/Ellipsoid.h>
-#include <geometry/Icosphere.h>
-#include <geometry/OBB.h>
-#include <omath/mat4.h>
-#include <renderer/DrawPrimitives.h>
-#include <renderer/Uniform.h>
-
-#include "../../extern/glad/glad.h"
+#include "base/Logbook.h"
+#include "geometry/Ellipsoid.h"
+#include "geometry/Icosphere.h"
+#include "geometry/OBB.h"
+#include "omath/mat4.h"
+#include "DrawPrimitives.h"
+#include "Uniform.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 

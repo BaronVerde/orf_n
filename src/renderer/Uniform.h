@@ -1,11 +1,10 @@
 
 #pragma once
 
-#include <base/Globals.h>
-#include <omath/mat4.h>
-
+//#include "base/Globals.h"
+#include "omath/mat4.h"
 #include <string>
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 /**
  * Helper functions to set uniform not belonging to the convention above

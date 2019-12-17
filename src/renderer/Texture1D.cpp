@@ -1,8 +1,7 @@
 
-#include <base/Logbook.h>
-#include <renderer/Texture1D.h>
-
-#include "../../extern/stb/stb_image.h"
+#include "base/Logbook.h"
+#include "Texture1D.h"
+#include "stb/stb_image.h"
 
 namespace orf_n {
 

@@ -5,9 +5,8 @@
 
 #pragma once
 
-#include <renderer/Color.h>
-
-#include "../../extern/glad/glad.h"
+#include "Color.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 

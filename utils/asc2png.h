@@ -17,9 +17,9 @@
 #include <cstdio>
 #include <png++/image.hpp>
 #include <png++/gray_pixel.hpp>
-#include "Omath/vec3.h"
-#include "Geometry/Geodetic.h"
-#include "Geometry/Ellipsoid.h"
+#include "omath/vec3.h"
+#include "geometry/Geodetic.h"
+#include "geometry/Ellipsoid.h"
 
 namespace converter {
 

@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include <geometry/AABB.h>
-#include <geometry/Geodetic.h>
-#include <geometry/Icosphere.h>
-#include <renderer/IndexBuffer.h>
-#include <renderer/Program.h>
-#include <renderer/Texture2D.h>
-#include <renderer/VertexArray3D.h>
-#include <scene/Renderable.h>
+#include "geometry/AABB.h"
+#include "geometry/Geodetic.h"
+#include "geometry/Icosphere.h"
+#include "renderer/IndexBuffer.h"
+#include "renderer/Program.h"
+#include "renderer/Texture2D.h"
+#include "renderer/VertexArray3D.h"
+#include "scene/Renderable.h"
 //#include "Noise/MapBuilder.h"
 
 class IcosphereEllipsoid : public orf_n::Renderable {

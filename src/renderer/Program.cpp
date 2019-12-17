@@ -1,6 +1,6 @@
 
-#include <base/Logbook.h>
-#include <renderer/Program.h>
+#include "base/Logbook.h"
+#include "Program.h"
 #include <fstream>
 #include <stdexcept>
 #include <sstream>

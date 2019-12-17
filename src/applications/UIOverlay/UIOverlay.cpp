@@ -1,13 +1,12 @@
 
-#include <applications/Camera/Camera.h>	// near- and far plane
-#include <applications/UIOverlay/UIOverlay.h>
-#include <base/Globals.h>	// deltaTime
-#include <base/Logbook.h>
-#include <omath/mat4.h>
-#include <renderer/Texture2D.h>
-#include <renderer/Uniform.h>
-#include <scene/Scene.h>
-
+#include "applications/Camera/Camera.h"	// near- and far plane
+#include "UIOverlay.h"
+#include "base/Globals.h"	// deltaTime
+#include "base/Logbook.h"
+#include "omath/mat4.h"
+#include "renderer/Texture2D.h"
+#include "renderer/Uniform.h"
+#include "scene/Scene.h"
 #include "imgui/imgui.h"
 
 namespace orf_n {

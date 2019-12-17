@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 
@@ -86,13 +86,13 @@ public:
 	void copySubData() const;
 
 private:
-	GLuint m_bufferName;
+	GLuint m_bufferName{0};
 
-	GLenum m_target;
+	GLenum m_target{0};
 
-	GLuint m_sizeInBytes;
+	GLuint m_sizeInBytes{0};
 
-	GLbitfield m_flags;
+	GLbitfield m_flags{0};
 
 };
 

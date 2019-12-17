@@ -1,8 +1,8 @@
 
-#include <applications/WorldTerrainLOD/Node.h>
-#include <applications/WorldTerrainLOD/QuadTree.h>
-#include <applications/WorldTerrainLOD/TerrainTile.h>
-#include <base/Logbook.h>
+#include "Node.h"
+#include "QuadTree.h"
+#include "TerrainTile.h"
+#include "base/Logbook.h"
 #include <sstream>
 
 namespace terrain {

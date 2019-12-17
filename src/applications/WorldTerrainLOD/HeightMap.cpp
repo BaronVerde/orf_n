@@ -1,11 +1,10 @@
 
-#include <applications/WorldTerrainLOD/HeightMap.h>
-#include <base/Logbook.h>
-#include <renderer/Sampler.h>
-
+#include "HeightMap.h"
+#include "base/Logbook.h"
+#include "renderer/Sampler.h"
 #include <iostream>
 #include <sstream>
-#include "../../../extern/stb/stb_image.h"
+#include "stb/stb_image.h"
 
 using namespace orf_n;
 

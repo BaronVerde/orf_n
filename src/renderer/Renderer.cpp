@@ -1,13 +1,13 @@
 
-#include <applications/Camera/Camera.h>
-#include <applications/CubeToEllipsoid/CubeToEllipsoid.h>
-#include <applications/IcosphereEllipsoid/IcosphereEllipsoid.h>
-#include <applications/SkyBox/SkyBox.h>
-#include <applications/WorldTerrainLOD/TerrainLOD.h>
-#include <applications/zTest_Positions/Positions.h>
-#include <base/Globals.h>	// deltaTime
-#include <base/Logbook.h>
-#include <renderer/Renderer.h>
+#include "applications/Camera/Camera.h"
+//#include "applications/CubeToEllipsoid/CubeToEllipsoid.h"
+//#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
+#include "applications/SkyBox/SkyBox.h"
+#include "applications/WorldTerrainLOD/TerrainLOD.h"
+//#include "<applications/zTest_Positions/Positions.h"
+#include "base/Globals.h"	// deltaTime
+#include "base/Logbook.h"
+#include "renderer/Renderer.h"
 //#include "Applications/PhysicsDemo/PhysicsDemo.h"
 
 namespace orf_n {
@@ -50,7 +50,7 @@ void Renderer::setupRenderer() {
 	//m_scene->addRenderable( 1, std::make_shared<Positions>() );
 	//m_scene->addRenderable( 1, std::make_shared<StreamingLOD>() );
 	//m_scene->addRenderable( 1, std::make_shared<PhysicsDemo>() );
-	//m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
+	m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
 
 }
 

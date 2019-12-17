@@ -15,11 +15,11 @@
 
 #pragma once
 
-#include <omath/vec3.h>
-#include <renderer/Program.h>
-#include <renderer/TextureCube.h>
-#include <renderer/VertexArray3D.h>
-#include <scene/Renderable.h>
+#include "omath/vec3.h"
+#include "renderer/Program.h"
+#include "renderer/TextureCube.h"
+#include "renderer/VertexArray3D.h"
+#include "scene/Renderable.h"
 #include <memory>
 
 class SkyBox : public orf_n::Renderable {

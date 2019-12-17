@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <applications/Camera/Camera.h>
-#include <applications/WorldTerrainLOD/Settings.h>
-#include <omath/vec4.h>
+#include "applications/Camera/Camera.h"
+#include "Settings.h"
+#include "omath/vec4.h"
 
 namespace terrain {
 

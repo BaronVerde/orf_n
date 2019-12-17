@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 /**
  * Profrabricated samplers for textures.

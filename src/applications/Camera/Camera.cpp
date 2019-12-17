@@ -1,14 +1,13 @@
 
-#include <applications/Camera/Camera.h>
-#include <base/GlfwWindow.h>
-#include <base/Globals.h>		// deltaTime
-#include <geometry/Plane.h>
-#include <geometry/ViewFrustum.h>
-#include <omath/mat4.h>
+#include "Camera.h"
+#include "base/GlfwWindow.h"
+#include "base/Globals.h"		// deltaTime
+#include "geometry/Plane.h"
+#include "geometry/ViewFrustum.h"
+#include "omath/mat4.h"
 #include <iostream>
 #include <string>
-
-#include "../../../extern/imgui/imgui.h"
+#include "imgui/imgui.h"
 
 namespace orf_n {
 

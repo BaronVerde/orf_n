@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <applications/WorldTerrainLOD/Settings.h>
-#include <geometry/AABB.h>
-#include <geometry/Ellipsoid.h>
-#include <geometry/Geodetic.h>
-#include <omath/vec3.h>
+#include "Settings.h"
+#include "geometry/AABB.h"
+#include "geometry/Ellipsoid.h"
+#include "geometry/Geodetic.h"
+#include "omath/vec3.h"
 #include <memory>
 
 namespace terrain {

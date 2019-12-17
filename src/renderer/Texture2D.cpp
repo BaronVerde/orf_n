@@ -1,11 +1,10 @@
 
-#include <base/Logbook.h>
-#include <renderer/Texture2D.h>
-
+#include "base/Logbook.h"
+#include "Texture2D.h"
 #include <sstream>
 #include <algorithm>	// max()
 #include <cmath>		// floor()
-#include "../../extern/stb/stb_image.h"
+#include "stb/stb_image.h"
 
 namespace orf_n {
 

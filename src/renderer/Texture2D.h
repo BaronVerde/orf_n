@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <omath/vec2.h>
-#include <renderer/Texture.h>
+#include "omath/vec2.h"
+#include "Texture.h"
 #include <string>
 
 namespace orf_n {

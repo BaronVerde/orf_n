@@ -6,11 +6,10 @@
 
 #pragma once
 
-#include <renderer/Texture.h>
-
+#include "Texture.h"
 #include <vector>
 #include <string>
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 

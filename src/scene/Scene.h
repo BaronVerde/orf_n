@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <applications/Camera/Camera.h>
-#include <applications/UIOverlay/UIOverlay.h>
-#include <base/GlfwWindow.h>
-#include <scene/Renderable.h>
+#include "applications/Camera/Camera.h"
+#include "applications/UIOverlay/UIOverlay.h"
+#include "base/GlfwWindow.h"
+#include "Renderable.h"
 
 namespace orf_n {
 

@@ -7,11 +7,11 @@
  */
 #pragma once
 
-#include <geometry/AABB.h>
-#include <renderer/Color.h>
-#include <renderer/IndexBuffer.h>
-#include <renderer/Program.h>
-#include <renderer/VertexArray3D.h>
+#include "geometry/AABB.h"
+#include "Color.h"
+#include "IndexBuffer.h"
+#include "Program.h"
+#include "VertexArray3D.h"
 
 namespace orf_n {
 

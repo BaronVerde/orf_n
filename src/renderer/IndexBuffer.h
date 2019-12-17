@@ -8,10 +8,9 @@
  */
 #pragma once
 
-#include <renderer/Buffer.h>
-
+#include "Buffer.h"
 #include <vector>
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 

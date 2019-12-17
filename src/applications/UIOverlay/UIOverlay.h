@@ -7,11 +7,10 @@
 
 #pragma once
 
-#include <base/GlfwWindow.h>
-#include <renderer/Program.h>
-#include <scene/Renderable.h>
-
-#include "../../../extern/imgui/imgui.h"
+#include "base/GlfwWindow.h"
+#include "renderer/Program.h"
+#include "scene/Renderable.h"
+#include "imgui/imgui.h"
 
 namespace orf_n {
 

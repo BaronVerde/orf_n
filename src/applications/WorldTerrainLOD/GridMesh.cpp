@@ -1,7 +1,7 @@
 
-#include <applications/WorldTerrainLOD/GridMesh.h>
-#include <base/Logbook.h>
-#include <renderer/VertexArray3D.h>
+#include "GridMesh.h"
+#include "base/Logbook.h"
+#include "renderer/VertexArray3D.h"
 #include <vector>
 
 namespace terrain {

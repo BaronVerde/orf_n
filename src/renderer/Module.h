@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 /**
  * @brief Class for a shader module for use in a pipeline

@@ -1,11 +1,11 @@
 
-#include <applications/WorldTerrainLOD/HeightMap.h>
-#include <applications/WorldTerrainLOD/LODSelection.h>
-#include <applications/WorldTerrainLOD/Node.h>
-#include <applications/WorldTerrainLOD/TerrainTile.h>
-#include <base/Logbook.h>
-#include <geometry/AABB.h>
-#include <geometry/ViewFrustum.h>
+#include "HeightMap.h"
+#include "LODSelection.h"
+#include "Node.h"
+#include "TerrainTile.h"
+#include "base/Logbook.h"
+#include "geometry/AABB.h"
+#include "geometry/ViewFrustum.h"
 #include <sstream>
 
 namespace terrain {

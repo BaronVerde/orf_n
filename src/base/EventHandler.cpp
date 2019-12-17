@@ -1,7 +1,7 @@
 
-#include <base/EventHandler.h>
-#include <base/Logbook.h>
-#include <GLFW/glfw3.h>
+#include "EventHandler.h"
+#include "Logbook.h"
+#include "GlfwWindow.h"
 #include <iostream>
 
 namespace orf_n {

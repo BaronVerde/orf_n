@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <applications/WorldTerrainLOD/Settings.h>
-#include <renderer/Color.h>
-#include <renderer/DrawPrimitives.h>
-#include <renderer/VertexArray3D.h>
-#include <scene/Renderable.h>
+#include "Settings.h"
+#include "renderer/Color.h"
+#include "renderer/DrawPrimitives.h"
+#include "renderer/VertexArray3D.h"
+#include "scene/Renderable.h"
 
 namespace terrain {
 	class TerrainTile;

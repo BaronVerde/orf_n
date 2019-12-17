@@ -1,9 +1,8 @@
 
-#include <base/Logbook.h>
-#include <renderer/TextureRectangle.h>
-
+#include "base/Logbook.h"
+#include "TextureRectangle.h"
 #include <cmath>	// floor()
-#include "../../extern/stb/stb_image.h"
+#include "stb/stb_image.h"
 
 namespace orf_n {
 

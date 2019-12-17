@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <renderer/IndexBuffer.h>
-#include <renderer/VertexArray3D.h>
+#include "renderer/IndexBuffer.h"
+#include "renderer/VertexArray3D.h"
 
 namespace terrain {
 

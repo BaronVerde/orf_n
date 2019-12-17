@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <geometry/Rectangle.h>
-#include <omath/vec2.h>
-#include <renderer/Texture2D.h>
+#include "geometry/Rectangle.h"
+#include "omath/vec2.h"
+#include "renderer/Texture2D.h"
 #include <string>
 
 namespace terrain {

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <omath/vec4.h>
+#include "omath/vec4.h"
 #include <array>
 
 namespace orf_n {

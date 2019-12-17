@@ -6,9 +6,9 @@
  * @todo Delete copy and move
  */
 
-#include <base/Logbook.h>
-#include <omath/vec3.h>
-#include <renderer/Buffer.h>
+#include "base/Logbook.h"
+#include "omath/vec3.h"
+#include "Buffer.h"
 #include <vector>
 #include <typeinfo>
 #include <sstream>

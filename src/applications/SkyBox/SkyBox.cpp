@@ -1,8 +1,8 @@
 
-#include <applications/SkyBox/SkyBox.h>
-#include <renderer/Uniform.h>
-#include <renderer/VertexArray3D.h>
-#include <scene/Scene.h>
+#include "SkyBox.h"
+#include "renderer/Uniform.h"
+#include "renderer/VertexArray3D.h"
+#include "scene/Scene.h"
 
 using namespace orf_n;
 

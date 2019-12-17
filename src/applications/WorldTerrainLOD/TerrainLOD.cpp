@@ -1,19 +1,20 @@
 
-#include <applications/Camera/Camera.h>
-#include <applications/WorldTerrainLOD/GridMesh.h>
-#include <applications/WorldTerrainLOD/LODSelection.h>
-#include <applications/WorldTerrainLOD/Node.h>
-#include <applications/WorldTerrainLOD/QuadTree.h>
-#include <applications/WorldTerrainLOD/TerrainLOD.h>
-#include <applications/WorldTerrainLOD/TerrainTile.h>
-#include <base/Logbook.h>
-#include <geometry/AABB.h>
-#include <geometry/Ellipsoid.h>
-#include <omath/mat4.h>
-#include <renderer/IndexBuffer.h>
-#include <renderer/Module.h>
-#include <renderer/Uniform.h>
-#include <scene/Scene.h>
+#include "applications/Camera/Camera.h"
+#include "GridMesh.h"
+#include "LODSelection.h"
+#include "Node.h"
+#include "QuadTree.h"
+#include "TerrainLOD.h"
+#include "TerrainTile.h"
+#include "base/Logbook.h"
+#include "base/Globals.h"
+#include "geometry/AABB.h"
+#include "geometry/Ellipsoid.h"
+#include "omath/mat4.h"
+#include "renderer/IndexBuffer.h"
+#include "renderer/Module.h"
+#include "renderer/Uniform.h"
+#include "scene/Scene.h"
 
 TerrainLOD::TerrainLOD() : Renderable( "TerrainLOD" ) {
 	// Prepare and check settings

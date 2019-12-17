@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include <applications/Camera/Camera.h>
-#include <applications/WorldTerrainLOD/HeightMap.h>
-#include <applications/WorldTerrainLOD/LODSelection.h>
-#include <applications/WorldTerrainLOD/Node.h>
-#include <omath/vec3.h>
+#include "applications/Camera/Camera.h"
+#include "HeightMap.h"
+#include "LODSelection.h"
+#include "Node.h"
+#include "omath/vec3.h"
 
 namespace terrain {
 

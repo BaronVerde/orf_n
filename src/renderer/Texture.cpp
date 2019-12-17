@@ -1,6 +1,6 @@
 
-#include <base/Logbook.h>
-#include <renderer/Texture.h>
+#include "base/Logbook.h"
+#include "Texture.h"
 
 namespace orf_n {
 

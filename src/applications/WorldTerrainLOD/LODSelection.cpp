@@ -1,9 +1,9 @@
 
-#include <applications/WorldTerrainLOD/LODSelection.h>
-#include <applications/WorldTerrainLOD/Node.h>
-#include <applications/WorldTerrainLOD/QuadTree.h>
-#include <base/Logbook.h>
-#include <omath/common.h>	// lerp()
+#include "LODSelection.h"
+#include "Node.h"
+#include "QuadTree.h"
+#include "base/Logbook.h"
+#include "omath/common.h"	// lerp()
 #include <sstream>
 #include <iostream>
 

@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <base/EventHandler.h>
-#include <geometry/ViewFrustum.h>
-#include <omath/mat4.h>
+#include "base/EventHandler.h"
+#include "geometry/ViewFrustum.h"
+#include "omath/mat4.h"
 
 namespace orf_n {
 

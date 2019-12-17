@@ -5,13 +5,10 @@
 
 #pragma once
 
-//! for dynamic linkage
-//#define GLFW_DLL
-#include <base/EventHandler.h>
-
+#include "EventHandler.h"
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <memory>
-#include "../../extern/glad/glad.h"
 
 namespace orf_n {
 

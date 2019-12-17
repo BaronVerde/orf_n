@@ -1,9 +1,8 @@
 
-#include <base/Logbook.h>
-#include <renderer/TextureCube.h>
-
+#include "base/Logbook.h"
+#include "TextureCube.h"
 #include <sstream>
-#include "../../extern/stb/stb_image.h"
+#include "stb/stb_image.h"
 
 namespace orf_n {
 
