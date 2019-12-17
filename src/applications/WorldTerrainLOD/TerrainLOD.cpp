@@ -49,9 +49,9 @@ TerrainLOD::TerrainLOD() : Renderable( "TerrainLOD" ) {
 	// Create terrain shaders
 	std::vector<std::shared_ptr<orf_n::Module>> modules;
 	modules.push_back( std::make_shared<orf_n::Module>( GL_VERTEX_SHADER,
-			"Source/Applications/WorldTerrainLOD/Terrain.vert.glsl" ) );
+			"src/applications/WorldTerrainLOD/Terrain.vert.glsl" ) );
 	modules.push_back( std::make_shared<orf_n::Module>( GL_FRAGMENT_SHADER,
-			"Source/Applications/WorldTerrainLOD/Terrain.frag.glsl" ) );
+			"src/applications/WorldTerrainLOD/Terrain.frag.glsl" ) );
 	m_shaderTerrain = std::make_unique<orf_n::Program>( modules );
 }
 

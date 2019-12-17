@@ -58,9 +58,9 @@ void UIOverlay::setup() {
 	// Create the shaders
 	std::vector<std::shared_ptr<Module>> modules;
 	modules.push_back( std::make_shared<Module>( GL_VERTEX_SHADER,
-			"Source/Applications/UIOverlay/UIOverlay.vert" ) );
+			"src/applications/UIOverlay/UIOverlay.vert" ) );
 	modules.push_back( std::make_shared<Module>( GL_FRAGMENT_SHADER,
-			"Source/Applications/UIOverlay/UIOverlay.frag" ) );
+			"src/applications/UIOverlay/UIOverlay.frag" ) );
 	m_shader = new Program( modules );
 	m_AttribLocationTex = glGetUniformLocation( m_shader->getProgram(), "Texture");
 	m_AttribLocationPosition = glGetAttribLocation( m_shader->getProgram(), "Position");

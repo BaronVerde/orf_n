@@ -27,10 +27,10 @@ void DrawPrimitives::setupDebugDrawing() {
 		// Load shaders
 		std::vector<std::shared_ptr<orf_n::Module>> modules;
 		modules.push_back(
-				std::make_shared<Module>( GL_VERTEX_SHADER, "Source/Renderer/DrawPrimitives.vert.glsl" )
+				std::make_shared<Module>( GL_VERTEX_SHADER, "src/renderer/DrawPrimitives.vert.glsl" )
 		);
 		modules.push_back(
-				std::make_shared<Module>( GL_FRAGMENT_SHADER, "Source/Renderer/DrawPrimitives.frag.glsl" )
+				std::make_shared<Module>( GL_FRAGMENT_SHADER, "src/renderer/DrawPrimitives.frag.glsl" )
 		);
 		m_shaderDebug = std::make_unique<Program>( modules );
 

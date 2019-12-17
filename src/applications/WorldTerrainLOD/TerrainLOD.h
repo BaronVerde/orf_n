@@ -38,10 +38,10 @@ private:
 	static const int MAX_NUMBER_OF_TILES{ 4 };
 
 	const std::vector<std::string> TERRAIN_FILES {
-		"Resources/Textures/Terrain/Area_52_06/tile_2048_1",
-		"Resources/Textures/Terrain/Area_52_06/tile_2048_2",
-		"Resources/Textures/Terrain/Area_52_06/tile_2048_3",
-		"Resources/Textures/Terrain/Area_52_06/tile_2048_4"
+		"resources/Textures/Terrain/Area_52_06/tile_2048_1",
+		"resources/Textures/Terrain/Area_52_06/tile_2048_2",
+		"resources/Textures/Terrain/Area_52_06/tile_2048_3",
+		"resources/Textures/Terrain/Area_52_06/tile_2048_4"
 	};
 
 	struct renderStats_t {

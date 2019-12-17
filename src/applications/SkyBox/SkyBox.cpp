@@ -10,24 +10,24 @@ SkyBox::SkyBox( const std::vector<std::string> &files ) :
 		Renderable{ "SkyBox" } {
 	if( 6 != files.size() ) {
 		std::vector<std::string> faces{
-			/*"Resources/Cubemaps/starfield_rt.tga",
-			"Resources/Cubemaps/starfield_lf.tga",
-			"Resources/Cubemaps/starfield_up.tga",
-			"Resources/Cubemaps/starfield_dn.tga",
-			"Resources/Cubemaps/starfield_ft.tga",
-			"Resources/Cubemaps/starfield_bk.tga"*/
-			"Resources/Cubemaps/eso_pos_x.png",
-			"Resources/Cubemaps/eso_neg_x.png",
-			"Resources/Cubemaps/eso_pos_y.png",
-			"Resources/Cubemaps/eso_neg_y.png",
-			"Resources/Cubemaps/eso_pos_z.png",
-			"Resources/Cubemaps/eso_neg_z.png"
-			/*"Resources/Cubemaps/nasa_pos_x.png",
-			"Resources/Cubemaps/nasa_neg_x.png",
-			"Resources/Cubemaps/nasa_pos_y.png",
-			"Resources/Cubemaps/nasa_neg_y.png",
-			"Resources/Cubemaps/nasa_pos_z.png",
-			"Resources/Cubemaps/nasa_neg_z.png"*/
+			/*"resources/Cubemaps/starfield_rt.tga",
+			"resources/Cubemaps/starfield_lf.tga",
+			"resources/Cubemaps/starfield_up.tga",
+			"resources/Cubemaps/starfield_dn.tga",
+			"resources/Cubemaps/starfield_ft.tga",
+			"resources/Cubemaps/starfield_bk.tga"*/
+			"resources/Cubemaps/eso_pos_x.png",
+			"resources/Cubemaps/eso_neg_x.png",
+			"resources/Cubemaps/eso_pos_y.png",
+			"resources/Cubemaps/eso_neg_y.png",
+			"resources/Cubemaps/eso_pos_z.png",
+			"resources/Cubemaps/eso_neg_z.png"
+			/*"resources/Cubemaps/nasa_pos_x.png",
+			"resources/Cubemaps/nasa_neg_x.png",
+			"resources/Cubemaps/nasa_pos_y.png",
+			"resources/Cubemaps/nasa_neg_y.png",
+			"resources/Cubemaps/nasa_pos_z.png",
+			"resources/Cubemaps/nasa_neg_z.png"*/
 		};
 		m_texture = std::make_unique<TextureCube>( faces );
 	} else {
@@ -40,9 +40,9 @@ void SkyBox::setup() {
 	// Create the shaders
 	std::vector<std::shared_ptr<Module>> modules;
 	modules.push_back( std::make_shared<Module>( GL_VERTEX_SHADER,
-			"Source/Applications/SkyBox/Skybox.vert.glsl" ) );
+			"src/applications/SkyBox/Skybox.vert.glsl" ) );
 	modules.push_back( std::make_shared<Module>( GL_FRAGMENT_SHADER,
-			"Source/Applications/SkyBox/Skybox.frag.glsl" ) );
+			"src/applications/SkyBox/Skybox.frag.glsl" ) );
 	m_program = std::make_unique<Program>( modules );
 
 	std::vector<omath::vec3> skyboxVertices{
