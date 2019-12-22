@@ -1,0 +1,100 @@
+
+#include "EsriRestImagery.h"
+#include "Renderer/Texture2D.h"
+#include "RasterLevel.h"
+#include "RasterTile.h"
+#include "Base/Logbook.h"
+#include <filesystem>
+#include <sstream>
+#include <cstring>
+#include <cstdio>
+#include <curl/curl.h>
+
+namespace globe {
+
+EsriRestImagery::EsriRestImagery( const std::string &url ) :
+		m_url{ url } {
+	m_levels.resize( NumberOfLevels );
+	m_extent = orf_n::GeodeticExtent{ -180.0, -90.0, 180.0, 90.0 };
+	double deltaLongitude{ LevelZeroDeltaLongitudeDegrees };
+	double deltaLatitude{ LevelZeroDeltaLatitudeDegrees };
+	for( int i{0}; i < m_levels.size(); ++i ) {
+		int longitudePosts{ static_cast<int>( std::round( 360.0 / deltaLongitude ) ) * TileWidth + 1 };
+		int latitudePosts{ static_cast<int>( std::round( 180.0 / deltaLatitude ) ) * TileHeight + 1 };
+		m_levels[i] = new RasterLevel{ this, i, &m_extent, longitudePosts, latitudePosts, TileWidth, TileHeight };
+		deltaLongitude /= 2.0;
+		deltaLatitude /= 2.0;
+	}
+}
+
+EsriRestImagery::EsriRestImagery() : EsriRestImagery{
+	"http://server.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/" } {}
+
+EsriRestImagery::~EsriRestImagery() {
+	for( int i{0}; i < m_levels.size(); ++i )
+		delete m_levels[i];
+}
+
+int EsriRestImagery::TileLongitudePosts() const {
+	return 512;
+}
+
+int EsriRestImagery::TileLatitudePosts() const {
+	return 512;
+}
+
+/* @todo write callback. Must be used for win32 applications
+static size_t writeCallback( void *buffer, size_t size, size_t nmemb, void *userp ) {}*/
+
+// @todo: store the texture somewhere or return a pointer !
+bool EsriRestImagery::LoadTileTexture( const RasterTileIdentifier &identifier ) {
+	int level = identifier.m_level;
+	int longitudeIndex = identifier.m_x;
+	int latitudeIndex = identifier.m_y;
+	std::string cachePath{ "esri/" + std::to_string(level) + '/' + std::to_string(latitudeIndex) };
+	std::string cacheFilename{ cachePath + '/' + std::to_string( longitudeIndex ) + ".jpg" };
+	if( !std::filesystem::is_directory( cachePath ) )
+		if( !std::filesystem::create_directory( cachePath ) ) {
+			// @todo error;
+		}
+	if( !std::filesystem::exists( cacheFilename ) ) {
+		// Esri tiles are numbered from the northwest instead of from the southwest.
+		std::ostringstream query{ m_url };
+		query << level << '/' << ( (1 << level)-latitudeIndex-1 ) << '/' << longitudeIndex;
+		++m_tilesLoaded;
+		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO,
+				'(' + std::to_string(m_tilesLoaded) + ") Downloading " + query.str() );
+		CURL *curlEasyHandle = curl_easy_init();
+		if( curlEasyHandle ) {
+			// curl_easy_setopt( m_curlEasyHandle, CURLOPT_WRITEFUNCTION, writeCallback );
+			curl_easy_setopt( curlEasyHandle, CURLOPT_URL, query.str().c_str() );
+			FILE *outputFile = fopen( cacheFilename.c_str(), "w" );
+			if( outputFile ) {
+				curl_easy_setopt( curlEasyHandle, CURLOPT_WRITEDATA, outputFile );
+				char errorBuffer[CURL_ERROR_SIZE];
+				curl_easy_setopt( curlEasyHandle, CURLOPT_ERRORBUFFER, errorBuffer );
+				// do the call
+				CURLcode retVal = curl_easy_perform( curlEasyHandle );
+				if( retVal != CURLE_OK ) {
+					std::cerr << "libcurl: (%d) " << retVal << ' ';
+					if( strlen( errorBuffer ) > 0 )
+						std::cerr << errorBuffer << std::endl;
+					else
+						std::cerr << curl_easy_strerror( retVal ) << std::endl;
+				}
+				if( 0 != fclose( outputFile ) ) {
+					// @todo error on close
+				}
+			} else {
+				// @todo error opening file
+			}
+			if( curlEasyHandle )
+				curl_easy_cleanup( curlEasyHandle );
+		}
+	}
+	// create texture (@todo: store it)
+	orf_n::Texture2D texture{ cacheFilename, 0, false };
+	return true;
+}
+
+}

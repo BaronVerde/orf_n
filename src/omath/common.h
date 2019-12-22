@@ -23,10 +23,24 @@ const double PI_OVER_SIX = M_PI / 6.0;
 const double THREE_PI_OVER_TWO = (3.0 * M_PI) * 0.5;
 const double TWO_PI = 2.0 * M_PI;
 
-// Collection of static functions
+// returns v0 when t == 0 and v1 when t == 1
 template<typename T>
-T lerp( T const & a, T const & b, T const & f ) {
-	return a + ( b - a ) * f;
+T lerp( T v0, T v1, T t ) {
+  return( ( static_cast<T>(1) - t ) * v0 + t * v1 );
+}
+
+/**
+ * Interpolates between n1 and n2 with given pre-n1 value n0 and post-n1 value n3
+ * If a is 0, function returns n1, if a is 1.0, function returns n2
+ * After libnoise !
+ */
+template <typename T>
+T cubicInterpolate( const T n0, const T n1, const T n2, const T n3, const T a = 0.5 ) {
+	const T p{ ( n3 - n2 ) - ( n0 - n1 ) };
+	const T q{ ( n0 - n1 ) - p };
+	const T r{ n2 - n0 };
+	const T s{ n1 };
+	return p * a * a * a + q * a * a + r * a + s;
 }
 
 template<typename T>

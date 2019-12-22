@@ -3,8 +3,8 @@
 //#include "applications/CubeToEllipsoid/CubeToEllipsoid.h"
 //#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
 #include "applications/SkyBox/SkyBox.h"
-#include "applications/WorldTerrainLOD/TerrainLOD.h"
-//#include "<applications/zTest_Positions/Positions.h"
+//#include "applications/TerrainLOD/TerrainLOD.h"
+#include "applications/TerrainSim/HydroTile.h"
 #include "base/Globals.h"	// deltaTime
 #include "base/Logbook.h"
 #include "renderer/Renderer.h"
@@ -46,11 +46,11 @@ void Renderer::setupRenderer() {
 	m_scene = new Scene( m_window, m_camera, m_overlay );
 	//m_scene->addRenderable( 1, std::make_shared<CubeToEllipsoid>( 2, omath::dvec3{1.0} ) );
 	//m_scene->addRenderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
-	m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
+	//m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
 	//m_scene->addRenderable( 1, std::make_shared<Positions>() );
-	//m_scene->addRenderable( 1, std::make_shared<StreamingLOD>() );
+	m_scene->addRenderable( 1, std::make_shared<HydroTile>() );
 	//m_scene->addRenderable( 1, std::make_shared<PhysicsDemo>() );
-	m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
+	//m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
 
 }
 
