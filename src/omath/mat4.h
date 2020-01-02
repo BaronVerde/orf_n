@@ -16,20 +16,20 @@ struct mat4_t {
 			value{ vec4_t<T>{ 1, 0, 0, 0 }, vec4_t<T>{ 0, 1, 0, 0 },
 				   vec4_t<T>{ 0, 0, 1, 0 }, vec4_t<T>{ 0, 0, 0, 1 } } {}
 
-	explicit mat4_t( const T& x ) :
+	explicit mat4_t( const T &x ) :
 			value{ vec4_t<T>{ x, 0, 0, 0 }, vec4_t<T>{ 0, x, 0, 0 },
 				   vec4_t<T>{ 0, 0, x, 0 }, vec4_t<T>{ 0, 0, 0, x } } {}
 
 	explicit mat4_t(
-			const T& x0, const T& y0, const T& z0, const T& w0,
-			const T& x1, const T& y1, const T& z1, const T& w1,
-			const T& x2, const T& y2, const T& z2, const T& w2,
-			const T& x3, const T& y3, const T& z3, const T& w3 ) :
+			const T &x0, const T &y0, const T &z0, const T &w0,
+			const T &x1, const T &y1, const T &z1, const T &w1,
+			const T &x2, const T &y2, const T &z2, const T &w2,
+			const T &x3, const T &y3, const T &z3, const T &w3 ) :
 			value{ vec4_t<T>{ x0, y0, z0, w0 }, vec4_t<T>{ x1, y1, z1, w1 },
 				   vec4_t<T>{ x2, y2, z2, w2 }, vec4_t<T>{ x3, y3, z3, w3 } } {}
 
-	mat4_t( vec4_t<T> const& v0, vec4_t<T> const& v1,
-			vec4_t<T> const& v2, vec4_t<T> const& v3 ) :
+	mat4_t( const vec4_t<T> &v0, const vec4_t<T> &v1,
+			const vec4_t<T> &v2, const vec4_t<T> &v3 ) :
 				value{ v0, v1, v2, v3 } {}
 
 	mat4_t( const mat4_t<T> &rhs ) = default;
@@ -42,36 +42,36 @@ struct mat4_t {
 
 	// Conversions
 	template <typename U>
-	mat4_t(	U const& x0, U const& y0, U const& z0, U const& w0,
-			U const& x1, U const& y1, U const& z1, U const& w1,
-			U const& x2, U const& y2, U const& z2, U const& w2,
-			U const& x3, U const& y3, U const& z3, U const& w3 ) :
+	mat4_t(	const U &x0, const U &y0, const U &z0, const U &w0,
+			const U &x1, const U &y1, const U &z1, const U &w1,
+			const U &x2, const U &y2, const U &z2, const U &w2,
+			const U &x3, const U &y3, const U &z3, const U &w3 ) :
 			mat4_t{ { x0, y0, z0, w0 }, { x1, y1, z1, w1 },
 					{ x2, y2, z2, w2 }, { x3, y3, z3, w3 } } {}
 
 	template<typename U>
-	mat4_t( vec4_t<U> const& v0, vec4_t<U> const& v1,
-			vec4_t<U> const& v2, vec4_t<U> const& v3 ) :
+	mat4_t( const mat3_t<T> &v0, const mat3_t<T> &v1,
+			const mat3_t<T> &v2, const mat3_t<T> &v3 ) :
 		value{ v0, v1, v2, v3 } {}
 
 	// -- Matrix conversions --
 	template<typename U>
-	mat4_t( mat4_t<U> const& m ) :
+	mat4_t( const mat4_t<U> &m ) :
 		value{ m[0], m[1], m[2], m[3] } {}
 
 	template<typename U>
-	mat4_t( mat3_t<U> const& m ) :
+	mat4_t( const mat3_t<U> &m ) :
 		value{ vec4_t<T>{ m[0], 0 },
 			   vec4_t<T>{ m[1], 0 },
 			   vec4_t<T>{ m[2], 0 },
 			   vec4_t<T>{ 0, 0, 0, 1 } } {}
 
 	// Access
-	vec4_t<T> &operator[]( const int& i ) {
+	vec4_t<T> &operator[]( const int &i ) {
 		return value[i];
 	}
 
-	const vec4_t<T> &operator[]( const int& i ) const {
+	const vec4_t<T> &operator[]( const int &i ) const {
 		return value[i];
 	}
 
@@ -87,7 +87,7 @@ struct mat4_t {
 
 
 	template<typename U>
-	mat4_t &operator=( mat4_t<U> const& m ) {
+	mat4_t &operator=( const mat4_t<U> &m ) {
 		//std::memcpy( &value, &m.value, 16 * sizeof( U ) );
 		value[0] = m[0];
 		value[1] = m[1];
@@ -97,7 +97,7 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator+=( U const s ) {
+	mat4_t & operator+=( const U s ) {
 		value[0] += s;
 		value[1] += s;
 		value[2] += s;
@@ -106,7 +106,7 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator+=( mat4_t<U> const& m ) {
+	mat4_t & operator+=( const mat4_t<U> &m ) {
 		value[0] += m[0];
 		value[1] += m[1];
 		value[2] += m[2];
@@ -115,7 +115,7 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator-=( U const s ) {
+	mat4_t & operator-=( const U s ) {
 		value[0] -= s;
 		value[1] -= s;
 		value[2] -= s;
@@ -124,7 +124,7 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator-=( mat4_t<U> const& m ) {
+	mat4_t & operator-=( mat4_t<U> const &m ) {
 		value[0] -= m[0];
 		value[1] -= m[1];
 		value[2] -= m[2];
@@ -133,7 +133,7 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator*=( U const s ) {
+	mat4_t & operator*=( const U s ) {
 		value[0] *= s;
 		value[1] *= s;
 		value[2] *= s;
@@ -142,12 +142,12 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator*=( mat4_t<U> const& m ) {
+	mat4_t & operator*=( const mat4_t<U> &m ) {
 		return (*this = *this * m);
 	}
 
 	template<typename U>
-	mat4_t & operator/=( U const s ) {
+	mat4_t & operator/=( const U s ) {
 		value[0] /= s;
 		value[1] /= s;
 		value[2] /= s;
@@ -156,7 +156,7 @@ struct mat4_t {
 	}
 
 	template<typename U>
-	mat4_t & operator/=( mat4_t<U> const& m ) {
+	mat4_t & operator/=( const mat4_t<U> &m ) {
 		return *this *= inverse(m);
 	}
 
@@ -170,12 +170,12 @@ inline mat4_t<T> operator-( const mat4_t<T>& m ) {
 
 // -- Binary operators --
 template<typename T>
-inline mat4_t<T> operator+( const mat4_t<T>& m, const T& s ) {
+inline mat4_t<T> operator+( const mat4_t<T>& m, const T &s ) {
 	return mat4_t<T>{ m[0] + s, m[1] + s, m[2] + s, m[3] + s };
 }
 
 template<typename T>
-inline mat4_t<T> operator+(const T& s, const mat4_t<T>& m ) {
+inline mat4_t<T> operator+(const T &s, const mat4_t<T>& m ) {
 	return m + s;
 }
 
@@ -185,12 +185,12 @@ inline mat4_t<T> operator+( const mat4_t<T>& m1, const mat4_t<T>& m2 ) {
 }
 
 template<typename T>
-inline mat4_t<T> operator-( const mat4_t<T>& m, const T& s ) {
+inline mat4_t<T> operator-( const mat4_t<T>& m, const T &s ) {
 	return mat4_t<T>{ m[0] - s, m[1] - s, m[2] - s, m[3] - s };
 }
 
 template<typename T>
-inline mat4_t<T> operator-(const T& s, const mat4_t<T>& m ) {
+inline mat4_t<T> operator-(const T &s, const mat4_t<T>& m ) {
 	return mat4_t<T>{ s - m[0], s - m[1], s - m[2], s - m[3] };
 }
 
@@ -200,18 +200,18 @@ inline mat4_t<T> operator-( const mat4_t<T>& m1, const mat4_t<T>& m2 ) {
 }
 
 template<typename T>
-inline mat4_t<T> operator*( const mat4_t<T>& m, const T& s ) {
+inline mat4_t<T> operator*( const mat4_t<T>& m, const T &s ) {
 	return mat4_t<T>{ m[0] * s, m[1] * s, m[2] * s, m[3] * s };
 }
 
 template<typename T>
-inline mat4_t<T> operator*(const T& s, const mat4_t<T>& m ) {
+inline mat4_t<T> operator*(const T &s, const mat4_t<T>& m ) {
 	return m * s;
 }
 
 // column vctor = matrix * row vector
 template<typename T>
-inline vec4_t<T> operator*( const mat4_t<T>& m, vec4_t<T> const& v ) {
+inline vec4_t<T> operator*( const mat4_t<T>& m, const vec4_t<T> &v ) {
 	/*vec4_t<T> const Mov0(v[0]);
 	vec4_t<T> const Mov1(v[1]);
 	vec4_t<T> const Mul0 = m[0] * Mov0;
@@ -232,7 +232,7 @@ inline vec4_t<T> operator*( const mat4_t<T>& m, vec4_t<T> const& v ) {
 
 // row vector = column vector * matrix
 template<typename T>
-inline vec4_t<T> operator*( vec4_t<T> const& v, const mat4_t<T>& m ) {
+inline vec4_t<T> operator*( const vec4_t<T> &v, const mat4_t<T>& m ) {
 	return vec4_t<T>{ m[0][0] * v[0] + m[0][1] * v[1] + m[0][2] * v[2] + m[0][3] * v[3],
 					  m[1][0] * v[0] + m[1][1] * v[1] + m[1][2] * v[2] + m[1][3] * v[3],
 					  m[2][0] * v[0] + m[2][1] * v[1] + m[2][2] * v[2] + m[2][3] * v[3],
@@ -258,24 +258,24 @@ inline mat4_t<T> operator*( const mat4_t<T>& m1, const mat4_t<T>& m2 ) {
 }
 
 template<typename T>
-inline mat4_t<T> operator/( const mat4_t<T>& m, const T& s ) {
+inline mat4_t<T> operator/( const mat4_t<T>& m, const T &s ) {
 	return mat4_t<T>{ m[0] / s, m[1] / s, m[2] / s, m[3] / s };
 }
 
 
 template<typename T>
-inline mat4_t<T> operator/(const T& s, const mat4_t<T>& m ) {
+inline mat4_t<T> operator/(const T &s, const mat4_t<T>& m ) {
 	return mat4_t<T>{ s / m[0], s / m[1], s / m[2], s / m[3] };
 }
 
 // col vector = matrix * row vector
 template<typename T>
-inline vec4_t<T> operator/( const mat4_t<T>& m, vec4_t<T> const& v ) {
+inline vec4_t<T> operator/( const mat4_t<T>& m, const vec4_t<T> &v ) {
 	return inverse(m) * v;
 }
 
 template<typename T>
-inline vec4_t<T> operator/( vec4_t<T> const& v, const mat4_t<T>& m ) {
+inline vec4_t<T> operator/( const vec4_t<T> &v, const mat4_t<T>& m ) {
 	return v * inverse(m);
 }
 
@@ -348,7 +348,7 @@ inline static mat4_t<T> inverse( const mat4_t<T>& m ) {
 
 // All matrices right handed !
 template<typename T>
-inline static mat4_t<T> ortho( const T& left, const T& right, const T& bottom, const T& top ) {
+inline static mat4_t<T> ortho( const T &left, const T &right, const T &bottom, const T &top ) {
 	mat4_t<T> result{ static_cast<T>(1) };
 	result[0][0] = static_cast<T>(2) / (right - left);
 	result[1][1] = static_cast<T>(2) / (top - bottom);
@@ -359,8 +359,8 @@ inline static mat4_t<T> ortho( const T& left, const T& right, const T& bottom, c
 }
 
 template<typename T>
-inline static mat4_t<T> ortho( const T& left, const T& right, const T& bottom, const T& top,
-		const T& zNear, const T& zFar ) {
+inline static mat4_t<T> ortho( const T &left, const T &right, const T &bottom, const T &top,
+		const T &zNear, const T &zFar ) {
 	mat4_t<T> result{ static_cast<T>(1) };
 	result[0][0] = static_cast<T>(2) / (right - left);
 	result[1][1] = static_cast<T>(2) / (top - bottom);
@@ -372,8 +372,8 @@ inline static mat4_t<T> ortho( const T& left, const T& right, const T& bottom, c
 }
 
 template<typename T>
-inline static mat4_t<T> frustum( const T& left, const T& right, const T& bottom,
-		const T& top, const T& nearVal, const T& farVal ) {
+inline static mat4_t<T> frustum( const T &left, const T &right, const T &bottom,
+		const T &top, const T &nearVal, const T &farVal ) {
 	mat4_t<T> result( static_cast<T>(0) );
 	result[0][0] = (static_cast<T>(2) * nearVal) / (right - left);
 	result[1][1] = (static_cast<T>(2) * nearVal) / (top - bottom);
@@ -387,7 +387,7 @@ inline static mat4_t<T> frustum( const T& left, const T& right, const T& bottom,
 
 // Corresponds to glm RH_NO version !
 template<typename T>
-inline static mat4_t<T> perspective( const T& fovy, const T& aspect, const T& zNear, const T& zFar ) {
+inline static mat4_t<T> perspective( const T &fovy, const T &aspect, const T &zNear, const T &zFar ) {
 	const T tanHalfFovy{ std::tan( fovy / static_cast<T>(2) ) };
 	mat4_t<T> result{ static_cast<T>(0) };
 	result[0][0] = static_cast<T>(1) / ( aspect * tanHalfFovy );
@@ -399,7 +399,7 @@ inline static mat4_t<T> perspective( const T& fovy, const T& aspect, const T& zN
 }
 
 template<typename T>
-inline static mat4_t<T> infinitePerspective( const T& fovy, const T& aspect, const T& zNear ) {
+inline static mat4_t<T> infinitePerspective( const T &fovy, const T &aspect, const T &zNear ) {
 	const T range = tan(fovy / static_cast<T>(2)) * zNear;
 	const T left = -range * aspect;
 	const T right = range * aspect;
@@ -417,7 +417,7 @@ inline static mat4_t<T> infinitePerspective( const T& fovy, const T& aspect, con
 // Infinite projection matrix: http://www.terathon.com/gdc07_lengyel.pdf
 template<typename T>
 inline static mat4_t<T> tweakedInfinitePerspective(
-		const T& fovy, const T& aspect, const T& zNear, const T& ep ) {
+		const T &fovy, const T &aspect, const T &zNear, const T &ep ) {
 	const T range = tan(fovy / static_cast<T>(2)) * zNear;
 	const T left = -range * aspect;
 	const T right = range * aspect;

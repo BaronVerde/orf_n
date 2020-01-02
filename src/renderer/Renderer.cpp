@@ -2,7 +2,7 @@
 #include "applications/Camera/Camera.h"
 //#include "applications/CubeToEllipsoid/CubeToEllipsoid.h"
 //#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
-#include "applications/SkyBox/SkyBox.h"
+//#include "applications/SkyBox/SkyBox.h"
 //#include "applications/TerrainLOD/TerrainLOD.h"
 #include "applications/TerrainSim/HydroTile.h"
 #include "base/Globals.h"	// deltaTime

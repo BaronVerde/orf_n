@@ -29,16 +29,16 @@ struct vec3_t {
 
 	vec3_t &operator=( vec3_t<T> &&rhs ) = default;
 
-	vec3_t( T const &scalar ) :
+	vec3_t( const T &scalar ) :
 			x{scalar}, y{scalar}, z{scalar} {}
 
-	vec3_t( T const &s1, T const &s2, T const &s3 ) :
+	vec3_t( const T &s1, const T &s2, const T &s3 ) :
 			x{s1}, y{s2}, z{s3} {}
 
-	vec3_t( const vec2_t<T> &v, T const &s3 ) :
+	vec3_t( const vec2_t<T> &v, const T &s3 ) :
 			x{v.x}, y{v.y}, z{s3} {}
 
-	vec3_t( T const &s1, const vec2_t<T> &v ) :
+	vec3_t( const T &s1, const vec2_t<T> &v ) :
 			x{s1}, y{v.x}, z{v.z} {}
 
 	template<typename U>
@@ -58,7 +58,7 @@ struct vec3_t {
 		}
 	}
 
-	T const &operator[]( int i ) const {
+	const T &operator[]( int i ) const {
 		switch(i) {
 			default:
 			case 0:
@@ -71,220 +71,220 @@ struct vec3_t {
 	}
 
 	template<typename U>
-	vec3_t &operator=( vec3_t<U> const& v) {
-		this->x = static_cast<T>(v.x);
-		this->y = static_cast<T>(v.y);
-		this->z = static_cast<T>(v.z);
+	vec3_t &operator=( vec3_t<U> const &v) {
+		x = static_cast<T>(v.x);
+		y = static_cast<T>(v.y);
+		z = static_cast<T>(v.z);
 		return *this;
 	}
 
 	template<typename U>
 	vec3_t & operator+=( U const scalar) {
-		this->x += static_cast<T>(scalar);
-		this->y += static_cast<T>(scalar);
-		this->z += static_cast<T>(scalar);
+		x += static_cast<T>(scalar);
+		y += static_cast<T>(scalar);
+		z += static_cast<T>(scalar);
 		return *this;
 	}
 
 	template<typename U>
-	vec3_t & operator+=( vec3_t<U> const& v) {
-		this->x += static_cast<T>(v.x);
-		this->y += static_cast<T>(v.y);
-		this->z += static_cast<T>(v.z);
+	vec3_t & operator+=( vec3_t<U> const &v) {
+		x += static_cast<T>(v.x);
+		y += static_cast<T>(v.y);
+		z += static_cast<T>(v.z);
 		return *this;
 	}
 
 	template<typename U>
 	vec3_t & operator-=( U const scalar) {
-		this->x -= static_cast<T>(scalar);
-		this->y -= static_cast<T>(scalar);
-		this->z -= static_cast<T>(scalar);
+		x -= static_cast<T>(scalar);
+		y -= static_cast<T>(scalar);
+		z -= static_cast<T>(scalar);
 		return *this;
 	}
 
 	template<typename U>
-	vec3_t & operator-=( vec3_t<U> const& v) {
-		this->x -= static_cast<T>(v.x);
-		this->y -= static_cast<T>(v.y);
-		this->z -= static_cast<T>(v.z);
+	vec3_t & operator-=( vec3_t<U> const &v) {
+		x -= static_cast<T>(v.x);
+		y -= static_cast<T>(v.y);
+		z -= static_cast<T>(v.z);
 		return *this;
 	}
 
 	template<typename U>
 	vec3_t & operator*=( U const scalar) {
-		this->x *= static_cast<T>(scalar);
-		this->y *= static_cast<T>(scalar);
-		this->z *= static_cast<T>(scalar);
+		x *= static_cast<T>(scalar);
+		y *= static_cast<T>(scalar);
+		z *= static_cast<T>(scalar);
 		return *this;
 	}
 
 	template<typename U>
-	vec3_t & operator*=( vec3_t<U> const& v) {
-		this->x *= static_cast<T>(v.x);
-		this->y *= static_cast<T>(v.y);
-		this->z *= static_cast<T>(v.z);
+	vec3_t & operator*=( vec3_t<U> const &v) {
+		x *= static_cast<T>(v.x);
+		y *= static_cast<T>(v.y);
+		z *= static_cast<T>(v.z);
 		return *this;
 	}
 
 	template<typename U>
 	vec3_t & operator/=( U const scalar) {
-		this->x /= static_cast<T>(scalar);
-		this->y /= static_cast<T>(scalar);
-		this->z /= static_cast<T>(scalar);
+		x /= static_cast<T>(scalar);
+		y /= static_cast<T>(scalar);
+		z /= static_cast<T>(scalar);
 		return *this;
 	}
 
 	template<typename U>
-	vec3_t & operator/=( vec3_t<U> const& v) {
-		this->x /= static_cast<T>(v.x);
-		this->y /= static_cast<T>(v.y);
-		this->z /= static_cast<T>(v.z);
+	vec3_t & operator/=( vec3_t<U> const &v) {
+		x /= static_cast<T>(v.x);
+		y /= static_cast<T>(v.y);
+		z /= static_cast<T>(v.z);
 		return *this;
 	}
 
 };
 
 template <typename T>
-inline vec3_t<T> operator-( vec3_t<T> const& v ) {
+inline vec3_t<T> operator-( const vec3_t<T> &v ) {
 	return vec3_t<T>{ -v.x, -v.y, -v.z };
 }
 
 // Binary ops
 template<typename T>
-inline vec3_t<T> operator+( vec3_t<T> const& v, T const scalar) {
+inline vec3_t<T> operator+( const vec3_t<T> &v, const T scalar) {
 	return vec3_t<T>{ v.x + scalar, v.y + scalar, v.z + scalar };
 }
 
 template<typename T>
-inline vec3_t<T> operator+( T const scalar, vec3_t<T> const& v) {
+inline vec3_t<T> operator+( const T scalar, const vec3_t<T> &v) {
 	return vec3_t<T>{ scalar + v.x, scalar + v.y, scalar + v.z };
 }
 
 template<typename T>
-inline vec3_t<T> operator+( vec3_t<T> const& v1, vec3_t<T> const& v2) {
+inline vec3_t<T> operator+( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 	return vec3_t<T>( v1.x + v2.x, v1.y + v2.y, v1.z + v2.z );
 }
 
 template<typename T>
-inline vec3_t<T> operator-( vec3_t<T> const& v, T const scalar) {
+inline vec3_t<T> operator-( const vec3_t<T> &v, const T scalar) {
 	return vec3_t<T>( v.x - scalar, v.y - scalar, v.z - scalar );
 }
 
 template<typename T>
-inline vec3_t<T> operator-( T const scalar, vec3_t<T> const& v) {
+inline vec3_t<T> operator-( const T scalar, const vec3_t<T> &v) {
 	return vec3_t<T>( scalar - v.x, scalar - v.y, v.z - scalar );
 }
 
 template<typename T>
-inline vec3_t<T> operator-( vec3_t<T> const& v1, vec3_t<T> const& v2) {
+inline vec3_t<T> operator-( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 	return vec3_t<T>( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z );
 }
 
 template<typename T>
-inline vec3_t<T> operator*( vec3_t<T> const& v, T const scalar) {
+inline vec3_t<T> operator*( const vec3_t<T> &v, const T scalar) {
 	return vec3_t<T>( v.x * scalar, v.y * scalar, v.z * scalar );
 }
 
 template<typename T>
-inline vec3_t<T> operator*( T const scalar, vec3_t<T> const& v) {
+inline vec3_t<T> operator*( const T scalar, const vec3_t<T> &v) {
 	return vec3_t<T>( scalar * v.x, scalar * v.y, scalar * v.z);
 }
 
 template<typename T>
-inline vec3_t<T> operator*( vec3_t<T> const& v1, vec3_t<T> const& v2) {
+inline vec3_t<T> operator*( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 	return vec3_t<T>( v1.x * v2.x, v1.y * v2.y, v1.z * v2.z );
 }
 
 template<typename T>
-inline vec3_t<T> operator/( vec3_t<T> const& v, T const scalar) {
+inline vec3_t<T> operator/( const vec3_t<T> &v, const T scalar) {
 	return vec3_t<T>( v.x / scalar, v.y / scalar, v.z / scalar);
 }
 
 template<typename T>
-inline vec3_t<T> operator/( T const scalar, vec3_t<T> const& v) {
+inline vec3_t<T> operator/( const T scalar, const vec3_t<T> &v) {
 	return vec3_t<T>( scalar / v.x, scalar / v.y, scalar / v.z );
 }
 
 template<typename T>
-inline vec3_t<T> operator/( vec3_t<T> const& v1, vec3_t<T> const& v2) {
+inline vec3_t<T> operator/( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 	return vec3_t<T>( v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
 }
 
 // Boolean ops
 template<typename T>
-inline bool operator==( vec3_t<T> const& v1, vec3_t<T> const& v2) {
+inline bool operator==( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 	return compareFloat( v1.x, v2.x ) && compareFloat( v1.y, v2.y ) && compareFloat( v1.z, v2.z );
 }
 
 template<typename T>
-inline bool operator!=( vec3_t<T> const& v1, vec3_t<T> const& v2) {
+inline bool operator!=( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 	return !(v1 == v2);
 }
 
 // Geometry
 template <typename T>
-static inline T dot( vec3_t<T> const& l, vec3_t<T> const& r ) {
+static inline T dot( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	if( !std::numeric_limits<T>::is_iec559 )
 		std::cerr << "'dot' only accepts floating-point input.\n";
 	return l.x * r.x + l.y * r.y + l.z * r.z;
 }
 
 template <typename T>
-static inline vec3_t<T> cross( vec3_t<T> const& l, vec3_t<T> const& r ) {
+static inline vec3_t<T> cross( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return vec3_t<T> { l.y * r.z - l.z * r.y,
 					 l.z * r.x - l.x * r.z,
 					 l.x * r.y - l.y * r.x };
 }
 
 template <typename T>
-static inline T magnitude( vec3_t<T> const& l ) {
+static inline T magnitude( const vec3_t<T> &l ) {
 	return std::sqrt( dot( l, l ) );
 }
 
 template <typename T>
-static inline T magnitudeSq( vec3_t<T> const& l ) {
+static inline T magnitudeSq( const vec3_t<T> &l ) {
 	return dot( l, l );
 }
 
 template <typename T>
-static inline T distance( vec3_t<T> const& l, vec3_t<T> const& r ) {
+static inline T distance( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return magnitude( l - r );
 }
 
 template <typename T>
-static inline T distanceSq( vec3_t<T> const& l, vec3_t<T> const& r ) {
+static inline T distanceSq( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return magnitudeSq( l - r );
 }
 
 template <typename T>
-static inline vec3_t<T> normalize( vec3_t<T> const& v ) {
+static inline vec3_t<T> normalize( const vec3_t<T> &v ) {
 	if( !std::numeric_limits<T>::is_iec559 )
 		std::cerr << "'normalize' only accepts floating-point input.\n";
 	return vec3_t<T>{ v / magnitude( v ) };
 }
 
 template <typename T>
-static inline T angle( vec3_t<T> const& l, vec3_t<T> const& r ) {
+static inline T angle( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return std::acos( dot( l, r ) / std::sqrt( magnitudeSq(l) * magnitudeSq(r) ) );
 }
 
 template <typename T>
-static inline vec3_t<T> project( vec3_t<T> const& length, vec3_t<T> const& direction ) {
+static inline vec3_t<T> project( const vec3_t<T> &length, const vec3_t<T> &direction ) {
 	return direction * ( dot( length, direction ) / magnitudeSq(direction) );
 }
 
 template <typename T>
-static inline vec3_t<T> perpendicular( const vec3_t<T>& length, vec3_t<T> const& direction ) {
+static inline vec3_t<T> perpendicular( const vec3_t<T> &length, const vec3_t<T> &direction ) {
 	return length - project( length, direction );
 }
 
 template <typename T>
-static inline vec3_t<T> reflection( vec3_t<T> const& sourceVector, vec3_t<T> const& normal ) {
+static inline vec3_t<T> reflection( const vec3_t<T> &sourceVector, const vec3_t<T> &normal ) {
 	return sourceVector - normal * ( dot( sourceVector, normal ) * 2.0f );
 }
 
 template <typename T>
-std::ostream &operator<<( std::ostream &o, vec3_t<T> const& v ) {
+std::ostream &operator<<( std::ostream &o, const vec3_t<T> &v ) {
 	o << '(' << v.x << '/' << v.y << '/' << v.z << ')';
 	return o;
 }

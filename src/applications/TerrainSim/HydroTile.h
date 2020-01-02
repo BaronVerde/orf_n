@@ -2,6 +2,8 @@
 #pragma once
 
 #include "GridMesh.h"
+#include "TerrainGen.h"
+#include "TerrainErosion.h"
 #include "renderer/Program.h"
 #include "scene/Renderable.h"
 #include "renderer/Texture2D.h"
@@ -29,14 +31,19 @@ private:
 
 	uint32_t m_extent{256};
 
+	omath::mat4 m_modelMatrix{ 1.0f };
+
 	// Liftrate per time interval
 	// Values between 0.0 (no lift rate) and 1.0(m_maxLiftrate)
-	const std::vector<float> m_profileEW{ 0.2f, 0.4f, 0.6f, 0.4f, 0.6f, 0.8f, 0.6f, 0.4f };
-
-	const std::vector<float> m_profileNS{ 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.0f, 1.0f };
+	//const std::vector<float> m_profileEW{ 0.2f, 0.4f, 0.6f, 0.4f, 0.6f, 0.8f, 0.6f, 0.4f };
+	//const std::vector<float> m_profileNS{ 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.0f, 1.0f };
+	const std::vector<float> m_profileNS{ 0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.2f, 0.1f, 0.0f };
+	const std::vector<float> m_profileEW{ 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f };
 
 	// Multiplier for the liftrate. Will be applied to every position in the liftrate texture
-	float m_maxLiftrate{1};
+	float m_liftrate{0.1f};
+	// To simulate the passing of time
+	float m_timeStep{1.0f};
 
 	// 8 bit grayscale png has sufficient resolution for this one, built from lerping EW and NS profile.
 	// Values range between 0 and 100 and must be mapped to [0..m_maxLiftrate] during displacement.

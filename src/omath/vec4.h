@@ -30,19 +30,19 @@ struct vec4_t {
 
 	vec4_t &operator=( vec4_t<T> &&rhs ) = default;
 
-	explicit vec4_t( T const &scalar ) :
+	explicit vec4_t( const T &scalar ) :
 			x{scalar}, y{scalar}, z{scalar}, w{scalar} {}
 
-	explicit vec4_t( T const &s1, T const &s2, T const &s3, T const &s4 ) :
+	explicit vec4_t( const T &s1, const T &s2, const T &s3, const T &s4 ) :
 			x{s1}, y{s2}, z{s3}, w{s4} {}
 
-	vec4_t( const vec3_t<T> &v, T const &s4 ) :
+	vec4_t( const vec3_t<T> &v, const T &s4 ) :
 			x{v.x}, y{v.y}, z{v.z}, w{s4} {}
 
 	vec4_t( const vec3_t<T> &v ) :
 			x{v.x}, y{v.y}, z{v.z}, w{1} {}
 
-	vec4_t( T const &s1, const vec3_t<T> &v ) :
+	vec4_t( const T &s1, const vec3_t<T> &v ) :
 			x{s1}, y{v.x}, z{v.z}, w{v.z} {}
 
 	template<typename U>
@@ -65,7 +65,7 @@ struct vec4_t {
 		}
 	}
 
-	T const& operator[]( const int i ) const {
+	const T& operator[]( const int i ) const {
 		switch(i) {
 			default:
 			case 0:
@@ -127,71 +127,71 @@ struct vec4_t {
 };
 
 template <typename T>
-inline vec4_t<T> operator-( vec4_t<T> const& v ) {
+inline vec4_t<T> operator-( const vec4_t<T> &v ) {
 	return vec4_t<T>{ -v.x, -v.y, -v.z, -v.w };
 }
 
 template <typename T>
-inline vec4_t<T> operator-( vec4_t<T> const& v1, vec4_t<T> const& v2  ) {
+inline vec4_t<T> operator-( const vec4_t<T> &v1, const vec4_t<T> &v2  ) {
 	return vec4_t<T>( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w );
 }
 
 template <typename T>
-inline vec4_t<T> operator+( vec4_t<T> const& v1, vec4_t<T> const& v2  ) {
+inline vec4_t<T> operator+( const vec4_t<T> &v1, const vec4_t<T> &v2  ) {
 	return vec4_t<T>( v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w );
 }
 
 template<typename T>
-inline vec4_t<T> operator*( vec4_t<T> const& v, T const scalar ) {
+inline vec4_t<T> operator*( const vec4_t<T> &v, const T scalar ) {
 	return vec4_t<T>( v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar );
 }
 
 template<typename T>
-inline vec4_t<T> operator*( T const scalar, vec4_t<T> const& v ) {
+inline vec4_t<T> operator*( const T scalar, const vec4_t<T> &v ) {
 	return vec4_t<T>( scalar * v.x, scalar * v.y, scalar * v.z, scalar * v.w );
 }
 
 template<typename T>
-inline vec4_t<T> operator*( vec4_t<T> const& v1, vec4_t<T> const& v2 ) {
+inline vec4_t<T> operator*( const vec4_t<T> &v1, const vec4_t<T> &v2 ) {
 	return vec4_t<T>( v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w );
 }
 
 template<typename T>
-inline vec4_t<T> operator/(vec4_t<T> const& v, T const scalar) {
+inline vec4_t<T> operator/(const vec4_t<T> &v, const T scalar) {
 	return vec4_t<T>( v.x / scalar, v.y / scalar, v.z / scalar, v.w / scalar );
 }
 
 template<typename T>
-inline vec4_t<T> operator/( T const scalar, vec4_t<T> const& v) {
+inline vec4_t<T> operator/( const T scalar, const vec4_t<T> &v) {
 	return vec4_t<T>( scalar / v.x, scalar / v.y, scalar / v.z, scalar / v.w );
 }
 
 template<typename T>
-inline vec4_t<T> operator/(vec4_t<T> const& v1, vec4_t<T> const& v2) {
+inline vec4_t<T> operator/(const vec4_t<T> &v1, const vec4_t<T> &v2) {
 	return vec4_t<T>( v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w );
 }
 
 // Boolean ops
 template<typename T>
-inline bool operator==(vec4_t<T> const& v1, vec4_t<T> const& v2) {
+inline bool operator==(const vec4_t<T> &v1, const vec4_t<T> &v2) {
 	return compareFloat( v1.x, v2.x ) && compareFloat( v1.y, v2.y ) &&
 			compareFloat( v1.z, v2.z ) && compareFloat( v1.w, v2.w );
 }
 
 template<typename T>
-inline bool operator!=(vec4_t<T> const& v1, vec4_t<T> const& v2) {
+inline bool operator!=(const vec4_t<T> &v1, const vec4_t<T> &v2) {
 	return !(v1 == v2);
 }
 
 template <typename T>
-static inline T dot( vec4_t<T> const& l, vec4_t<T> const& r ) {
+static inline T dot( const vec4_t<T> &l, const vec4_t<T> &r ) {
 	if( !std::numeric_limits<T>::is_iec559 )
 		std::cerr << "'dot' only accepts floating-point input.\n";
 	return l.x * r.x + l.y * r.y + l.z * r.z + l.w * r.w;
 }
 
 template <typename T>
-std::ostream &operator<<( std::ostream &o, vec4_t<T> const& v ) {
+std::ostream &operator<<( std::ostream &o, const vec4_t<T> &v ) {
 	o << '(' << v.x << '/' << v.y << '/' << v.z << '/' << v.w << ')';
 	return o;
 }
