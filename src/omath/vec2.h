@@ -269,6 +269,11 @@ std::ostream &operator<<( std::ostream &o, const vec2_t<T> &v ) {
 	return o;
 }
 
+template<typename T>
+static inline const vec2_t<T> abs( const vec2_t<T> &v ) {
+	return vec2_t<T>{ std::abs( v.x ), std::abs( v.y ) };
+}
+
 typedef vec2_t<float> vec2;
 typedef vec2_t<double> dvec2;
 typedef vec2_t<int> ivec2;

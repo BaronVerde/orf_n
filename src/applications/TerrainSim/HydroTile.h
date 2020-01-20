@@ -2,8 +2,8 @@
 #pragma once
 
 #include "GridMesh.h"
-#include "TerrainGen.h"
-#include "TerrainErosion.h"
+//#include "TerrainGen.h"
+//#include "TerrainErosion.h"
 #include "renderer/Program.h"
 #include "scene/Renderable.h"
 #include "renderer/Texture2D.h"
