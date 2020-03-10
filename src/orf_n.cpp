@@ -3,7 +3,6 @@
 #include "base/Globals.h"
 #include "base/Logbook.h"
 #include <iostream>
-#include <curl/curl.h>
 #include "renderer/Renderer.h"
 #include <memory>	// unique_ptr
 #include <cstring>	// strcmp()
@@ -20,12 +19,9 @@ int main( int argc, char *argv[] ) {
 	Logbook::getInstance().setLogFilename( "orfnlog.log" );
 	Logbook::getInstance().logMsg( "Program started." );
 
-	if( 0 != curl_global_init( /*CURL_GLOBAL_WIN32 | CURL_GLOBAL_ACK_EINTR |*/ CURL_GLOBAL_SSL ) )
-		std::cerr << "Error initializing curl." << std::endl;
-
 	bool debug{ true };
 	if( argc > 1 ) {
-		if( 0 == std::strcmp( argv[1], "-d" ) || 0 == std::strcmp( argv[1], "--debug" ) )
+		if( 0 == strcmp( argv[1], "-d" ) || 0 == strcmp( argv[1], "--debug" ) )
 			debug = true;
 		else
 			std::cout << "Unknown parameter: " << argv[1] << "\n";
@@ -41,8 +37,6 @@ int main( int argc, char *argv[] ) {
 	} catch( std::runtime_error &e ) {
 		std::cerr << e.what() << std::endl;
 	}
-
-	curl_global_cleanup();
 
 	Logbook::getInstance().logMsg( "Program ending normally." );
 	return EXIT_SUCCESS;

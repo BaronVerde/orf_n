@@ -27,12 +27,12 @@ Framebuffer::~Framebuffer() {
 			"Framebuffer object " + std::to_string( m_framebuffer ) + " destroyed.");
 }
 
-void Framebuffer::addColorAttachment( const GLenum colorFormat ) {
+void Framebuffer::addColorAttachment( const GLenum colorFormat, GLenum attachmentPoint ) {
 	glCreateRenderbuffers( 1, &m_colorAttachment );
 	if( GL_TRUE != glIsRenderbuffer( m_colorAttachment ) )
 		std::cerr << "Error creating color renderbuffer.\n";
 	glNamedRenderbufferStorage( m_colorAttachment, colorFormat, m_sizeX, m_sizeY );
-	glNamedFramebufferRenderbuffer( m_framebuffer, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_colorAttachment );
+	glNamedFramebufferRenderbuffer( m_framebuffer, attachmentPoint, GL_RENDERBUFFER, m_colorAttachment );
 }
 
 void Framebuffer::addDepthAttachment( const GLenum depthFormat ) {
@@ -41,12 +41,12 @@ void Framebuffer::addDepthAttachment( const GLenum depthFormat ) {
 		std::cerr << "Error creating depth renderbuffer.\n";
 	glNamedRenderbufferStorage( m_depthAttachment, depthFormat, m_sizeX, m_sizeY );
 	glNamedFramebufferRenderbuffer( m_framebuffer, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthAttachment );
-	/*glTextureParameteri( m_depthAttachment, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	glTextureParameteri( m_depthAttachment, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-	glTextureParameteri( m_depthAttachment, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );*/
+	glTextureParameteri( m_depthAttachment, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 }
 
 bool Framebuffer::isComplete() const {

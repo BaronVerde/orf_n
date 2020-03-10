@@ -21,7 +21,7 @@ public:
 
 	void bind( const GLenum target ) const;
 
-	void addColorAttachment( const GLenum colorFormat = GL_SRGB );
+	void addColorAttachment( const GLenum colorFormat = GL_SRGB, GLenum attachmentPoint = GL_COLOR_ATTACHMENT0 );
 
 	void addDepthAttachment( const GLenum depthFormat = GL_DEPTH_COMPONENT32F );
 

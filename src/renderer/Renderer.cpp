@@ -2,9 +2,10 @@
 #include "applications/Camera/Camera.h"
 //#include "applications/CubeToEllipsoid/CubeToEllipsoid.h"
 //#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
-//#include "applications/SkyBox/SkyBox.h"
-//#include "applications/TerrainLOD/TerrainLOD.h"
-#include "applications/TerrainSim/HydroTile.h"
+#include "applications/SkyBox/SkyBox.h"
+#include "applications/TerrainLOD/TerrainLOD.h"
+//#include "applications/TerrainSim/HydroTile.h"
+//#include "applications/TerrainErosion/HydroErosionMDH07.h"
 #include "base/Globals.h"	// deltaTime
 #include "base/Logbook.h"
 #include "renderer/Renderer.h"
@@ -33,7 +34,7 @@ void Renderer::setupRenderer() {
 	m_overlay = new UIOverlay( m_window );
 
 	m_framebuffer = new orf_n::Framebuffer( m_window->getWidth(), m_window->getHeight() );
-	m_framebuffer->addColorAttachment( GL_SRGB );
+	m_framebuffer->addColorAttachment( GL_SRGB, GL_COLOR_ATTACHMENT0 );
 	m_framebuffer->addDepthAttachment( GL_DEPTH_COMPONENT32F );
 	if( !m_framebuffer->isComplete() ) {
 		std::string s{ "Error creating framebuffer." };
@@ -46,11 +47,11 @@ void Renderer::setupRenderer() {
 	m_scene = new Scene( m_window, m_camera, m_overlay );
 	//m_scene->addRenderable( 1, std::make_shared<CubeToEllipsoid>( 2, omath::dvec3{1.0} ) );
 	//m_scene->addRenderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
-	//m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
+	m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
 	//m_scene->addRenderable( 1, std::make_shared<Positions>() );
-	m_scene->addRenderable( 1, std::make_shared<HydroTile>() );
+	//m_scene->addRenderable( 1, std::make_shared<HydroErosionMDH07>() );
 	//m_scene->addRenderable( 1, std::make_shared<PhysicsDemo>() );
-	//m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
+	m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
 
 }
 
