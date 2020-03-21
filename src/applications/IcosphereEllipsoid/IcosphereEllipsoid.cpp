@@ -1,7 +1,7 @@
 
+#include <base/logbook.h>
 #include "IcosphereEllipsoid.h"
 #include "glad/glad.h"
-#include "base/Logbook.h"
 #include "base/Globals.h"
 #include "omath/mat4.h"
 #include "renderer/Color.h"
@@ -22,7 +22,7 @@ IcosphereEllipsoid::IcosphereEllipsoid(	const omath::vec3 &axes,
 				m_numSubDivs{ numSubDivs } {}
 
 IcosphereEllipsoid::~IcosphereEllipsoid() {
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO,
+	logbook::log_msg( logbook::RENDERER, logbook::INFO,
 			"IcosphereEllipsoid cleaned up and deleted." );
 }
 
@@ -83,7 +83,7 @@ void IcosphereEllipsoid::setup() {
 	m_tileBorderIndices = new orf_n::IndexBuffer{ indices };
 	glPrimitiveRestartIndex( 999 );
 
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, "IcosphereEllipsoid created and set up." );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, "IcosphereEllipsoid created and set up." );
 }
 
 void IcosphereEllipsoid::render() {
@@ -178,11 +178,11 @@ void IcosphereEllipsoid::readBB( const std::string &filename ) {
 		bbfile >> lon >> lat >> m_cellsize;
 		m_geodeticCoords.push_back( orf_n::Geodetic{ omath::radians(lon), omath::radians(lat) } );
 		if( !(m_cellsize >= 0.0) )
-			orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR,
+			orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR,
 					"Terrain tile bounding boxes file: invalid cell size" );
 		bbfile.close();
 	} else
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR,
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR,
 				"Terrain tile bounding boxes file '" + filename + "' could not be opened" );
 }
 

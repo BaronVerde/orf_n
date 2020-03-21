@@ -1,5 +1,5 @@
 
-#include <base/Logbook.h>
+#include <base/logbook.h>
 #include <geometry/EllipsoidCM.h>
 
 namespace orf_n {
@@ -9,7 +9,7 @@ EllipsoidCM::EllipsoidCM( const omath::dvec2 axes, const unsigned int numberOfTi
 	// @todo: between 2 and 512 ?
 	if( !omath::isPowerOf2( m_numSubdivsPerFace ) ) {
 		std::string s{ "CubeToEllipsoid: number of tiles per face must be power of two" };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s );
 		throw std::runtime_error( "CubeToEllipsoid: number of tiles per face must be power of two." );
 	}
 	simpleCubeToEllipsoid();

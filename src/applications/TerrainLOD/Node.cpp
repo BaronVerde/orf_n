@@ -1,9 +1,9 @@
 
+#include <base/logbook.h>
 #include "HeightMap.h"
 #include "LODSelection.h"
 #include "Node.h"
 #include "TerrainTile.h"
-#include "base/Logbook.h"
 #include "geometry/AABB.h"
 #include "geometry/ViewFrustum.h"
 #include <sstream>
@@ -39,7 +39,7 @@ void Node::create( const int x, const int z, const int size, const int level,
 	if( size == LEAF_NODE_SIZE ) {
 		if( level != NUMBER_OF_LOD_LEVELS -1 ) {
 			std::string s{ "Lowest lod level unequals number lod levels during quad tree node creation." };
-			orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR, s );
+			orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s );
 			throw std::runtime_error( s );
 		}
 		// Mark leaf node!
@@ -140,7 +140,7 @@ orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompl
 
 	if( lodSelection->m_selectionCount >= MAX_NUMBER_SELECTED_NODES ) {
 		std::string s{ "LOD selected more nodes than the maximum selection count. Some nodes will not be drawn." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::WARNING, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 		return orf_n::OUTSIDE;
 	}
 	// Add node to selection

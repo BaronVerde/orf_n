@@ -2,7 +2,7 @@
 #include <applications/TerrainLOD/LODSelection.h>
 #include <applications/TerrainLOD/Node.h>
 #include <applications/TerrainLOD/QuadTree.h>
-#include <base/Logbook.h>
+#include <base/logbook.h>
 #include <omath/common.h>	// lerp()
 #include <sstream>
 #include <iostream>
@@ -43,7 +43,7 @@ void LODSelection::calculateRanges() {
 		s << i << '/' << m_visibilityRanges[NUMBER_OF_LOD_LEVELS - i - 1] << '/' << m_morphStart[i] << '/' << m_morphEnd[i] << "; ";
 	}
 	// Debug output:
-	//orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
+	//orf_n::Logbook::log_msg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
 }
 
 void LODSelection::reset() {

@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "TextureRectangle.h"
 #include <cmath>	// floor()
 #include "stb/stb_image.h"
@@ -16,12 +16,12 @@ TextureRectangle::TextureRectangle( const std::string &filename,
 	data = stbi_load( filename.c_str(), &w, &h, &m_numChannels, 0 );
 	if( data == nullptr ) {
 		std::string s{ "Rectangle texture " + filename + " could not be loaded." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	if( w != h ) {
 		std::string s{ "Texture " + filename + " is not a rectangle. Failed to load." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		if( nullptr != data )
 			stbi_image_free( data );
 		throw std::runtime_error( s );
@@ -44,7 +44,7 @@ TextureRectangle::TextureRectangle( const std::string &filename,
 			format = GL_RGBA;
 			break;
 		default:
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING,
+			logbook::log_msg( logbook::RENDERER, logbook::WARNING,
 					"2D texture " + filename + " unsupported nr of channels for chosen format: " +
 					std::to_string( m_numChannels ) );
 	}
@@ -60,7 +60,7 @@ TextureRectangle::TextureRectangle( const std::string &filename,
 	std::string s{ "Rectangle texture '" + filename + "' loaded, unit " + std::to_string( m_unit ) +
 				   ", size " + std::to_string( m_size ) + ", " +
 				   std::to_string( m_numChannels ) + " channel(s)." };
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 
 	// Set application memory free, ogl has our data after glTextureSubImage2D()
 	if( nullptr != data )
@@ -70,7 +70,7 @@ TextureRectangle::TextureRectangle( const std::string &filename,
 
 TextureRectangle::~TextureRectangle() {
 	std::string s{ "Rectangle texture '" + m_filename + "' destroyed." };
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 }
 
 void TextureRectangle::createMipmaps() {

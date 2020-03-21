@@ -8,7 +8,6 @@
 
 #include <omath/mat4.h>
 #include <string>
-#include <memory>
 #include <map>
 
 namespace orf_n {

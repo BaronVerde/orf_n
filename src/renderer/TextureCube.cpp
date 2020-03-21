@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "TextureCube.h"
 #include <sstream>
 #include "stb/stb_image.h"
@@ -15,7 +15,7 @@ TextureCube::TextureCube( const std::vector<std::string> &files ) {
 	stbi_uc *data = stbi_load( files[0].c_str(), &width, &height, &numChannels, 0 );
 	if( NULL == data ) {
 		std::string s{ "Cubemap texture '" + files[0] + "' failed to load." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	} else
 		// Only a test.
@@ -28,7 +28,7 @@ TextureCube::TextureCube( const std::vector<std::string> &files ) {
 		default :
 			std::string s{ "Unsupported cube map texture format. '" + files[0] +
 				"' failed to load. Check number of channels (1/3/4)." };
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+			logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 			throw std::runtime_error( s );
 			break;
 	}
@@ -45,7 +45,7 @@ TextureCube::TextureCube( const std::vector<std::string> &files ) {
 			data = NULL;
 		} else {
 			std::string s{ "Cubemap texture '" + files[face] + "' failed to load." };
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING, s );
+			logbook::log_msg( logbook::RENDERER, logbook::WARNING, s );
 		}
 	}
 	glTextureParameteri( m_textureName, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
@@ -57,7 +57,7 @@ TextureCube::TextureCube( const std::vector<std::string> &files ) {
 	std::ostringstream s;
 	s << "Cubemap '" << files[0] << "' (" << width << '*' << height <<
 		") " << numChannels << " channels and following 5 files loaded.";
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 
 }
 
@@ -68,7 +68,7 @@ void TextureCube::bind() const {
 TextureCube::~TextureCube() {
 	glDeleteTextures( 1, &m_textureName );
 	std::string s{ "Cubemap texture #" + std::to_string( m_textureName ) + " destroyed." };
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 }
 
 }

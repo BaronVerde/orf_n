@@ -1,4 +1,5 @@
 
+#include <base/logbook.h>
 #include "GridMesh.h"
 #include "LODSelection.h"
 #include "Node.h"
@@ -6,7 +7,6 @@
 #include "TerrainLOD.h"
 #include "TerrainTile.h"
 #include "applications/Camera/Camera.h"
-#include "base/Logbook.h"
 #include "base/Globals.h"
 #include "geometry/AABB.h"
 #include "geometry/Ellipsoid.h"
@@ -21,25 +21,25 @@ TerrainLOD::TerrainLOD() : Renderable( "TerrainLOD" ) {
 	if( !omath::isPowerOf2( terrain::LEAF_NODE_SIZE ) ||
 			terrain::LEAF_NODE_SIZE < 2 || terrain::LEAF_NODE_SIZE > 1024 ) {
 		std::string s{ "Settings LEAF_NODE_SIZE must be power of 2 and between 2 and 1024." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::WARNING, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
 	if( !omath::isPowerOf2( terrain::RENDER_GRID_RESULUTION_MULT ) || terrain::RENDER_GRID_RESULUTION_MULT < 1 ) {
 		std::string s{ "Settings RENDER_GRID_RESULUTION_MULT must be power of 2 and between 1 and LEAF_NODE_SIZE." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	if( terrain::NUMBER_OF_LOD_LEVELS < 2 || terrain::NUMBER_OF_LOD_LEVELS > 15 ) {
 		std::string s{ "Settings NUMBER_OF_LOD_LEVELS must be between 1 and 15." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::WARNING, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
 	if( terrain::LOD_LEVEL_DISTANCE_RATIO < 1.5f || terrain::LOD_LEVEL_DISTANCE_RATIO > 16.0f ) {
 		std::string s{ "Settings LOD_LEVEL_DISTANCE_RATIO must be between 1.5f and 16.0f." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::WARNING, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
 	if( !omath::isPowerOf2( terrain::GRIDMESH_DIMENSION ) ||
 			terrain::GRIDMESH_DIMENSION < 8 || terrain::GRIDMESH_DIMENSION > 1024 ) {
 		std::string s{ "Gridmesh dimension must be power of 2 and > 8 and < 1024." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::WARNING, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
 
 	// Prepare gridmesh for drawing and load terrain tiles

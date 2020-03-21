@@ -14,7 +14,7 @@ ResourceDescriptor::~ResourceDescriptor() {}
 
 bool ResourceDescriptor::hasChanged() const {
 	bool has{ m_descriptor.lastLoaded < getLastModified( m_descriptor.descriptorFile ) };
-	Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::INFO, "Resource '" + m_descriptor.name + "' has " +
+	logbook::log_msg( logbook::RESOURCE, logbook::INFO, "Resource '" + m_descriptor.name + "' has " +
 									 ( has ? "changed." : "not changed." ) );
 	return has;
 	// return m_lastLoaded < getLastModified( m_filepath ) };
@@ -44,7 +44,7 @@ int ResourceDescriptor::getAttributeIntValue( std::string &attributeName ) const
 	auto pos{ lookupAttribute( attributeName ) };
 	if( pos->second.dataType != INT ) {
 		std::string s{ "Attribute '" + attributeName + "' in descriptor '" + m_descriptor.name + "' is not an INT." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return pos->second.intValue;
@@ -54,7 +54,7 @@ unsigned int ResourceDescriptor::getAttributeUIntValue( std::string &attributeNa
 	auto pos{ lookupAttribute( attributeName ) };
 	if( pos->second.dataType != UINT ) {
 		std::string s{ "Attribute '" + attributeName + "' in descriptor '" + m_descriptor.name + "' is not an UINT." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return pos->second.uintValue;
@@ -64,7 +64,7 @@ float ResourceDescriptor::getAttributeFloatValue( std::string &attributeName ) c
 	auto pos{ lookupAttribute( attributeName ) };
 	if( pos->second.dataType != FLOAT ) {
 		std::string s{ "Attribute '" + attributeName + "' in descriptor '" + m_descriptor.name + "' is not a FLOAT." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return pos->second.floatValue;
@@ -74,7 +74,7 @@ double ResourceDescriptor::getAttributeDoubleValue( std::string &attributeName )
 	auto pos{ lookupAttribute( attributeName ) };
 	if( pos->second.dataType != DOUBLE ) {
 		std::string s{ "Attribute '" + attributeName + "' in descriptor '" + m_descriptor.name + "' is not a DOUBLE." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return pos->second.doubleValue;
@@ -84,7 +84,7 @@ std::string ResourceDescriptor::getAttributeStringValue( std::string &attributeN
 	auto pos{ lookupAttribute( attributeName ) };
 	if( pos->second.dataType != STRING ) {
 		std::string s{ "Attribute '" + attributeName + "' in descriptor '" + m_descriptor.name + "' is not a STRING." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return pos->second.stringValue;
@@ -96,7 +96,7 @@ ResourceDescriptor::lookupAttribute( std::string &name ) const {
 	// auto pos{ m_descriptor.attributes.find( name ) };
 	if( m_descriptor.attributes.end() == pos ) {
 		std::string s{ "Could not find attribute '" + name + "' in descriptor '" + m_descriptor.name + "'." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return pos;
@@ -114,7 +114,7 @@ void ResourceDescriptor::load() {
 	std::ifstream file{ m_descriptor.descriptorFile, std::ios::binary  };
 	if( file.is_open() ) {
 		std::string s{ "Error opening resource descriptor file '" + m_descriptor.descriptorFile + "'." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	std::string thisLine;
@@ -142,7 +142,7 @@ void ResourceDescriptor::load() {
 				} else {
 					std::string s{ "Error reading descriptor header " +
 						m_descriptor.descriptorFile + ": unknown resource type" };
-					Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+					logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 					throw std::runtime_error( s );
 				}
 			}
@@ -154,7 +154,7 @@ void ResourceDescriptor::load() {
 				std::ifstream datafile{ m_descriptor.dataFile, std::ios::binary };
 				if( !datafile.is_open() ) {
 					std::string s{ "Resource data file '" + m_descriptor.dataFile + "' could not be opened." };
-					Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+					logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 					throw std::runtime_error( s );
 				} else
 					datafile.close();
@@ -184,7 +184,7 @@ void ResourceDescriptor::load() {
 					att.dataType = STRING;
 				else {
 					std::string s{ "Unknown attribute data type in descriptor " + m_descriptor.descriptorFile };
-					Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+					logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 					throw std::runtime_error( s );
 				}
 				// cut off type;
@@ -221,7 +221,7 @@ inline std::time_t ResourceDescriptor::getLastModified( const std::string &filen
 	struct stat attribs;
 	if( 0 != stat( filename.c_str(), &attribs ) ) {
 		std::string s{ "File '" + filename + "''s stats could not be read." };
-		Logbook::getInstance().logMsg( Logbook::RESOURCE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RESOURCE, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 	return attribs.st_mtim.tv_sec;

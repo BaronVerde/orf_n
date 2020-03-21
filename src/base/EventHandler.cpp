@@ -1,6 +1,6 @@
 
+#include <base/logbook.h>
 #include "EventHandler.h"
-#include "Logbook.h"
 #include "GlfwWindow.h"
 #include <iostream>
 
@@ -23,7 +23,7 @@ void EventHandler::registerObject( RegisteredObject &obj ) {
 	bool found = false;
 	for( RegisteredObject &r : s_registeredObjects ) {
 		if( r.object == obj.object ) {
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING,
+			logbook::log_msg( logbook::RENDERER, logbook::WARNING,
 							 "Ignoring try to register an already registered object with the event handler." );
 			found = true;
 		}
@@ -42,7 +42,7 @@ void EventHandler::deRegisterObject( EventHandler *eh ) {
 		}
 	}
 	if( !found )
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING,
+		logbook::log_msg( logbook::RENDERER, logbook::WARNING,
 				"Ignoring try to de-register an unregistered object with the event handler." );
 }
 

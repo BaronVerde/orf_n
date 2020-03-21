@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "Texture2D.h"
 #include <sstream>
 #include <algorithm>	// max()
@@ -16,7 +16,7 @@ Texture2D::Texture2D( const std::string &filename, const GLuint unit, bool gener
 	data = stbi_load( filename.c_str(), &m_width, &m_height, &m_numChannels, 0 );
 	if( data == nullptr ) {
 		std::string s{ "2D texture " + filename + " could not be loaded." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 
@@ -36,7 +36,7 @@ Texture2D::Texture2D( const std::string &filename, const GLuint unit, bool gener
 			format = GL_RGBA;
 			break;
 		default:
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING,
+			logbook::log_msg( logbook::RENDERER, logbook::WARNING,
 					"2D texture " + filename + " unsupported nr of channels for chosen format: " +
 					std::to_string( m_numChannels ) );
 	}
@@ -58,7 +58,7 @@ Texture2D::Texture2D( const std::string &filename, const GLuint unit, bool gener
 	std::string s{ "2D texture '" + filename + "' loaded, unit " + std::to_string( m_unit ) +
 				   ", " + std::to_string( m_width ) + '*' + std::to_string( m_height ) + ", " +
 				   std::to_string( m_numChannels ) + " channel(s)." };
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 
 	if( generateMipmaps )
 		createMipmaps();
@@ -90,7 +90,7 @@ Texture2D::~Texture2D() {
 	std::string t{ m_filename == "" ? "data texture" : m_filename };
 	std::string s{ "2D texture '" + t + "'; texture name #" +
 		std::to_string( m_textureName ) + " destroyed." };
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 }
 
 void Texture2D::createMipmaps() {
@@ -114,7 +114,7 @@ void Texture2D::printLODInfo() const {
 	std::ostringstream s;
 	s << "Texture " << m_textureName << ": min LOD: " << minLOD <<
 			", max LOD: " << maxLOD << ", base level: " << baseLevel << ", max level: " << maxLevel << ".";
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 }
 
 }	// namespace

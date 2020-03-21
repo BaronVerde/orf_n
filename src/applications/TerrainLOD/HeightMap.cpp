@@ -1,6 +1,6 @@
 
+#include <base/logbook.h>
 #include "HeightMap.h"
-#include "base/Logbook.h"
 #include "renderer/Sampler.h"
 #include <iostream>
 #include <sstream>
@@ -33,11 +33,11 @@ HeightMap::HeightMap( const std::string &filename, const bitDepth_t depth ) :
 	}
 	if( nullptr == heightValues16 && nullptr == heightValues8 ) {
 		std::string s{ "Error loading heightmap image file '" + m_filename + "'." };
-		Logbook::getInstance().logMsg( Logbook::TERRAIN, Logbook::ERROR, s );
+		logbook::log_msg( logbook::TERRAIN, logbook::ERROR, s );
 		// @todo throw std::runtime_error( s );
 	}
 	if( numChannels != 1 )
-		Logbook::getInstance().logMsg( Logbook::TERRAIN, Logbook::WARNING,
+		logbook::log_msg( logbook::TERRAIN, logbook::WARNING,
 				"Unknown heightmap format in '" + m_filename + "'. Not a monochrome image ?" );
 
 	m_extent = omath::uvec2( static_cast<unsigned int>(w), static_cast<unsigned int>(h) );
@@ -91,7 +91,7 @@ HeightMap::HeightMap( const std::string &filename, const bitDepth_t depth ) :
 	s << "Heightmap '" << m_filename << "', texture unit " << HEIGHTMAP_TEXTURE_UNIT <<
 			", " << m_extent.x << '*' << m_extent.y << ", " << numChannels <<
 			" channel(s) loaded. Size in memory : " << totalSizeInKB << "kB.";
-	Logbook::getInstance().logMsg( Logbook::TERRAIN, Logbook::INFO, s.str() );
+	logbook::log_msg( logbook::TERRAIN, logbook::INFO, s.str() );
 }
 
 const omath::vec2 &HeightMap::getMinMaxHeight() const {
@@ -132,7 +132,7 @@ HeightMap::~HeightMap() {
 	unbind();
 	glDeleteTextures( 1, &m_texture );
 	delete [] m_heightValuesNormalized;
-	Logbook::getInstance().logMsg( Logbook::TERRAIN, Logbook::INFO,
+	logbook::log_msg( logbook::TERRAIN, logbook::INFO,
 			"Heightmap '" + m_filename + "' destroyed." );
 }
 

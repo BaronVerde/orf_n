@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "Texture1D.h"
 #include "stb/stb_image.h"
 
@@ -12,7 +12,7 @@ Texture1D::Texture1D( const std::string &filename, const GLuint unit ) :
 	data = stbi_load( filename.c_str(), &m_width, &h, &m_numChannels, 0 );
 	if( data == nullptr ) {
 		std::string s{ "1D texture " + filename + " could not be loaded." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 
@@ -32,7 +32,7 @@ Texture1D::Texture1D( const std::string &filename, const GLuint unit ) :
 			format = GL_RGBA;
 			break;
 		default:
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING,
+			logbook::log_msg( logbook::RENDERER, logbook::WARNING,
 					"1D texture " + filename + " unsupported nr of channels for chosen format: " +
 					std::to_string( m_numChannels ) );
 	}
@@ -49,14 +49,14 @@ Texture1D::Texture1D( const std::string &filename, const GLuint unit ) :
 
 	std::string s{ "1D texture '" + m_filename + "'; texture name #" +
 		std::to_string( m_textureName ) + "loaded." };
-	Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::INFO, s );
+	logbook::log_msg( logbook::SHADER, logbook::INFO, s );
 
 }
 
 Texture1D::~Texture1D() {
 	std::string s{ "1D texture '" + m_filename + "'; texture name #" +
 		std::to_string( m_textureName ) + "destroyed." };
-	Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::INFO, s );
+	logbook::log_msg( logbook::SHADER, logbook::INFO, s );
 }
 
 } /* namespace orf_n */

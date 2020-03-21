@@ -1,7 +1,7 @@
 
 #include <applications/Camera/Camera.h>
 #include <applications/CubeToEllipsoid/CubeToEllipsoid.h>
-#include <base/Logbook.h>
+#include <base/logbook.h>
 #include <geometry/EllipsoidCM.h>
 #include <renderer/Uniform.h>
 #include <scene/Scene.h>

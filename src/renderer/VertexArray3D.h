@@ -10,7 +10,7 @@
  * @todo: 16bit unsigned int for heightmaps.Delete copy and move
  */
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "omath/vec3.h"
 #include "Buffer.h"
 #include <vector>
@@ -79,9 +79,9 @@ public:
 				std::ostringstream s;
 				s << "VertexArray3D '" << m_vaoName << "' created: received " <<
 						vertexData.size() << " dvec3 converted to vec3 high/low interleaved values.";
-				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+				logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 			} else
-				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR,
+				logbook::log_msg( logbook::RENDERER, logbook::ERROR,
 						"Unexpected data type for VertexArray3D. Vertex array not created." );
 		} else {
 			if( typeid( T ) == typeid( omath::dvec3 ) ) {
@@ -101,7 +101,7 @@ public:
 				glVertexArrayAttribFormat( m_vaoName, 0, 3, GL_FLOAT, GL_FALSE, 0 );
 				std::ostringstream s;
 				s << "VertexArray3D '" << m_vaoName << "' created: " << vertexData.size() << " dvec3 values converted to vec3.";
-				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+				logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 			} else if( typeid( T ) == typeid( omath::vec3 ) ) {
 				// single component, only 'high' location is set
 				m_buffer = std::make_unique<Buffer>(
@@ -116,7 +116,7 @@ public:
 				glVertexArrayAttribFormat( m_vaoName, 0, 3, GL_FLOAT, GL_FALSE, 0 );
 				std::ostringstream s;
 				s << "VertexArray3D '" << m_vaoName << "' created: " << vertexData.size() << " vec3 values.";
-				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+				logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 			} else if( typeid( T ) == typeid( float ) ) {// single component, only 'high' location is set
 				m_buffer = std::make_unique<Buffer>(
 						GL_ARRAY_BUFFER, vertexData.size() * sizeof( float ),
@@ -130,9 +130,9 @@ public:
 				glVertexArrayAttribFormat( m_vaoName, 0, 1, GL_FLOAT, GL_FALSE, 0 );
 				std::ostringstream s;
 				s << "VertexArray3D '" << m_vaoName << "' created: " << vertexData.size() << " float values.";
-				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+				logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 			} else {
-				Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR,
+				logbook::log_msg( logbook::RENDERER, logbook::ERROR,
 						"Unexpected data type for VertexArray3D. Vertex array not created." );
 			}
 			glVertexArrayAttribBinding( m_vaoName, HIGH_ATTRIB_LOCATION, m_bindingIndex );
@@ -147,7 +147,7 @@ public:
 	virtual ~VertexArray3D() {
 		disable();
 		glDeleteVertexArrays( 1, &m_vaoName );
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO,
+		logbook::log_msg( logbook::RENDERER, logbook::INFO,
 				"VertexArray3D " + std::to_string( m_vaoName ) + " destroyed." );
 	}
 

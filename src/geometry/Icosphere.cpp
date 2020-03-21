@@ -1,5 +1,5 @@
 
-#include <base/Logbook.h>
+#include <base/logbook.h>
 #include <geometry/Icosphere.h>
 
 namespace orf_n {
@@ -59,7 +59,7 @@ Icosphere::Icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs ) :
 		m_indices = tmpIndices;
 	}
 
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, "Icosphere created." );
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, "Icosphere created." );
 
 	// scale to ellipsoid radii
 	for( omath::dvec3 &v : m_positions )
@@ -68,7 +68,7 @@ Icosphere::Icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs ) :
 }
 
 Icosphere::~Icosphere() {
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, "Icosphere deleted." );
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, "Icosphere deleted." );
 }
 
 // add vertex to mesh, fix position to be on unit sphere, return index

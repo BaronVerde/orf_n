@@ -1,6 +1,6 @@
 
+#include <base/logbook.h>
 #include "GridMesh.h"
-#include "base/Logbook.h"
 #include "renderer/VertexArray3D.h"
 #include <vector>
 
@@ -74,7 +74,7 @@ GridMesh::GridMesh( const int dimension ) : m_dimension{ dimension } {
 	m_endIndexBottomRight = index;
 	m_indexBuffer = new orf_n::IndexBuffer( indices );
 
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO,
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO,
 			"Gridmesh dimension " + std::to_string( m_dimension ) + " created." );
 }
 
@@ -91,7 +91,7 @@ void GridMesh::unbind() const {
 GridMesh::~GridMesh() {
 	delete m_indexBuffer;
 	delete m_vertexArray;
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO,
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO,
 			"Gridmesh dimension " + std::to_string( m_dimension ) + " destroyed." );
 }
 

@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "Texture.h"
 
 namespace orf_n {
@@ -7,7 +7,7 @@ namespace orf_n {
 Texture::Texture( const GLenum target, const GLuint unit ) :
 		m_target{ target }, m_unit{ unit } {
 	if( unit == 20 )
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING,
+		logbook::log_msg( logbook::RENDERER, logbook::WARNING,
 				"Warning: texture unit 20 given for texture, but is used by UIOverlay !" );
 	glCreateTextures( m_target, 1, &m_textureName );
 }

@@ -1,13 +1,13 @@
 
+#include <base/logbook.h>
 #include "base/Globals.h"
-#include "base/Logbook.h"
 #include "Scene.h"
 
 namespace orf_n {
 
 Scene::Scene( GlfwWindow *win, Camera *cam, UIOverlay *ovl ) :
 	Renderable{ "Scene" }, m_window{ win }, m_camera{ cam }, m_overlay{ ovl } {
-	Logbook::getInstance().logMsg( Logbook::SCENE, Logbook::INFO, "Scene '" + getName() + "' created" );
+	logbook::log_msg( logbook::SCENE, logbook::INFO, "Scene '" + getName() + "' created" );
 }
 
 void Scene::setup() {
@@ -47,10 +47,10 @@ void Scene::addRenderable( unsigned int order, std::shared_ptr<Renderable> rende
 	auto erg{ m_orderedRenderables.insert( { order, renderable } ) };
 	if( false != erg.second ) {
 		std::string s{ "Object '" + renderable->getName() + "' added to Scene '" + getName() + "'" };
-		Logbook::getInstance().logMsg( Logbook::SCENE, Logbook::INFO, s );
+		logbook::log_msg( logbook::SCENE, logbook::INFO, s );
 	} else {
 		std::string s{ "Object '" + renderable->getName() + "' NOT added to Scene '" + getName() + "'. Duplicate order ?" };
-		Logbook::getInstance().logMsg( Logbook::SCENE, Logbook::ERROR, s );
+		logbook::log_msg( logbook::SCENE, logbook::ERROR, s );
 	}
 }
 
@@ -64,7 +64,7 @@ Camera *Scene::getCamera() const {
 
 Scene::~Scene() {
 	// m_orderedRenderables.clear();
-	Logbook::getInstance().logMsg( Logbook::SCENE, Logbook::INFO, "Scene '" + getName() + "' destroyed." );
+	logbook::log_msg( logbook::SCENE, logbook::INFO, "Scene '" + getName() + "' destroyed." );
 }
 
 }

@@ -1,29 +1,25 @@
 
-#include "Logbook.h"
+#include "logbook.h"
 #include <iostream>
 #include <chrono>
 
 namespace orf_n {
 
-std::string Logbook::m_logFilename{ "log.txt" };
+namespace logbook {
 
-std::mutex Logbook::m_logfileMutex{};
+std::string log_filename{ "log.txt" };
 
-std::ofstream Logbook::m_logHandle{};
+std::mutex logfile_mutex{};
 
-// static
-Logbook &Logbook::getInstance() {
-	static Logbook onceOnly;
-	return onceOnly;
-}
+std::ofstream log_handle{};
 
-void Logbook::logMsg( const logSource type, const logSeverity severity, const std::string &msg ) const {
-	if( "" == m_logFilename ) {
+void log_msg( const log_source type, const log_severity severity, const std::string &msg ) {
+	if( "" == log_filename ) {
 		std::string s{ "ERROR: Log filename not set !\n" };
 		std::cerr << s;
 		throw std::runtime_error( s );
 	}
-	std::cout << "Logbook: " << msg << std::endl;
+	std::cout << "logbook: " << msg << std::endl;
 	std::string lt, st;
 	switch( type ) {
 		case ANY		: lt = "ANY"; break;
@@ -49,36 +45,33 @@ void Logbook::logMsg( const logSource type, const logSeverity severity, const st
 	std::string s = ctime( &t );
 	// delete trailing newline
 	s.at( s.size()-1 ) = ']';
-	std::lock_guard<std::mutex> lock{ m_logfileMutex };
-	if( !m_logHandle.is_open() )
+	std::lock_guard<std::mutex> lock{ logfile_mutex };
+	if( !log_handle.is_open() )
 		// If file exists, append to it.
-		m_logHandle.open( m_logFilename, std::ios::out | std::ios::app );
-	m_logHandle << '[' << s << " [" << st << "] " << lt <<  ": " << msg << std::endl;
-	m_logHandle.close();
+		log_handle.open( log_filename, std::ios::out | std::ios::app );
+	log_handle << '[' << s << " [" << st << "] " << lt <<  ": " << msg << std::endl;
+	log_handle.close();
 }
 
-void Logbook::logMsg( const std::string &msg ) const {
-	logMsg( ANY, LOG, msg );
+void log_msg( const std::string &msg ) {
+	log_msg( ANY, LOG, msg );
 }
 
-void Logbook::setLogFilename( const std::string &filename ) {
-	m_logFilename = filename;
-	if( m_logHandle.is_open() )
-		m_logHandle.close();
+void set_log_filename( const std::string &filename ) {
+	log_filename = filename;
+	if( log_handle.is_open() )
+		log_handle.close();
 	// If file exists, overwrite it.
-	m_logHandle.open( m_logFilename, std::ios::out );
-	if( !m_logHandle.is_open() ) {
+	log_handle.open( log_filename, std::ios::out );
+	if( !log_handle.is_open() ) {
 		std::string s{ "ERROR: Log file could not be opened !\n" };
 		std::cerr << s;
 		throw std::runtime_error( s );
 	}
-	std::cout << "Logbook: Log filename set to " + m_logFilename + '\n';
-	m_logHandle.close();
+	std::cout << "logbook: Log filename set to " + log_filename + '\n';
+	log_handle.close();
 }
 
-Logbook::~Logbook() {
-	if( m_logHandle.is_open() )
-		m_logHandle.close();
 }
 
 }

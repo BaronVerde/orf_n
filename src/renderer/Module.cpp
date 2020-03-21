@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "Module.h"
 #include <sstream>
 #include <fstream>
@@ -21,7 +21,7 @@ Module::Module( const GLenum stage, const std::string &filename ) :
 		glGetShaderiv( m_shader, GL_INFO_LOG_LENGTH, &len );
 		GLchar *log = new GLchar[len+1];
 		glGetShaderInfoLog( m_shader, len, &len, log );
-		Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::ERROR, "Shader " + m_filename + " compilation failed: " + log );
+		logbook::log_msg( logbook::SHADER, logbook::ERROR, "Shader " + m_filename + " compilation failed: " + log );
 		delete [] log;
 		glDeleteShader( m_shader );
 		throw std::runtime_error( "Shader compilation error. See logfile." );
@@ -29,7 +29,7 @@ Module::Module( const GLenum stage, const std::string &filename ) :
 	m_isShader = true;
 	std::ostringstream s;
 	s << "Loaded shader '" << m_filename << "'; #" << m_shader << '.';
-	Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::INFO, s.str() );
+	logbook::log_msg( logbook::SHADER, logbook::INFO, s.str() );
 	// shader sourcecode is not needed any more.
 }
 
@@ -45,7 +45,7 @@ Module::Module( const GLenum stage, const GLchar *moduleText[] ) {
 		glGetShaderiv( m_shader, GL_INFO_LOG_LENGTH, &len );
 		GLchar *log = new GLchar[len+1];
 		glGetShaderInfoLog( m_shader, len, &len, log );
-		Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::ERROR, "Shader " + m_filename + " compilation failed: " + log );
+		logbook::log_msg( logbook::SHADER, logbook::ERROR, "Shader " + m_filename + " compilation failed: " + log );
 		delete [] log;
 		glDeleteShader( m_shader );
 		throw std::runtime_error( "Shader compilation error. See logfile." );
@@ -53,13 +53,13 @@ Module::Module( const GLenum stage, const GLchar *moduleText[] ) {
 	m_isShader = true;
 	std::ostringstream s;
 	s << "Loaded shader '" << m_filename << "'; #" << m_shader << '.';
-	Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::INFO, s.str() );
+	logbook::log_msg( logbook::SHADER, logbook::INFO, s.str() );
 }
 
 Module::~Module() {
 	if( m_isShader )
 		glDeleteShader( m_shader );
-	Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::INFO,
+	logbook::log_msg( logbook::SHADER, logbook::INFO,
 			"Shader #" + std::to_string( m_shader ) + " destroyed." );
 }
 
@@ -80,7 +80,7 @@ std::vector<GLchar> Module::readShaderSourceFile( const std::string& filename ) 
 	std::ifstream file( filename, std::ios::ate | std::ios::binary );
 	if( !file.is_open() ) {
 		std::string s{ "Unable to open shader file '" + filename + "'." };
-		Logbook::getInstance().logMsg( Logbook::SHADER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::SHADER, logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 

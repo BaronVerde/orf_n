@@ -1,13 +1,13 @@
 
 #pragma once
 
-#include <base/Logbook.h>
+#include <base/logbook.h>
 #include <map>
 #include <string>
 #include <ctime>		// time_t
 #include <sys/stat.h>	// struct stat and stat() for file date
 #include <map>
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 

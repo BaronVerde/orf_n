@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "geometry/Ellipsoid.h"
 #include "geometry/Icosphere.h"
 #include "geometry/OBB.h"
@@ -22,7 +22,7 @@ DrawPrimitives::~DrawPrimitives() {
 
 void DrawPrimitives::setupDebugDrawing() {
 	if( m_allSetup )
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::WARNING, "Debug drawing already set up." );
+		logbook::log_msg( logbook::RENDERER, logbook::WARNING, "Debug drawing already set up." );
 	else {
 		// Load shaders
 		std::vector<std::shared_ptr<orf_n::Module>> modules;
@@ -58,7 +58,7 @@ void DrawPrimitives::setupDebugDrawing() {
 		Icosphere is{ omath::dvec3{ 0.5, 0.5, 0.5 }, 2 };
 		m_sphereArray = std::make_unique<VertexArray3D<omath::dvec3>>( is.getVertices(), 0, true );
 		m_sphereIndices = std::make_unique<IndexBuffer>( is.getIndices() );
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, "Debug drawing set up." );
+		logbook::log_msg( logbook::RENDERER, logbook::INFO, "Debug drawing set up." );
 		m_allSetup = true;
 	}
 }

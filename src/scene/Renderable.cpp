@@ -1,5 +1,5 @@
 
-#include <base/Logbook.h>
+#include <base/logbook.h>
 #include <scene/Renderable.h>
 
 namespace orf_n {

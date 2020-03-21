@@ -1,5 +1,5 @@
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "Framebuffer.h"
 #include "iostream"
 
@@ -10,10 +10,10 @@ Framebuffer::Framebuffer( const unsigned int x, const unsigned int y ) :
 	glCreateFramebuffers( 1, &m_framebuffer );
 	if( GL_TRUE != glIsFramebuffer( m_framebuffer ) ) {
 		std::string s{ "Error creating framebuffer object." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+		logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 		throw std::runtime_error( s );
 	}
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO,
+	logbook::log_msg( logbook::RENDERER, logbook::INFO,
 			"Created framebuffer object " + std::to_string( m_framebuffer ) );
 }
 
@@ -23,14 +23,14 @@ Framebuffer::~Framebuffer() {
 	if( GL_TRUE == glIsRenderbuffer( m_colorAttachment ) )
 		glDeleteRenderbuffers( 1, &m_colorAttachment );
 	glDeleteFramebuffers( 1, &m_framebuffer );
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO,
+	logbook::log_msg( logbook::RENDERER, logbook::INFO,
 			"Framebuffer object " + std::to_string( m_framebuffer ) + " destroyed.");
 }
 
 void Framebuffer::addColorAttachment( const GLenum colorFormat, GLenum attachmentPoint ) {
 	glCreateRenderbuffers( 1, &m_colorAttachment );
 	if( GL_TRUE != glIsRenderbuffer( m_colorAttachment ) )
-		std::cerr << "Error creating color renderbuffer.\n";
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, "Error creating color renderbuffer" );
 	glNamedRenderbufferStorage( m_colorAttachment, colorFormat, m_sizeX, m_sizeY );
 	glNamedFramebufferRenderbuffer( m_framebuffer, attachmentPoint, GL_RENDERBUFFER, m_colorAttachment );
 }
@@ -38,15 +38,15 @@ void Framebuffer::addColorAttachment( const GLenum colorFormat, GLenum attachmen
 void Framebuffer::addDepthAttachment( const GLenum depthFormat ) {
 	glCreateRenderbuffers( 1, &m_depthAttachment );
 	if( GL_TRUE != glIsRenderbuffer( m_depthAttachment ) )
-		std::cerr << "Error creating depth renderbuffer.\n";
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, "Error creating depth renderbuffer" );
 	glNamedRenderbufferStorage( m_depthAttachment, depthFormat, m_sizeX, m_sizeY );
 	glNamedFramebufferRenderbuffer( m_framebuffer, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthAttachment );
-	glTextureParameteri( m_depthAttachment, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+	/*glTextureParameteri( m_depthAttachment, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL );
 	glTextureParameteri( m_depthAttachment, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-	glTextureParameteri( m_depthAttachment, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+	glTextureParameteri( m_depthAttachment, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );*/
 }
 
 bool Framebuffer::isComplete() const {

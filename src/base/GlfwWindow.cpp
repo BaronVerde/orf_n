@@ -1,6 +1,6 @@
 
+#include <base/logbook.h>
 #include "GlfwWindow.h"
-#include "Logbook.h"
 #include <iostream>
 
 namespace orf_n {
@@ -32,7 +32,7 @@ GlfwWindow::GlfwWindow( const std::string &title, const int width, const int hei
 	if( !gladLoadGLLoader( (GLADloadproc)glfwGetProcAddress ) )
 		throw std::runtime_error( "Error initialising glad" );
 
-	Logbook::getInstance().logMsg( Logbook::WINDOW, Logbook::INFO, "OpenGL 4.5 context created." );
+	logbook::log_msg( logbook::WINDOW, logbook::INFO, "OpenGL 4.5 context created." );
 
 	// swap interval for current context, start in vsync mode
 	glfwSwapInterval( 1 );
@@ -52,9 +52,9 @@ GlfwWindow::GlfwWindow( const std::string &title, const int width, const int hei
 		    glEnable( GL_DEBUG_OUTPUT_SYNCHRONOUS );
 		    glDebugMessageCallback( glDebugOutput, nullptr );
 		    glDebugMessageControl( GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE );
-		    Logbook::getInstance().logMsg( Logbook::WINDOW, Logbook::INFO, "Debug context created." );
+		    logbook::log_msg( logbook::WINDOW, logbook::INFO, "Debug context created." );
 		} else
-			Logbook::getInstance().logMsg( Logbook::WINDOW, Logbook::WARNING,
+			logbook::log_msg( logbook::WINDOW, logbook::WARNING,
 					"Debug context not created. Continuing without debug messages." );
 	}
 
@@ -126,7 +126,7 @@ bool GlfwWindow::getVsync() const { return m_vsync; }
 void GlfwWindow::errorCallback( int error, const char *msg ) {
 	std::string s;
 	s = " [" + std::to_string(error) + "] " + msg;
-	Logbook::getInstance().logMsg( Logbook::WINDOW, Logbook::ERROR, s );
+	logbook::log_msg( logbook::WINDOW, logbook::ERROR, s );
 	throw std::runtime_error( "GLFW window error, see logbook" );
 }
 
@@ -177,7 +177,7 @@ void APIENTRY GlfwWindow::glDebugOutput( GLenum source, GLenum type, GLuint id, 
     s += "; ";
     s += message;
 
-    Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::LOG, s );
+    logbook::log_msg( logbook::RENDERER, logbook::LOG, s );
 }	// glDebugOutput()
 
 }	// namespace

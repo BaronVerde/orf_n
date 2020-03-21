@@ -1,10 +1,10 @@
 
+#include <base/logbook.h>
 #include "applications/Camera/Camera.h"
 #include "GridMesh.h"
 #include "LODSelection.h"
 #include "QuadTree.h"
 #include "TerrainTile.h"
-#include "base/Logbook.h"
 #include "omath/mat4.h"
 #include "renderer/Module.h"
 #include "renderer/Sampler.h"
@@ -25,7 +25,7 @@ TerrainTile::TerrainTile( const std::string &filename ) :
 	if( !bbf.is_open() ) {
 		std::ostringstream s;
 		s << "Error opening bounding box file '" << filename << ".bb'. Tile will not be rendered correctly.";
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::WARNING, s.str() );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s.str() );
 	}
 	omath::dvec3 min, max;
 	bbf >> min.x >> min.y >> min.z >> max.x >> max.y >> max.z;
@@ -38,15 +38,15 @@ TerrainTile::TerrainTile( const std::string &filename ) :
 
 	std::ostringstream s;
 	s << "Terrain tile '" << filename << "'loaded.";
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
 	s.str( std::string() );
 	s << "\tBounding box of whole tile: " << *m_AABB;
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
 }
 
 TerrainTile::~TerrainTile() {
 	std::string s{ "Terrain tile '" + m_filename + "'unloaded." };
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s );
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s );
 }
 
 const terrain::HeightMap *TerrainTile::getHeightMap() const {

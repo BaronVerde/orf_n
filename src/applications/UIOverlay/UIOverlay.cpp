@@ -1,8 +1,8 @@
 
+#include <base/logbook.h>
 #include "applications/Camera/Camera.h"	// near- and far plane
 #include "UIOverlay.h"
 #include "base/Globals.h"	// deltaTime
-#include "base/Logbook.h"
 #include "omath/mat4.h"
 #include "renderer/Texture2D.h"
 #include "renderer/Uniform.h"
@@ -92,7 +92,7 @@ void UIOverlay::setup() {
     m_shader->unUse();
     io.Fonts->TexID = (void *)(intptr_t)m_fontTexture;
     if( !io.Fonts->IsBuilt() )
-    	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR,
+    	logbook::log_msg( logbook::RENDERER, logbook::ERROR,
     			"The overlay font atlas was not built correctly." );
 
 	glGenBuffers( 1, &m_vboHandle );

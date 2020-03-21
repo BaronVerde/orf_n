@@ -6,7 +6,7 @@
  * @todo Delete copy and move
  */
 
-#include "base/Logbook.h"
+#include <base/logbook.h>
 #include "omath/vec3.h"
 #include "Buffer.h"
 #include <vector>
@@ -42,14 +42,14 @@ public:
 			glVertexArrayAttribFormat( m_vaoName, 0, 2, GL_FLOAT, GL_FALSE, 0 );
 			std::ostringstream s;
 			s << "VertexArray2D '" << m_vaoName << "' created: " << vertexData.size() << " vec2 values.";
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+			logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 		} else if( typeid( T ) == typeid( float ) ) {
 			glVertexArrayAttribFormat( m_vaoName, 0, 1, GL_FLOAT, GL_FALSE, 0 );
 			std::ostringstream s;
 			s << "VertexArray2D '" << m_vaoName << "' created: " << vertexData.size() << " float values.";
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s.str() );
+			logbook::log_msg( logbook::RENDERER, logbook::INFO, s.str() );
 		} else
-			Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR,
+			logbook::log_msg( logbook::RENDERER, logbook::ERROR,
 					"Unexpected data type for VertexArray2D. Vertex array not created." );
 	}
 
@@ -60,7 +60,7 @@ public:
 	virtual ~VertexArray2D() {
 		disable();
 		glDeleteVertexArrays( 1, &m_vaoName );
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO,
+		logbook::log_msg( logbook::RENDERER, logbook::INFO,
 				"VertexArray2D " + std::to_string( m_vaoName ) + " destroyed." );
 	}
 

@@ -1,4 +1,5 @@
 
+#include <base/logbook.h>
 #include "applications/Camera/Camera.h"
 //#include "applications/CubeToEllipsoid/CubeToEllipsoid.h"
 //#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
@@ -7,7 +8,6 @@
 //#include "applications/TerrainSim/HydroTile.h"
 //#include "applications/TerrainErosion/HydroErosionMDH07.h"
 #include "base/Globals.h"	// deltaTime
-#include "base/Logbook.h"
 #include "renderer/Renderer.h"
 //#include "Applications/PhysicsDemo/PhysicsDemo.h"
 
@@ -25,7 +25,7 @@ void Renderer::setupRenderer() {
 	// Before we proceed, perform a basic look around.
 	if( !checkEnvironment() ) {
 		std::string s{ "The graphics environment is unfit to run this program." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		throw std::runtime_error{ s };
 	}
 	// Just to have a camera object. Applications may set position and target
@@ -38,10 +38,10 @@ void Renderer::setupRenderer() {
 	m_framebuffer->addDepthAttachment( GL_DEPTH_COMPONENT32F );
 	if( !m_framebuffer->isComplete() ) {
 		std::string s{ "Error creating framebuffer." };
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, s );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, s );
 		throw std::runtime_error{ s };
 	} else
-		Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::ERROR, "Framebuffer/renderbuffer created." );
+		logbook::log_msg( logbook::RENDERER, logbook::ERROR, "Framebuffer/renderbuffer created." );
 
 	// Build the scene and set it up.
 	m_scene = new Scene( m_window, m_camera, m_overlay );
@@ -60,7 +60,7 @@ void Renderer::setup() const {
 }
 
 void Renderer::render() const {
-	Logbook::getInstance().logMsg( orf_n::Logbook::RENDERER, orf_n::Logbook::INFO,
+	logbook::log_msg( orf_n::logbook::RENDERER, orf_n::logbook::INFO,
 			"--- Entering main loop ---" );
 	double lastFrame { 0.0 };
 	uint64_t frameCounter { 0 };
@@ -99,7 +99,7 @@ void Renderer::render() const {
 		glfwSwapBuffers( m_scene->getWindow()->getWindow() );
 
 	}
-	Logbook::getInstance().logMsg( orf_n::Logbook::RENDERER, orf_n::Logbook::INFO,
+	logbook::log_msg( orf_n::logbook::RENDERER, orf_n::logbook::INFO,
 			"--- Leaving main loop ---" );
 }
 
@@ -120,13 +120,13 @@ bool Renderer::checkEnvironment() {
 	GLint retval;
 	glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &retval );
 	std::string s{ "Maximum combined texture units: " + std::to_string( retval ) + '.' };
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 	glGetIntegerv( GL_MAX_TEXTURE_SIZE, &retval );
 	s = "Maximum texture size: " + std::to_string( retval ) + '.';
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 	glGetIntegerv( GL_MAX_TEXTURE_BUFFER_SIZE, &retval );
 	s = "Maximum texture buffer size: " + std::to_string( retval ) + '.';
-	Logbook::getInstance().logMsg( Logbook::RENDERER, Logbook::INFO, s );
+	logbook::log_msg( logbook::RENDERER, logbook::INFO, s );
 	return true;
 }
 

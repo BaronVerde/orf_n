@@ -1,8 +1,8 @@
 
+#include <base/logbook.h>
 #include "Node.h"
 #include "QuadTree.h"
 #include "TerrainTile.h"
-#include "base/Logbook.h"
 #include <sstream>
 
 namespace terrain {
@@ -11,7 +11,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 		m_terrainTile{ terrainTile } {
 	if( m_terrainTile->getHeightMap()->getExtent().x > 65535 || m_terrainTile->getHeightMap()->getExtent().y > 65535 ) {
 		std::string s{ "Heightmap too large (>65535) for the quad tree." };
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR, s );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s );
 		throw std::runtime_error( s );
 	}
 
@@ -47,7 +47,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 		std::ostringstream s;
 		s << "Node counter (" << m_nodeCount << ") does not equal pre-calculated node count ("
 		  << totalNodeCount << ").";
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::ERROR, s.str() );
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s.str() );
 		throw std::runtime_error( s.str() );
 	}
 
@@ -58,7 +58,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 	s << "Quad tree created " << m_nodeCount << " Nodes; size in memory: " <<
 			( sizeInMemory / 1024.0f ) << "kB.\n\t" << m_topNodeCountX << '*' <<
 			m_topNodeCountZ << " top nodes.";
-	orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
 	// Debug: List of all Nodes
 	/*for( int i{ 0 }; i < m_nodeCount; ++i ) {
 		s.str( std::string() );
@@ -71,7 +71,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 					n->getUpperRight()->getLevel() << '/' << n->getLowerLeft()->getLevel() <<
 					'/' << n->getLowerRight()->getLevel();
 		}
-		orf_n::Logbook::getInstance().logMsg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
+		orf_n::Logbook::log_msg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
 	}*/
 
 }

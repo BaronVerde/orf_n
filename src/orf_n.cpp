@@ -1,10 +1,9 @@
 
+#include <base/logbook.h>
 #include "glad/glad.h"
 #include "base/Globals.h"
-#include "base/Logbook.h"
 #include <iostream>
 #include "renderer/Renderer.h"
-#include <memory>	// unique_ptr
 #include <cstring>	// strcmp()
 //#include "../utils/asc2png.h"
 
@@ -16,8 +15,8 @@ int main( int argc, char *argv[] ) {
 
 	//return converter::asc2png( "/home/kemde/Downloads/OpenGL/srtm/big/cut_n30e000.asc", 2048 ) ? EXIT_SUCCESS : EXIT_FAILURE;
 
-	Logbook::getInstance().setLogFilename( "orfnlog.log" );
-	Logbook::getInstance().logMsg( "Program started." );
+	logbook::set_log_filename( "orfnlog.log" );
+	logbook::log_msg( "Program started." );
 
 	bool debug{ true };
 	if( argc > 1 ) {
@@ -28,17 +27,18 @@ int main( int argc, char *argv[] ) {
 	}
 
 	try {
-		std::unique_ptr<Renderer> r{ std::make_unique<Renderer>( debug ) };
+		Renderer* r = new Renderer( debug );
 		r->setupRenderer();
 		r->setup();
 		r->render();
 		r->cleanup();
 		r->cleanupRenderer();
+		delete r;
 	} catch( std::runtime_error &e ) {
 		std::cerr << e.what() << std::endl;
 	}
 
-	Logbook::getInstance().logMsg( "Program ending normally." );
+	logbook::log_msg( "Program ending normally." );
 	return EXIT_SUCCESS;
 
 }
