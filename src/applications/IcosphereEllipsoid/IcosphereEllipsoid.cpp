@@ -10,7 +10,6 @@
 #include "scene/Scene.h"
 #include <iostream>
 #include <fstream>
-//#include <cstdio>
 //#include "Geometry/ViewFrustum.h"
 
 using namespace orf_n;
@@ -30,12 +29,12 @@ void IcosphereEllipsoid::setup() {
 	// Create the shaders
 	std::vector<std::shared_ptr<Module>> modules;
 	modules.push_back( std::make_shared<Module>( GL_VERTEX_SHADER,
-			"Source/Applications/IcosphereEllipsoid/IcosphereEllipsoid.vert.glsl" ) );
+			"src/applications/IcosphereEllipsoid/IcosphereEllipsoid.vert.glsl" ) );
 	modules.push_back( std::make_shared<Module>( GL_FRAGMENT_SHADER,
-			"Source/Applications/IcosphereEllipsoid/IcosphereEllipsoid.frag.glsl" ) );
+			"src/applications/IcosphereEllipsoid/IcosphereEllipsoid.frag.glsl" ) );
 	m_shader = new Program( modules );
 
-	m_texture = new Texture2D{ "Resources/Textures/Ellipsoids/EarthDay_4k.jpg", 0, true };
+	m_texture = new Texture2D{ "resources/Textures/Ellipsoids/EarthDay_4k.jpg", 0, true };
 	//m_texture = new Texture2D{ "Resources/Textures/Ellipsoids/sphere1.png", 0, true };
 	setDefaultSampler( m_texture->getName(), LINEAR_CLAMP );
 

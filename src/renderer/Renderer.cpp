@@ -1,7 +1,6 @@
 
 #include <base/logbook.h>
 #include "applications/Camera/Camera.h"
-//#include "applications/CubeToEllipsoid/CubeToEllipsoid.h"
 //#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
 #include "applications/SkyBox/SkyBox.h"
 #include "applications/TerrainLOD/TerrainLOD.h"
@@ -45,7 +44,6 @@ void Renderer::setupRenderer() {
 
 	// Build the scene and set it up.
 	m_scene = new Scene( m_window, m_camera, m_overlay );
-	//m_scene->addRenderable( 1, std::make_shared<CubeToEllipsoid>( 2, omath::dvec3{1.0} ) );
 	//m_scene->addRenderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
 	m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
 	//m_scene->addRenderable( 1, std::make_shared<Positions>() );
