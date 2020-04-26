@@ -1,9 +1,9 @@
 
 #include <base/logbook.h>
 #include "applications/Camera/Camera.h"
-//#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
-#include "applications/SkyBox/SkyBox.h"
-#include "applications/TerrainLOD/TerrainLOD.h"
+#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
+//#include "applications/SkyBox/SkyBox.h"
+//#include "applications/TerrainLOD/TerrainLOD.h"
 //#include "applications/TerrainSim/HydroTile.h"
 //#include "applications/TerrainErosion/HydroErosionMDH07.h"
 #include "base/Globals.h"	// deltaTime
@@ -44,12 +44,12 @@ void Renderer::setupRenderer() {
 
 	// Build the scene and set it up.
 	m_scene = new Scene( m_window, m_camera, m_overlay );
-	//m_scene->addRenderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
-	m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
+	m_scene->addRenderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
+	//m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
 	//m_scene->addRenderable( 1, std::make_shared<Positions>() );
 	//m_scene->addRenderable( 1, std::make_shared<HydroErosionMDH07>() );
 	//m_scene->addRenderable( 1, std::make_shared<PhysicsDemo>() );
-	m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
+	//m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
 
 }
 

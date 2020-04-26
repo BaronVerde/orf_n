@@ -57,7 +57,7 @@ void IcosphereEllipsoid::setup() {
 	boxOutlines.resize( 289 * 4 );
 	std::vector<GLuint> indices;
 	for( int i{0}; i < 289; ++i ) {
-		readBB( "Resources/Textures/Terrain/Area_30_00/tile_2048_" + std::to_string(i+1) + ".bb" );
+		readBB( "resources/Textures/Terrain/Area_30_00/tile_2048_" + std::to_string(i+1) + ".bb" );
 		boxOutlines[i*4] = m_ico->toCartesian( m_geodeticCoords[i] );
 		const double delta{ omath::radians( 2048 * m_cellsize ) };
 		boxOutlines[i*4+1] = m_ico->toCartesian(
