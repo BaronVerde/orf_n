@@ -1,11 +1,11 @@
 
+#include <base/glfw_window.h>
 #include <base/logbook.h>
-#include "GlfwWindow.h"
 #include <iostream>
 
 namespace orf_n {
 
-GlfwWindow::GlfwWindow( const std::string &title, const int width, const int height, bool debug ) :
+glfw_window::glfw_window( const std::string &title, const int width, const int height, bool debug ) :
 		m_title( title ), m_width( width ), m_height( height ), m_debug( debug ) {
 	// error callbacks
 	glfwSetErrorCallback( errorCallback );
@@ -13,7 +13,7 @@ GlfwWindow::GlfwWindow( const std::string &title, const int width, const int hei
 		throw std::runtime_error( "Error initialising glfw" );
 
 	// Window and context; we want OpenGL 4.5
-	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4 ); 
+	glfwWindowHint( GLFW_CONTEXT_VERSION_MAJOR, 4 );
 	glfwWindowHint( GLFW_CONTEXT_VERSION_MINOR, 5 );
 	if( m_debug )
 		glfwWindowHint( GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE );
@@ -38,9 +38,9 @@ GlfwWindow::GlfwWindow( const std::string &title, const int width, const int hei
 	glfwSwapInterval( 1 );
 	m_vsync = true;
 
-	// EventHandler
-	m_eventHandler = std::make_unique<EventHandler>( this );
-	glfwSetWindowUserPointer( m_window, m_eventHandler.get() );
+	// event_handler
+	m_event_handler = std::make_unique<event_handler>( this );
+	glfwSetWindowUserPointer( m_window, m_event_handler.get() );
 
 	if( m_debug ) {
 		// Initialize debug output
@@ -67,12 +67,12 @@ GlfwWindow::GlfwWindow( const std::string &title, const int width, const int hei
 }	// ctor
 
 // virtual
-GlfwWindow::~GlfwWindow() {
+glfw_window::~glfw_window() {
 	 glfwDestroyWindow( m_window );
 	 glfwTerminate();
 }	// dtor
 
-void GlfwWindow::toggleInputMode() {
+void glfw_window::toggle_input_mode() {
 	if( m_cursorDisabled )
 		glfwSetInputMode( m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL );
 	else
@@ -80,50 +80,50 @@ void GlfwWindow::toggleInputMode() {
 	m_cursorDisabled = !m_cursorDisabled;
 }
 
-void GlfwWindow::setVsync( bool v ) {
+void glfw_window::set_v_sync( bool v ) {
 	m_vsync = v;
 	glfwSwapInterval( m_vsync ? 1 : 0 );
 }
 
-GLFWwindow *GlfwWindow::getWindow() const {
+GLFWwindow* glfw_window::get_window() const {
 	return m_window;
 }
 
-const EventHandler *GlfwWindow::getEventHandler() const {
-	return m_eventHandler.get();
+const event_handler *glfw_window::get_event_handler() const {
+	return m_event_handler.get();
 }
 
-int GlfwWindow::getWidth() const { return m_width; }
+int glfw_window::get_width() const { return m_width; }
 
-int GlfwWindow::getHeight() const { return m_height; }
+int glfw_window::get_height() const { return m_height; }
 
-void GlfwWindow::setWidth( int width ) { m_width = width; }
+void glfw_window::set_width( int width ) { m_width = width; }
 
-void GlfwWindow::setHeight( int height ) { m_height = height; }
+void glfw_window::set_height( int height ) { m_height = height; }
 
-void GlfwWindow::setTitle( const std::string &title ) {
+void glfw_window::set_title( const std::string &title ) {
 	m_title = title;
    	glfwSetWindowTitle( m_window, m_title.c_str() );
 }
 
-void GlfwWindow::setDamaged( bool damaged ) {
+void glfw_window::set_damaged( bool damaged ) {
 	m_isDamaged = damaged;
 }
 
-bool GlfwWindow::isDamaged() const {
+bool glfw_window::get_damaged() const {
 	return m_isDamaged;
 }
 
-void GlfwWindow::setShouldClose() const {
+void glfw_window::set_should_close() const {
 	glfwSetWindowShouldClose( m_window, GL_TRUE );
 }
 
-bool GlfwWindow::isCursorDisabled() const { return m_cursorDisabled; }
+bool glfw_window::is_cursor_disabled() const { return m_cursorDisabled; }
 
-bool GlfwWindow::getVsync() const { return m_vsync; }
+bool glfw_window::get_v_sync() const { return m_vsync; }
 
 // static
-void GlfwWindow::errorCallback( int error, const char *msg ) {
+void glfw_window::errorCallback( int error, const char *msg ) {
 	std::string s;
 	s = " [" + std::to_string(error) + "] " + msg;
 	logbook::log_msg( logbook::WINDOW, logbook::ERROR, s );
@@ -131,7 +131,7 @@ void GlfwWindow::errorCallback( int error, const char *msg ) {
 }
 
 // static
-void APIENTRY GlfwWindow::glDebugOutput( GLenum source, GLenum type, GLuint id, GLenum severity,
+void APIENTRY glfw_window::glDebugOutput( GLenum source, GLenum type, GLuint id, GLenum severity,
 		GLsizei length, const GLchar *message, const void *userParam ) {
 
 	// Ignore non-significant error/warning codes

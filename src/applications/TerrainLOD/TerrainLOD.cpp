@@ -1,22 +1,24 @@
 
-#include <base/logbook.h>
+#include <applications/camera/camera.h>
+#include "base/globals.h"
+#include <scene/scene.h>
+#include "base/logbook.h"
 #include "GridMesh.h"
 #include "LODSelection.h"
 #include "Node.h"
 #include "QuadTree.h"
 #include "TerrainLOD.h"
 #include "TerrainTile.h"
-#include "applications/Camera/Camera.h"
-#include "base/Globals.h"
 #include "geometry/AABB.h"
 #include "geometry/Ellipsoid.h"
 #include "omath/mat4.h"
 #include "renderer/IndexBuffer.h"
 #include "renderer/Module.h"
 #include "renderer/Uniform.h"
-#include "scene/Scene.h"
 
-TerrainLOD::TerrainLOD() : Renderable( "TerrainLOD" ) {
+extern bool orf_n::globals::show_app_ui;
+
+TerrainLOD::TerrainLOD() : orf_n::renderable( "TerrainLOD" ) {
 	// Prepare and check settings
 	if( !omath::isPowerOf2( terrain::LEAF_NODE_SIZE ) ||
 			terrain::LEAF_NODE_SIZE < 2 || terrain::LEAF_NODE_SIZE > 1024 ) {
@@ -66,17 +68,17 @@ void TerrainLOD::setup() {
 	// Camera and selection object. Are connected because selection is based on view frustum and range.
 	// @todo parametrize or calculate initial position, direction and view range
 	std::cout << m_terrainTiles[0]->getAABB()->m_min << m_terrainTiles[0]->getAABB()->m_max << std::endl;
-	m_scene->getCamera()->setPositionAndTarget(
+	m_scene->get_camera()->setPositionAndTarget(
 			{ 0.0, 100.0, 0.0 }, { 2047.0, 50.0, 2047.0 }
 	);
-	m_scene->getCamera()->setNearPlane( 10.0f );
-	m_scene->getCamera()->setFarPlane( 4000.0f );
-	m_scene->getCamera()->calculateFOV();
+	m_scene->get_camera()->set_near_plane( 10.0f );
+	m_scene->get_camera()->set_far_plane( 4000.0f );
+	m_scene->get_camera()->calculateFOV();
 
 	// @todo: no sorting for now. Should be sorted by tileIndex, distanceToCamera and lodLevel
 	// to avoid too many heightmap switches and shader uniform settings.
 	// Lod selection ranges depend on camera near/far plane distances
-	m_lodSelection = new terrain::LODSelection{ m_scene->getCamera(), false /*don't sort*/ };
+	m_lodSelection = new terrain::LODSelection{ m_scene->get_camera(), false /*don't sort*/ };
 
 	m_drawPrimitives.setupDebugDrawing();
 
@@ -110,7 +112,7 @@ void TerrainLOD::setup() {
 void TerrainLOD::render() {
 	glEnable( GL_DEPTH_TEST );
 	glEnable( GL_CULL_FACE );
-	const orf_n::Camera *const cam{ m_scene->getCamera() };
+	const orf_n::camera *const cam{ m_scene->get_camera() };
 
 	// Perform selection @todo parametrize sorting and concatenate lod selection
 	// reset selection, add nodes, sort selection, sort by tile index, nearest to farest
@@ -176,7 +178,7 @@ void TerrainLOD::debugDrawing() {
 	// To keep the below less verbose
 	const orf_n::Program *p{ m_drawPrimitives.getProgramPtr() };
 	p->use();
-	orf_n::setUniform( p->getProgram(), "projViewMatrix", m_scene->getCamera()->getViewPerspectiveMatrix() );
+	orf_n::setUniform( p->getProgram(), "projViewMatrix", m_scene->get_camera()->getViewPerspectiveMatrix() );
 	glPointSize( 3.0f );
 	for( size_t i{0}; i < m_terrainTiles.size(); ++i ) {
 		if( m_showTileBoxes )
@@ -226,7 +228,7 @@ void TerrainLOD::debugDrawLowestLevelBoxes( const terrain::TerrainTile *const t 
 	for( int i{ 0 }; i < t->getQuadTree()->getNodeCount(); ++i )
 		if( nodes[i].getLevel() == terrain::NUMBER_OF_LOD_LEVELS - 1 ) {
 			const orf_n::AABB *box{ nodes[i].getBoundingBox() };
-			if( m_scene->getCamera()->getViewFrustum().isBoxInFrustum( box ) != orf_n::OUTSIDE )
+			if( m_scene->get_camera()->getViewFrustum().isBoxInFrustum( box ) != orf_n::OUTSIDE )
 				m_drawPrimitives.drawAABB( *box, orf_n::color::cornflowerBlue );
 		}
 }
@@ -234,7 +236,7 @@ void TerrainLOD::debugDrawLowestLevelBoxes( const terrain::TerrainTile *const t 
 bool TerrainLOD::refreshUI() {
 	bool retVal{ false };
 	// UI stuff
-	if( orf_n::globals::showAppUI ) {
+	if( orf_n::globals::show_app_ui ) {
 		ImGui::Begin( "Basic LOD params" );
 		ImGui::Text( "Show bounding boxes:" );
 		ImGui::Checkbox( "  of tiles map", &m_showTileBoxes );
@@ -249,8 +251,8 @@ bool TerrainLOD::refreshUI() {
 		ImGui::Text( "min selected LOD level %d", m_lodSelection->m_minSelectedLODLevel );
 		ImGui::Text( "max selected LOD level %d", m_lodSelection->m_maxSelectedLODLevel );
 		ImGui::Separator();
-		float nearPlane{ m_scene->getCamera()->getNearPlane() };
-		float farPlane{ m_scene->getCamera()->getFarPlane() };
+		float nearPlane{ m_scene->get_camera()->get_near_plane() };
+		float farPlane{ m_scene->get_camera()->get_far_plane() };
 		const omath::vec3 oldDiffuseLightPos{ m_diffuseLightPos };
 		ImGui::Text( "Camera Control" );
 		ImGui::SliderFloat( "Near plane", &nearPlane, 1.0f, 100.0f );
@@ -258,12 +260,12 @@ bool TerrainLOD::refreshUI() {
 		ImGui::SliderFloat( "Light Position x", &m_diffuseLightPos.x, -10.0f, 10.0f );
 		ImGui::End();
 		// Recalc camera fov and lod ranges on change
-		if( nearPlane != m_scene->getCamera()->getNearPlane() ) {
-			m_scene->getCamera()->setNearPlane( nearPlane );
+		if( nearPlane != m_scene->get_camera()->get_near_plane() ) {
+			m_scene->get_camera()->set_near_plane( nearPlane );
 			m_lodSelection->calculateRanges();
 		}
-		if( farPlane != m_scene->getCamera()->getFarPlane()  ) {
-			m_scene->getCamera()->setFarPlane( farPlane );
+		if( farPlane != m_scene->get_camera()->get_far_plane()  ) {
+			m_scene->get_camera()->set_far_plane( farPlane );
 			m_lodSelection->calculateRanges();
 		}
 		if( oldDiffuseLightPos != m_diffuseLightPos )

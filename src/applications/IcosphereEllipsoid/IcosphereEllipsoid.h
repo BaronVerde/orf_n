@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <scene/renderable.h>
 #include "geometry/AABB.h"
 #include "geometry/Geodetic.h"
 #include "geometry/Icosphere.h"
@@ -15,10 +16,9 @@
 #include "renderer/Program.h"
 #include "renderer/Texture2D.h"
 #include "renderer/VertexArray3D.h"
-#include "scene/Renderable.h"
 //#include "Noise/MapBuilder.h"
 
-class IcosphereEllipsoid : public orf_n::Renderable {
+class IcosphereEllipsoid : public orf_n::renderable {
 public:
 	IcosphereEllipsoid(	const omath::vec3 &axes, const uint32_t numSubDivs );
 

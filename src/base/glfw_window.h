@@ -5,16 +5,16 @@
 
 #pragma once
 
-#include "EventHandler.h"
+#include <base/event_handler.h>
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <memory>
 
 namespace orf_n {
 
-class EventHandler;
+class event_handler;
 
-class GlfwWindow {
+class glfw_window {
 public:
 	/**
      * @brief Creates a new window. Init glfw and glew.
@@ -23,19 +23,19 @@ public:
      * @param height Initial window heigh
      * @param debug Create debug context and init glfw and opengl callbacks.
      */
-    GlfwWindow( const std::string &title, const int width, const int height, bool debug = false );
+    glfw_window( const std::string &title, const int width, const int height, bool debug = false );
 
-    virtual ~GlfwWindow();
+    virtual ~glfw_window();
 
     /**
      * @brief Return glfw window handle.
      */
-    GLFWwindow *getWindow() const;
+    GLFWwindow *get_window() const;
 
     /**
-     * @brief Return pointer to EventHandler object.
+     * @brief Return pointer to event_handler object.
      */
-    const EventHandler *getEventHandler() const;
+    const event_handler *get_event_handler() const;
 
     // std::string getTitle() const { return m_title; }
 
@@ -43,47 +43,47 @@ public:
      * Return framebuffer width and height.
      * @toto Eventually make them float to avoid too many casts.
      */
-    int getWidth() const;
+    int get_width() const;
 
-    void setWidth( int width );
+    void set_width( int width );
 
-    void setHeight( int height );
+    void set_height( int height );
 
-    int getHeight() const;
+    int get_height() const;
 
     /**
      * @brief Set the title text of the window.
      */
-    void setTitle( const std::string &title );
+    void set_title( const std::string &title );
 
     /**
      * @brief Set should close. Used to end the render loop.
      */
-    void setShouldClose() const;
+    void set_should_close() const;
 
     /**
      * @bried Toggle cursor visible and free or captured and hidden.
      */
-    void toggleInputMode();
+    void toggle_input_mode();
 
-    bool isCursorDisabled() const;
+    bool is_cursor_disabled() const;
 
-    GlfwWindow &operator=( const GlfwWindow &eh ) = delete;
+    glfw_window &operator=( const glfw_window &eh ) = delete;
 
-    GlfwWindow( const GlfwWindow &eh ) = delete;
+    glfw_window( const glfw_window &eh ) = delete;
 
-    bool getVsync() const;
+    bool get_v_sync() const;
 
-    void setVsync( bool v );
+    void set_v_sync( bool v );
 
-    void setDamaged( bool damaged );
+    void set_damaged( bool damaged );
 
-    bool isDamaged() const;
+    bool get_damaged() const;
 
 private:
-    GLFWwindow *m_window{nullptr};
+    GLFWwindow* m_window{nullptr};
 
-    std::unique_ptr<EventHandler> m_eventHandler{nullptr};
+    std::unique_ptr<event_handler> m_event_handler{nullptr};
 
     std::string m_title;
 
@@ -105,6 +105,6 @@ private:
     static void APIENTRY glDebugOutput( GLenum source, GLenum type, GLuint id, GLenum severity,
     		GLsizei length, const GLchar *message, const void *userParam );
 
-};	// class GlfwWindow
+};	// class glfw_window
 
 }	// namespace

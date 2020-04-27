@@ -1,22 +1,24 @@
 
+#include "base/globals.h"
 #include <base/logbook.h>
+#include <scene/scene.h>
 #include "IcosphereEllipsoid.h"
 #include "glad/glad.h"
-#include "base/Globals.h"
 #include "omath/mat4.h"
 #include "renderer/Color.h"
 #include "renderer/Sampler.h"
 #include "renderer/Uniform.h"
-#include "scene/Scene.h"
 #include <iostream>
 #include <fstream>
 //#include "Geometry/ViewFrustum.h"
 
 using namespace orf_n;
 
+extern bool globals::show_app_ui;
+
 IcosphereEllipsoid::IcosphereEllipsoid(	const omath::vec3 &axes,
 										const uint32_t numSubDivs ) :
-				Renderable{ "IcosphereEllipsoid" },
+				renderable{ "IcosphereEllipsoid" },
 				m_axes{ axes },
 				m_numSubDivs{ numSubDivs } {}
 
@@ -42,12 +44,12 @@ void IcosphereEllipsoid::setup() {
 	m_vertexArray = new VertexArray3D<omath::dvec3>{ m_ico->getVertices(), 0, true };
 	m_indexBuffer = new IndexBuffer{ m_ico->getIndices() };
 
-	m_scene->getCamera()->setPositionAndTarget( { 0.0, 0.0, -15000000.0  }, { 0.0, 0.0, 0.0 } );
-	//m_scene->getCamera()->setUp( { 0.0f, 0.0f, 1.0f } );
-	m_scene->getCamera()->setNearPlane( 100.0f );
-	m_scene->getCamera()->setFarPlane( 100000000.0f );
-	m_scene->getCamera()->setMovementSpeed( 300.0f );
-	m_scene->getCamera()->calculateFOV();
+	m_scene->get_camera()->setPositionAndTarget( { 0.0, 0.0, -15000000.0  }, { 0.0, 0.0, 0.0 } );
+	//m_scene->get_camera()->setUp( { 0.0f, 0.0f, 1.0f } );
+	m_scene->get_camera()->set_near_plane( 100.0f );
+	m_scene->get_camera()->set_far_plane( 100000000.0f );
+	m_scene->get_camera()->setMovementSpeed( 300.0f );
+	m_scene->get_camera()->calculateFOV();
 	m_shader->use();
 	setUniform( m_shader->getProgram(), "u_oneOverRadiiSquared",
 			static_cast<omath::vec3>( m_ico->getOneOverRadiiSquared() ) );
@@ -86,11 +88,11 @@ void IcosphereEllipsoid::setup() {
 }
 
 void IcosphereEllipsoid::render() {
-	orf_n::Camera *cam{ m_scene->getCamera() };	// shortcut
-	float nearPlane{ cam->getNearPlane() };
-	float farPlane{ cam->getFarPlane() };
+	orf_n::camera *cam{ m_scene->get_camera() };	// shortcut
+	float nearPlane{ cam->get_near_plane() };
+	float farPlane{ cam->get_far_plane() };
 	float movementSpeed{ cam->getMovementSpeed() };
-	if( orf_n::globals::showAppUI ) {
+	if( globals::show_app_ui ) {
 		ImGui::Begin( "Ellipsoid Params" );
 		//ImGui::Checkbox( "Origin in frustum: ", &m_visible );
 		ImGui::SliderFloat( "Near plane", &nearPlane, 0.01f, 100.0f );
@@ -106,10 +108,10 @@ void IcosphereEllipsoid::render() {
 			clicked++;*/
 		ImGui::End();
 	}
-	if( nearPlane != cam->getNearPlane() )
-		cam->setNearPlane( nearPlane );
-	if( farPlane != cam->getFarPlane() )
-		cam->setFarPlane( farPlane );
+	if( nearPlane != cam->get_near_plane() )
+		cam->set_near_plane( nearPlane );
+	if( farPlane != cam->get_far_plane() )
+		cam->set_far_plane( farPlane );
 	if( movementSpeed != cam->getMovementSpeed() )
 		cam->setMovementSpeed( movementSpeed );
 

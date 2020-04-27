@@ -1,18 +1,18 @@
 
+#include <applications/camera/camera.h>
+#include <base/globals.h>	// deltaTime
 #include <base/logbook.h>
-#include "applications/Camera/Camera.h"
 #include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
-//#include "applications/SkyBox/SkyBox.h"
-//#include "applications/TerrainLOD/TerrainLOD.h"
+#include "applications/SkyBox/SkyBox.h"
+#include "applications/TerrainLOD/TerrainLOD.h"
 //#include "applications/TerrainSim/HydroTile.h"
 //#include "applications/TerrainErosion/HydroErosionMDH07.h"
-#include "base/Globals.h"	// deltaTime
 #include "renderer/Renderer.h"
 //#include "Applications/PhysicsDemo/PhysicsDemo.h"
 
 namespace orf_n {
 
-extern double globals::deltaTime;
+extern double orf_n::globals::delta_time;
 
 Renderer::Renderer( bool debug ) : m_debug{ debug } {}
 
@@ -20,7 +20,7 @@ Renderer::~Renderer() {}
 
 void Renderer::setupRenderer() {
 	// create render window, camera object and basic UIOverlay
-	m_window = new GlfwWindow( "orf-n", 1600, 1000, m_debug );
+	m_window = new glfw_window( "orf-n", 1600, 1000, m_debug );
 	// Before we proceed, perform a basic look around.
 	if( !checkEnvironment() ) {
 		std::string s{ "The graphics environment is unfit to run this program." };
@@ -28,11 +28,11 @@ void Renderer::setupRenderer() {
 		throw std::runtime_error{ s };
 	}
 	// Just to have a camera object. Applications may set position and target
-	m_camera = new Camera{ m_window, omath::dvec3{ 0.0, 0.0, 1.0 }, omath::dvec3{ 0.0, 0.0, 0.0 },
-		omath::vec3{ 0.0f, 1.0f, 0.0f }, 1.0f, 1000.0f, Camera::FIRST_PERSON };
+	m_camera = new camera{ m_window, omath::dvec3{ 0.0, 0.0, 1.0 }, omath::dvec3{ 0.0, 0.0, 0.0 },
+		omath::vec3{ 0.0f, 1.0f, 0.0f }, 1.0f, 1000.0f, camera::FIRST_PERSON };
 	m_overlay = new UIOverlay( m_window );
 
-	m_framebuffer = new orf_n::Framebuffer( m_window->getWidth(), m_window->getHeight() );
+	m_framebuffer = new orf_n::Framebuffer( m_window->get_width(), m_window->get_height() );
 	m_framebuffer->addColorAttachment( GL_SRGB, GL_COLOR_ATTACHMENT0 );
 	m_framebuffer->addDepthAttachment( GL_DEPTH_COMPONENT32F );
 	if( !m_framebuffer->isComplete() ) {
@@ -43,13 +43,13 @@ void Renderer::setupRenderer() {
 		logbook::log_msg( logbook::RENDERER, logbook::ERROR, "Framebuffer/renderbuffer created." );
 
 	// Build the scene and set it up.
-	m_scene = new Scene( m_window, m_camera, m_overlay );
-	m_scene->addRenderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
-	//m_scene->addRenderable( 1, std::make_shared<TerrainLOD>() );
-	//m_scene->addRenderable( 1, std::make_shared<Positions>() );
-	//m_scene->addRenderable( 1, std::make_shared<HydroErosionMDH07>() );
-	//m_scene->addRenderable( 1, std::make_shared<PhysicsDemo>() );
-	//m_scene->addRenderable( 9, std::make_shared<SkyBox>() );
+	m_scene = new scene( m_window, m_camera, m_overlay );
+	//m_scene->add_renderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
+	m_scene->add_renderable( 1, std::make_shared<TerrainLOD>() );
+	//m_scene->add_renderable( 1, std::make_shared<Positions>() );
+	//m_scene->add_renderable( 1, std::make_shared<HydroErosionMDH07>() );
+	//m_scene->add_renderable( 1, std::make_shared<PhysicsDemo>() );
+	m_scene->add_renderable( 9, std::make_shared<SkyBox>() );
 
 }
 
@@ -63,10 +63,10 @@ void Renderer::render() const {
 	double lastFrame { 0.0 };
 	uint64_t frameCounter { 0 };
 
-	while( !glfwWindowShouldClose( m_window->getWindow() ) ) {
+	while( !glfwWindowShouldClose( m_window->get_window() ) ) {
 		double currentFrame { glfwGetTime() };
 		++frameCounter;
-		globals::deltaTime = currentFrame - lastFrame;
+		orf_n::globals::delta_time = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		//glEnable( GL_FRAMEBUFFER_SRGB );
@@ -76,7 +76,7 @@ void Renderer::render() const {
 
 		m_scene->prepareFrame();
 		// Called after prepareFrame() because UIOverlay has to start a new frame.
-		m_scene->getCamera()->updateMoving();
+		m_scene->get_camera()->updateMoving();
 
 		m_scene->render();
 		m_scene->endFrame();
@@ -89,12 +89,12 @@ void Renderer::render() const {
 		// clear to blue to distinguish between draw framebuffer; color::blue
 		glClearColor( 0.0f, 0.0f, 1.0f, 1.0f );
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-		glBlitFramebuffer( 0, 0, m_window->getWidth(), m_window->getHeight(),
-						   0, 0, m_window->getWidth(), m_window->getHeight(),
+		glBlitFramebuffer( 0, 0, m_window->get_width(), m_window->get_height(),
+						   0, 0, m_window->get_width(), m_window->get_height(),
 						   GL_COLOR_BUFFER_BIT, GL_NEAREST );
 
 		glfwPollEvents();
-		glfwSwapBuffers( m_scene->getWindow()->getWindow() );
+		glfwSwapBuffers( m_scene->get_window()->get_window() );
 
 	}
 	logbook::log_msg( orf_n::logbook::RENDERER, orf_n::logbook::INFO,

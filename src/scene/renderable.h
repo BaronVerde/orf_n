@@ -12,25 +12,25 @@
 
 namespace orf_n {
 
-class Scene;
+class scene;
 
 /**
  * Abstract class for the life cycle of a renderable object with 5 stages.
  * setup(), render() and cleanup() must be overridden.
  */
-class Renderable {
+class renderable {
 public:
 	/**
 	 * Create a new renderable object.
 	 * @param name Name of object. No special meaning.
 	 */
-	Renderable( const std::string &name );
+	renderable( const std::string &name );
 
-	virtual ~Renderable();
+	virtual ~renderable();
 
-	virtual const std::string &getName() const final;
+	virtual const std::string &get_name() const final;
 
-	virtual void setScene( Scene *scene ) final;
+	virtual void set_scene( scene *scene ) final;
 
 	virtual void setup() = 0;
 
@@ -43,7 +43,7 @@ public:
 	virtual void cleanup() = 0;
 
 protected:
-	Scene *m_scene;
+	scene *m_scene;
 
 	std::string m_name;
 

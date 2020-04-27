@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <base/Globals.h>
+#include <base/globals.h>
 #include <geometry/Ellipsoid.h>
 #include <geometry/OBB.h>
 #include <geometry/Sphere.h>

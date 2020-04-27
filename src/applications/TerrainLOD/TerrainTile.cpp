@@ -1,6 +1,7 @@
 
+#include <applications/camera/camera.h>
 #include <base/logbook.h>
-#include "applications/Camera/Camera.h"
+#include <scene/scene.h>
 #include "GridMesh.h"
 #include "LODSelection.h"
 #include "QuadTree.h"
@@ -9,7 +10,6 @@
 #include "renderer/Module.h"
 #include "renderer/Sampler.h"
 #include "renderer/Uniform.h"
-#include "scene/Scene.h"
 #include <iostream>
 #include <string>
 #include <sstream>

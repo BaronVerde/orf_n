@@ -14,12 +14,12 @@ namespace globals {
  * Number of ticks between frames in microseconds.
  * See render() method in class Renderer.
  */
-extern double deltaTime;
+extern double delta_time;
 
 /**
  * UI vars shared among components
  */
-extern bool showAppUI;
+extern bool show_app_ui;
 
 }
 

@@ -5,17 +5,17 @@
 
 #pragma once
 
-#include "base/EventHandler.h"
+#include <base/event_handler.h>
 #include "geometry/ViewFrustum.h"
 #include "omath/mat4.h"
 
 namespace orf_n {
 
-class GlfwWindow;
+class glfw_window;
 class Plane;
 class ViewFrustum;
 
-class Camera : public EventHandler {
+class camera : public event_handler {
 public:
 	// Terrain is a first person camera with double precision view matrix
 	typedef enum {
@@ -36,7 +36,7 @@ public:
 	 * camera up vector (default y up), near and far plane as floats and the mode,
 	 * if it is an orbiting camera around the target or a free moving first person type.
 	 */
-	Camera( GlfwWindow *win,
+	camera( glfw_window *win,
 			omath::dvec3 position,
 			omath::dvec3 target,
 			omath::vec3 up = omath::vec3{ 0.0f, 1.0f, 0.0f },
@@ -44,7 +44,7 @@ public:
 			float farPlane = 100.0f,
 			cameraMode mode = ORBITING );
 
-	virtual ~Camera();
+	virtual ~camera();
 
 	const omath::mat4 &getViewMatrix() const;
 
@@ -97,16 +97,16 @@ public:
 	 */
 	void updateMoving();
 
-	const float &getNearPlane() const;
+	const float &get_near_plane() const;
 
-	const float &getFarPlane() const;
+	const float &get_far_plane() const;
 
-	void setNearPlane( const float &np );
+	void set_near_plane( const float &np );
 
-	void setFarPlane( const float &fp );
+	void set_far_plane( const float &fp );
 
 private:
-	GlfwWindow *m_window;
+	glfw_window *m_window;
 
 	omath::dvec3 m_position;
 
@@ -182,15 +182,15 @@ private:
 	 */
 	bool m_wireframe{ false };
 
-	bool onKeyPressed( int key, int scancode, int action, int mods ) override final;
+	bool on_key_pressed( int key, int scancode, int action, int mods ) override final;
 
-	bool onMouseMove( float x, float y ) override final;
+	bool on_mouse_move( float x, float y ) override final;
 
-	bool onMouseButton( int button, int action, int mods ) override final;
+	bool on_mouse_button( int button, int action, int mods ) override final;
 
-	bool onMouseScroll( float xOffset, float yOffset ) override final;
+	bool on_mouse_scroll( float xOffset, float yOffset ) override final;
 
-	bool onFramebufferResize( int width, int height ) override final;
+	bool on_framebuffer_resize( int width, int height ) override final;
 
 	/**
 	 * Helper function to calculate distance, yaw and pitch on creation and
@@ -203,7 +203,7 @@ private:
 	 * Depend on prior calculateInitialValues() on camera creation or change of
 	 * position or target !
 	 */
-	void updateCameraVectors();
+	void updatecameraVectors();
 
 	// debug output
 	void printPosition() const;

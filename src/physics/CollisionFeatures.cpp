@@ -1,5 +1,5 @@
 
-#include <base/Globals.h>
+#include <base/globals.h>
 #include <geometry/Line.h>
 #include <geometry/OBB.h>
 #include <geometry/Plane.h>

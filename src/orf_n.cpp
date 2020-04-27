@@ -1,7 +1,7 @@
 
+#include <base/globals.h>
 #include <base/logbook.h>
 #include "glad/glad.h"
-#include "base/Globals.h"
 #include <iostream>
 #include "renderer/Renderer.h"
 #include <cstring>	// strcmp()
@@ -9,7 +9,8 @@
 
 using namespace orf_n;
 
-extern double globals::deltaTime = 0.0;
+extern double globals::delta_time = 0.0;
+extern bool globals::show_app_ui = false;
 
 int main( int argc, char *argv[] ) {
 

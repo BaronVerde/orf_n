@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "applications/Camera/Camera.h"
+#include <applications/camera/camera.h>
 #include "HeightMap.h"
 #include "LODSelection.h"
 #include "Node.h"

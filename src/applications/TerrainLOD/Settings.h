@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <applications/Camera/Camera.h>
+#include <applications/camera/camera.h>
 #include <applications/TerrainLOD/HeightMap.h>
 #include <string>
 

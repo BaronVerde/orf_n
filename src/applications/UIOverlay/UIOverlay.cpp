@@ -1,22 +1,22 @@
 
+#include <applications/camera/camera.h>	// near- and far plane
+#include "base/globals.h"
 #include <base/logbook.h>
-#include "applications/Camera/Camera.h"	// near- and far plane
+#include <scene/scene.h>
 #include "UIOverlay.h"
-#include "base/Globals.h"	// deltaTime
 #include "omath/mat4.h"
 #include "renderer/Texture2D.h"
 #include "renderer/Uniform.h"
-#include "scene/Scene.h"
 #include "imgui/imgui.h"
 
 namespace orf_n {
 
-extern double globals::deltaTime;
-extern bool globals::showAppUI{ true };
+extern double globals::delta_time;
+extern bool globals::show_app_ui;
 
 // Low priority, rendered last
-UIOverlay::UIOverlay( GlfwWindow *win ) :
-		Renderable{ "UIOverlay" }, EventHandler{ win }, m_window{ win } {}
+UIOverlay::UIOverlay( glfw_window *win ) :
+		renderable{ "UIOverlay" }, event_handler{ win }, m_window{ win } {}
 
 UIOverlay::~UIOverlay() {}
 
@@ -29,8 +29,8 @@ void UIOverlay::setup() {
 	ImGui::StyleColorsClassic();
 	ImGuiStyle &style{ ImGui::GetStyle() };
 	style.Alpha = 1.0f;
-	io.DisplaySize.x = (float)m_window->getWidth();
-	io.DisplaySize.y = (float)m_window->getHeight();
+	io.DisplaySize.x = (float)m_window->get_width();
+	io.DisplaySize.y = (float)m_window->get_height();
 
 	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
 	io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
@@ -98,13 +98,13 @@ void UIOverlay::setup() {
 	glGenBuffers( 1, &m_vboHandle );
 	glGenBuffers( 1, &m_elementsHandle );
 
-	unsigned int cb = EventHandler::KEY |
-					  EventHandler::MOUSE_MOVE |
-					  EventHandler::MOUSE_BUTTON |
-					  EventHandler::MOUSE_SCROLL |
-					  EventHandler::CHAR;
-	EventHandler::RegisteredObject o { this, cb };
-	registerObject( o );
+	unsigned int cb = event_handler::KEY |
+					  event_handler::MOUSE_MOVE |
+					  event_handler::MOUSE_BUTTON |
+					  event_handler::MOUSE_SCROLL |
+					  event_handler::CHAR;
+	event_handler::registered_object_t o { this, cb };
+	register_object( o );
 
 }
 
@@ -133,12 +133,12 @@ void UIOverlay::render() {
 	ImGuiIO& io{ ImGui::GetIO() };
 	// get style for alpha blending
 	ImGuiStyle &style{ ImGui::GetStyle() };
-	if( io.DisplaySize.x != (float)m_window->getWidth() )
-		io.DisplaySize.x = (float)m_window->getWidth();
-	if( io.DisplaySize.y != (float)m_window->getHeight() )
-		io.DisplaySize.y = (float)m_window->getHeight();
+	if( io.DisplaySize.x != (float)m_window->get_width() )
+		io.DisplaySize.x = (float)m_window->get_width();
+	if( io.DisplaySize.y != (float)m_window->get_height() )
+		io.DisplaySize.y = (float)m_window->get_height();
 
-	io.DeltaTime = static_cast<float>( globals::deltaTime );
+	io.DeltaTime = static_cast<float>( globals::delta_time );
 
 	omath::mat4 oMa = omath::ortho( 0.0f, io.DisplaySize.x, io.DisplaySize.y, 0.0f, 0.0f, 1.0f );
 
@@ -147,23 +147,23 @@ void UIOverlay::render() {
 
 	ImGui::Begin( "orf_n UI" );
 	ImGui::Text( "Press ctrl-U to toggle UI display on/off" );
-	if( m_window->isCursorDisabled() )
+	if( m_window->is_cursor_disabled() )
 		ImGui::Text( "Cursor disabled" );
 	else
 		ImGui::Text( "Cursor normal" );
 	ImGui::SameLine(); ImGui::Text( "; left-ALT to toggle." );
 	ImGui::Separator();
-	bool oldVsync{ m_window->getVsync() };
+	bool oldVsync{ m_window->get_v_sync() };
 	bool vsync{ oldVsync };
 	ImGui::Checkbox( "Vsync", &vsync );
 	if( vsync != oldVsync )
-		m_window->setVsync( vsync );
-	ImGui::SameLine(); ImGui::Text( "   %.1lf fps", 1 / globals::deltaTime );
+		m_window->set_v_sync( vsync );
+	ImGui::SameLine(); ImGui::Text( "   %.1lf fps", 1 / globals::delta_time );
 	ImGui::SameLine();
-	ImGui::Text( "FB size %d/%d", m_scene->getWindow()->getWidth(), m_scene->getWindow()->getHeight() );
+	ImGui::Text( "FB size %d/%d", m_scene->get_window()->get_width(), m_scene->get_window()->get_height() );
 	ImGui::SliderFloat( "UI alpha", &style.Alpha, 0.3f, 1.0f );
 	ImGui::Separator();
-	ImGui::Checkbox( "Show App UI", &globals::showAppUI );
+	ImGui::Checkbox( "Show App UI", &globals::show_app_ui );
 	ImGui::End();
 	ImGui::Render();
 
@@ -193,7 +193,7 @@ void UIOverlay::render() {
 	ImVec2 pos = drawData->DisplayPos;
 	int fbWidth{ 0 };
 	int fbHeight{ 0 };
-	glfwGetFramebufferSize( m_window->getWindow(), &fbWidth, &fbHeight );
+	glfwGetFramebufferSize( m_window->get_window(), &fbWidth, &fbHeight );
 	for( int n = 0; n < drawData->CmdListsCount; n++ ) {
 		const ImDrawList* cmd_list = drawData->CmdLists[n];
 		const ImDrawIdx* idx_buffer_offset = 0;
@@ -243,7 +243,7 @@ void UIOverlay::render() {
 }
 
 void UIOverlay::cleanup() {
-	deRegisterObject( this );
+	de_register_object( this );
 	glDeleteBuffers( 1, &m_vboHandle );
 	glDeleteBuffers( 1, &m_elementsHandle );
 	glDeleteTextures( 1, &m_fontTexture );
@@ -251,13 +251,13 @@ void UIOverlay::cleanup() {
 	ImGui::DestroyContext();
 }
 
-// functions to be called by the EventHandler if UIOverlay is present
+// functions to be called by the event_handler if UIOverlay is present
 // virtual
-bool UIOverlay::onMouseMove( float x, float y ) {
-	if( m_window->isCursorDisabled() )
+bool UIOverlay::on_mouse_move( float x, float y ) {
+	if( m_window->is_cursor_disabled() )
 		return false;
     ImGuiIO& io = ImGui::GetIO();
-    GLFWwindow *win = m_window->getWindow();
+    GLFWwindow *win = m_window->get_window();
 	// Update mouse position
     const ImVec2 mouse_pos_backup = io.MousePos;
     io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
@@ -274,8 +274,8 @@ bool UIOverlay::onMouseMove( float x, float y ) {
 }
 
 // virtual
-bool UIOverlay::onMouseButton( int button, int action, int mods ) {
-	if( m_window->isCursorDisabled() )
+bool UIOverlay::on_mouse_button( int button, int action, int mods ) {
+	if( m_window->is_cursor_disabled() )
 		return false;
 	bool handled = false;
 	bool mouseJustPressed[5] { false, false, false, false, false };
@@ -288,19 +288,19 @@ bool UIOverlay::onMouseButton( int button, int action, int mods ) {
 	for( int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++ ) {
 		// If a mouse press event came, always pass it as "mouse held this frame",
 		// so we don't miss click-release events that are shorter than 1 frame.
-		io.MouseDown[i] = mouseJustPressed[i] || glfwGetMouseButton( m_window->getWindow(), i ) != 0;
+		io.MouseDown[i] = mouseJustPressed[i] || glfwGetMouseButton( m_window->get_window(), i ) != 0;
 		mouseJustPressed[i] = false;
 	}
 	return handled;
 }
 
 // virtual
-bool UIOverlay::onMouseScroll( float xOffset, float yOffset ) {
+bool UIOverlay::on_mouse_scroll( float xOffset, float yOffset ) {
 	return true;
 }
 
 // virtual
-bool UIOverlay::onKeyPressed( int key, int scancode, int action, int mods ) {
+bool UIOverlay::on_key_pressed( int key, int scancode, int action, int mods ) {
 	// Toggle UI with ctrl-U
 	bool handled{ false };
 	if( GLFW_PRESS == action && GLFW_KEY_U == key && ( GLFW_MOD_CONTROL & mods ) ) {
@@ -311,7 +311,7 @@ bool UIOverlay::onKeyPressed( int key, int scancode, int action, int mods ) {
 }
 
 // virtual
-bool UIOverlay::onChar( unsigned int code ) {
+bool UIOverlay::on_char( unsigned int code ) {
 	if( code > 0 && code < 0x10000 ) {
 		ImGuiIO& io = ImGui::GetIO();
 		io.AddInputCharacter( (unsigned short)code );

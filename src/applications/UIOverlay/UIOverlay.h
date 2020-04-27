@@ -7,16 +7,16 @@
 
 #pragma once
 
-#include "base/GlfwWindow.h"
+#include <base/glfw_window.h>
+#include <scene/renderable.h>
 #include "renderer/Program.h"
-#include "scene/Renderable.h"
 #include "imgui/imgui.h"
 
 namespace orf_n {
 
-class UIOverlay : public Renderable, EventHandler {
+class UIOverlay : public renderable, event_handler {
 public:
-	UIOverlay( GlfwWindow *win );
+	UIOverlay( glfw_window *win );
 
 	virtual ~UIOverlay();
 
@@ -41,7 +41,7 @@ private:
 
 	bool m_showUI{ true };
 
-	GlfwWindow *m_window;
+	glfw_window *m_window;
 
 	Program *m_shader;
 
@@ -61,15 +61,15 @@ private:
 
 	GLuint m_elementsHandle;
 
-	virtual bool onMouseMove( float x, float y ) override;
+	virtual bool on_mouse_move( float x, float y ) override;
 
-	virtual bool onMouseButton( int button, int action, int mods ) override;
+	virtual bool on_mouse_button( int button, int action, int mods ) override;
 
-	virtual bool onMouseScroll( float xOffset, float yOffset ) override;
+	virtual bool on_mouse_scroll( float xOffset, float yOffset ) override;
 
-	virtual bool onKeyPressed( int key, int scancode, int action, int mods ) override;
+	virtual bool on_key_pressed( int key, int scancode, int action, int mods ) override;
 
-	virtual bool onChar( unsigned int code ) override;
+	virtual bool on_char( unsigned int code ) override;
 
 };
 

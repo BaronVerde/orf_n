@@ -1,11 +1,11 @@
 
 #pragma once
 
+#include <scene/renderable.h>
 #include "Settings.h"
 #include "renderer/Color.h"
 #include "renderer/DrawPrimitives.h"
 #include "renderer/VertexArray3D.h"
-#include "scene/Renderable.h"
 
 namespace terrain {
 	class TerrainTile;
@@ -18,7 +18,7 @@ namespace orf_n {
 	class IndexBuffer;
 }
 
-class TerrainLOD : public orf_n::Renderable {
+class TerrainLOD : public orf_n::renderable {
 public:
 
 	TerrainLOD();

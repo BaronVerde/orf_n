@@ -15,14 +15,14 @@
 
 #pragma once
 
+#include <scene/renderable.h>
 #include "omath/vec3.h"
 #include "renderer/Program.h"
 #include "renderer/TextureCube.h"
 #include "renderer/VertexArray3D.h"
-#include "scene/Renderable.h"
 #include <memory>
 
-class SkyBox : public orf_n::Renderable {
+class SkyBox : public orf_n::renderable {
 public:
 	SkyBox( const std::vector<std::string> &files = {} );
 

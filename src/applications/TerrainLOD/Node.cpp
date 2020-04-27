@@ -101,7 +101,7 @@ bool Node::isLeaf() const {
 
 orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompletelyInFrustum ) {
 	// Shortcut
-	const orf_n::Camera *cam{ lodSelection->m_camera };
+	const orf_n::camera *cam{ lodSelection->m_camera };
 	// Test early outs
 	orf_n::intersect_t frustumIntersection = parentCompletelyInFrustum ?
 			orf_n::INSIDE : cam->getViewFrustum().isBoxInFrustum( m_boundingBox );
@@ -157,7 +157,7 @@ orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompl
 		// Set tile index, min distance and min/max levels for sorting
 		// @todo sorting temporarily disabled
 		if( lodSelection->m_sortByDistance )
-			lodSelection->m_selectedNodes[lodSelection->m_selectionCount].minDistanceToCamera =
+			lodSelection->m_selectedNodes[lodSelection->m_selectionCount].minDistanceTocamera =
 					std::sqrt( lodSelection->m_selectedNodes[lodSelection->m_selectionCount].
 					node->getBoundingBox()->minDistanceFromPointSq( cam->getPosition() ) );
 		lodSelection->m_selectionCount++;

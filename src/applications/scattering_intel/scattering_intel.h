@@ -2,6 +2,7 @@
 #pragma once
 
 #include "scene/Renderable.h"
+#include "renderer/Framebuffer.h"
 
 namespace scattering {
 
@@ -20,37 +21,34 @@ public:
 	virtual void cleanup() override final;
 
 private:
+	void build_gui_window() const;
 	bool CreateShadowMap();
 	void ReleaseShadowMap();
-	bool CreateTmpBackBuffAndDepthBuff();
-	void ReleaseTmpBackBuffAndDepthBuff();
 	//void RenderShadowMap(ID3D11DeviceContext *pContext, SLightAttribs &LightAttribs);
 	float GetSceneExtent();
-	class CLightSctrPostProcess *m_pLightSctrPP;
-	unsigned int m_uiShadowMapResolution;
-	float m_fCascadePartitioningFactor;
-	bool m_bEnableLightScattering;
-	bool m_bAnimateSun;
-	static const int m_iMinEpipolarSlices = 32;
-	static const int m_iMaxEpipolarSlices = 2048;
-	static const int m_iMinSamplesInEpipolarSlice = 32;
-	static const int m_iMaxSamplesInEpipolarSlice = 2048;
-	static const int m_iMaxEpipoleSamplingDensityFactor = 32;
-	static const int m_iMinInitialSamplesInEpipolarSlice = 8;
+	class CLightSctrPostProcess* m_pLightSctrPP{nullptr};
+	unsigned int m_uiShadowMapResolution{1024};
+	float m_fCascadePartitioningFactor{0.95f};
+	bool m_bEnableLightScattering{true};
+	bool m_bAnimateSun{false};
 	//SPostProcessingAttribs m_PPAttribs;
-	float m_fScatteringScale;
+	float m_fScatteringScale{0.5f};
 	//std::vector<CComPtr<ID3D11DepthStencilView> > m_pShadowMapDSVs;
 	//CComPtr<ID3D11ShaderResourceView> m_pShadowMapSRV;
-	//CPUTRenderTargetColor*  m_pOffscreenRenderTarget;
-	//CPUTRenderTargetDepth*  m_pOffscreenDepth;
-	//CPUTCamera*           m_pDirectionalLightCamera;
-	//CPUTCamera*           m_pDirLightOrienationCamera;
+
+	//@todo: These may be two different framebuffers !
+	orf_n::Framebuffer* m_pOffscreenRenderTarget{nullptr};
+	//CPUTRenderTargetColor* m_pOffscreenRenderTarget{NULL};
+	//CPUTRenderTargetDepth* m_pOffscreenDepth{NULL};
+
+	//CPUTCamera* m_pDirectionalLightCamera;
+	//CPUTCamera* m_pDirLightOrienationCamera;
 	//CPUTCameraController* mpCameraController;
 	//CPUTCameraController* m_pLightController;
-	//CPUTTimerWin          m_Timer;
-	float                 m_fElapsedTime;
-	omath::vec4 m_f4LightColor;
-	int m_iGUIMode;
+	//CPUTTimerWin m_Timer;
+	float m_fElapsedTime;
+	omath::vec4 m_f4LightColor{1.0f};
+	int m_iGUIMode{1};
 	//SRenderingParams m_TerrainRenderParams;
 	std::string m_strRawDEMDataFile;
 	std::string m_strMtrlMaskFile;
@@ -59,12 +57,14 @@ private:
 	//std::auto_ptr<CElevationDataSource> m_pElevDataSource;
 	//CEarthHemsiphere m_EarthHemisphere;
 	omath::mat4 m_CameraViewMatrix;
-	omath::vec3 m_CameraPos;
+	omath::vec3 m_CameraPos{0.0f};
 	//CComPtr<ID3D11Buffer> m_pcbLightAttribs;
-	unsigned int m_uiBackBufferWidth, m_uiBackBufferHeight;
+	unsigned int m_uiBackBufferWidth{0};
+	unsigned int m_uiBackBufferHeight{0};
 	//CPUTDropdown* m_pSelectPanelDropDowns[3];
-	unsigned int m_uiSelectedPanelInd;
-	float m_fMinElevation, m_fMaxElevation;
+	unsigned int m_uiSelectedPanelInd{0};
+	float m_fMinElevation;
+	float m_fMaxElevation;
 	//COutdoorLightScatteringSample(const COutdoorLightScatteringSample&);
 	//const COutdoorLightScatteringSample& operator = (const COutdoorLightScatteringSample&);
 

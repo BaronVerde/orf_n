@@ -1,13 +1,13 @@
 
+#include <scene/scene.h>
 #include "SkyBox.h"
 #include "renderer/Uniform.h"
 #include "renderer/VertexArray3D.h"
-#include "scene/Scene.h"
 
 using namespace orf_n;
 
 SkyBox::SkyBox( const std::vector<std::string> &files ) :
-		Renderable{ "SkyBox" } {
+		renderable{ "SkyBox" } {
 	if( 6 != files.size() ) {
 		std::vector<std::string> faces{
 			/*"resources/Cubemaps/starfield_rt.tga",
@@ -100,7 +100,7 @@ void SkyBox::render() {
 	m_texture->bind();
 	// Set view and projection matrix
 	setUniform( m_program->getProgram(), "projectionView",
-			m_scene->getCamera()->getUntranslatedViewPerspectiveMatrix() );
+			m_scene->get_camera()->getUntranslatedViewPerspectiveMatrix() );
 	glDrawArrays( GL_TRIANGLES, 0, 36 );
 
 	glDepthFunc( GL_LESS );

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <omath/vec3.h>
+#include "omath/vec3.h"
 #include <ostream>
 
 namespace orf_n {

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "applications/Camera/Camera.h"
+#include <applications/camera/camera.h>
 #include "Settings.h"
 #include "omath/vec4.h"
 
@@ -25,7 +25,7 @@ public:
 		bool hasTR{ false };
 		bool hasBL{ false };
 		bool hasBR{ false };
-		double minDistanceToCamera{ 0.0 };	// for sorting by distance
+		double minDistanceTocamera{ 0.0 };	// for sorting by distance
 
 		selectedNode_t() {};
 
@@ -33,7 +33,7 @@ public:
 		node{n}, tileIndex{tileIndex}, lodLevel{lvl}, hasTL{tl}, hasTR{tr}, hasBL{bl}, hasBR{br} {}
 	} selectedNode_t;
 
-	LODSelection( const orf_n::Camera *cam, bool sortByDistance = false );
+	LODSelection( const orf_n::camera *cam, bool sortByDistance = false );
 
 	virtual ~LODSelection();
 
@@ -49,7 +49,7 @@ public:
 
 	const omath::vec4 getMorphConsts( const int lodLevel ) const;
 
-	const orf_n::Camera *m_camera{ nullptr };
+	const orf_n::camera *m_camera{ nullptr };
 
 	float m_visibilityRanges[NUMBER_OF_LOD_LEVELS];
 

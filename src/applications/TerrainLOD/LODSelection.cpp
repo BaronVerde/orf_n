@@ -9,7 +9,7 @@
 
 namespace terrain {
 
-LODSelection::LODSelection( const orf_n::Camera *cam, bool sortByDistance ) :
+LODSelection::LODSelection( const orf_n::camera *cam, bool sortByDistance ) :
 		m_camera{ cam }, m_sortByDistance{ sortByDistance } {
 	calculateRanges();
 }
@@ -23,8 +23,8 @@ void LODSelection::calculateRanges() {
 		total += currentDetailBalance;
 		currentDetailBalance *= LOD_LEVEL_DISTANCE_RATIO;
 	}
-	float sect{ ( m_camera->getFarPlane() - m_camera->getNearPlane() ) / total };
-	float prevPos{ m_camera->getNearPlane() };
+	float sect{ ( m_camera->get_far_plane() - m_camera->get_near_plane() ) / total };
+	float prevPos{ m_camera->get_near_plane() };
 	currentDetailBalance = 1.0f;
 	for( int i{ 0 }; i < NUMBER_OF_LOD_LEVELS; ++i ) {
 		// @todo why is this inverted ?
@@ -32,7 +32,7 @@ void LODSelection::calculateRanges() {
 		prevPos = m_visibilityRanges[NUMBER_OF_LOD_LEVELS - i - 1];
 		currentDetailBalance *= LOD_LEVEL_DISTANCE_RATIO;
 	}
-	prevPos = m_camera->getNearPlane();
+	prevPos = m_camera->get_near_plane();
 	std::ostringstream s;
 	s << "Lod levels and ranges: lvl/range/start/end ";
 	for( int i{ 0 }; i < NUMBER_OF_LOD_LEVELS; ++i ) {
@@ -55,7 +55,7 @@ void LODSelection::reset() {
 static inline int compareCloserFirst( const void *arg1, const void *arg2 ) {
 	const LODSelection::selectedNode_t *a = (const LODSelection::selectedNode_t *)arg1;
 	const LODSelection::selectedNode_t *b = (const LODSelection::selectedNode_t *)arg2;
-	return a->minDistanceToCamera > b->minDistanceToCamera;
+	return a->minDistanceTocamera > b->minDistanceTocamera;
 }
 
 // sort by tile index and distance
@@ -68,7 +68,7 @@ void LODSelection::setDistancesAndSort() {
 	for( int i{ 0 }; i < m_selectionCount; ++i ) {
 		selectedNode_t n{ m_selectedNodes[i] };
 		s << "Node " << *n.node->getBoundingBox() << "; tile " << n.tileIndex << "; lvl " << n.lodLevel <<
-				"; distance " << n.minDistanceToCamera << '\n';
+				"; distance " << n.minDistanceTocamera << '\n';
 	}
 	std::cout << s.str();*/
 }

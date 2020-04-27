@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include <scene/scene.h>
 #include "Framebuffer.h"
-#include "scene/Scene.h"
 
 namespace orf_n {
 
@@ -47,11 +47,11 @@ public:
 private:
 	bool m_debug{ false };
 
-	Scene *m_scene{ nullptr };
+	scene *m_scene{ nullptr };
 
-	GlfwWindow *m_window{ nullptr };
+	glfw_window *m_window{ nullptr };
 
-	Camera *m_camera{ nullptr };
+	camera *m_camera{ nullptr };
 
 	Framebuffer *m_framebuffer{ nullptr };
 
