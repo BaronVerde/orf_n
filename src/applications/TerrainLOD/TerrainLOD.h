@@ -9,7 +9,7 @@
 
 namespace terrain {
 	class TerrainTile;
-	class GridMesh;
+	class gridmesh;
 	class LODSelection;
 }
 
@@ -32,16 +32,15 @@ public:
 	virtual void cleanup() override final;
 
 private:
+	const std::vector<std::string> TERRAIN_FILES {
+		"resources/textures/terrain/area_52_06/tile_4096_1",
+		/*"resources/textures/Terrain/Area_52_06/tile_2048_2",
+		"resources/textures/Terrain/Area_52_06/tile_2048_3",
+		"resources/textures/Terrain/Area_52_06/tile_2048_4"*/
+	};
 
 	// Maximum number of tiles simultaneously loaded in memory.
-	static const int MAX_NUMBER_OF_TILES{ 4 };
-
-	const std::vector<std::string> TERRAIN_FILES {
-		"resources/Textures/Terrain/Area_52_06/tile_2048_1",
-		"resources/Textures/Terrain/Area_52_06/tile_2048_2",
-		"resources/Textures/Terrain/Area_52_06/tile_2048_3",
-		"resources/Textures/Terrain/Area_52_06/tile_2048_4"
-	};
+	const int MAX_NUMBER_OF_TILES{ (int)TERRAIN_FILES.size() };
 
 	struct renderStats_t {
 		int totalRenderedNodes{ 0 };
@@ -53,7 +52,7 @@ private:
 
 	std::vector<terrain::TerrainTile *> m_terrainTiles;
 
-	std::unique_ptr<terrain::GridMesh> m_drawGridMesh{ nullptr };
+	std::unique_ptr<terrain::gridmesh> m_drawGridMesh{ nullptr };
 
 	std::unique_ptr<orf_n::Program> m_shaderTerrain{ nullptr };
 

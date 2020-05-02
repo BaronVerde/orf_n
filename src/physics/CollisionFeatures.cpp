@@ -20,7 +20,7 @@ collisionManifold_t findCollisionFeatures( const Sphere &a, const Sphere &b ) {
 	const double r{ a.getRadius() + b.getRadius() };
 	const omath::dvec3 d{ b.getPosition() - a.getPosition() };
 	// Distance to large, no intersection
-	if( omath::magnitudeSq( d ) - r * r > 0 || omath::compareFloat( omath::magnitudeSq( d ), 0.0 ) )
+	if( omath::magnitudeSq( d ) - r * r > 0 || omath::compare_float( omath::magnitudeSq( d ), 0.0 ) )
 		return result;
 	const omath::dvec3 dn{ omath::normalize( d ) };
 	result.colliding = true;
@@ -42,9 +42,9 @@ collisionManifold_t findCollisionFeatures( const OBB &a, const Sphere &b ) {
 		return result;
 	// Intersection ...
 	omath::dvec3 normal;
-	if( omath::compareFloat( distanceSquared, 0.0 ) ) {
+	if( omath::compare_float( distanceSquared, 0.0 ) ) {
 		const double mSq{ omath::magnitudeSq( closestPoint - a.getPosition() ) };
-		if( omath::compareFloat( mSq, 0.0 ) )
+		if( omath::compare_float( mSq, 0.0 ) )
 			return result;
 		// Closest point is at the center of the sphere
 		normal = omath::normalize( closestPoint - a.getPosition() );

@@ -21,16 +21,16 @@ bool Ray::raycast( const OBB &obb, raycastResult_t *outResult ) {
 	const omath::vec3 z{ obb.getOrientation()[2] };
 	omath::vec3 f{ omath::dot( x, m_direction ), omath::dot( y, m_direction ), omath::dot( z, m_direction )	};
 	omath::vec3 e{ omath::dot( x, p ), omath::dot( y, p ), omath::dot( z, p ) };
-	if( omath::compareFloat( f.x, 0.0f ) ) {
+	if( omath::compare_float( f.x, 0.0f ) ) {
 		if( -e.x - obb.getHalfSize().x > 0 || -e.x + obb.getHalfSize().x < 0 )
 			return false;
 		// To avoid division by 0
 		f.x = 0.00001f;
-	} else if( omath::compareFloat( f.y, 0.0f ) ) {
+	} else if( omath::compare_float( f.y, 0.0f ) ) {
 		if( -e.y - obb.getHalfSize().y > 0 || -e.y + obb.getHalfSize().y < 0 )
 			return false;
 		f.y = 0.00001f;
-	} else if( omath::compareFloat( f.z, 0.0f ) ) {
+	} else if( omath::compare_float( f.z, 0.0f ) ) {
 		if( -e.z - obb.getHalfSize().z > 0 || -e.z + obb.getHalfSize().z < 0 )
 			return false;
 		f.z = 0.00001f; // Avoid div by 0!
@@ -66,7 +66,7 @@ bool Ray::raycast( const OBB &obb, raycastResult_t *outResult ) {
 				z * -1.0f	// -z
 		};
 		for( int i{0}; i < 6; ++i )
-			if( omath::compareFloat( t_result, t[i] ) )
+			if( omath::compare_float( t_result, t[i] ) )
 				outResult->normal = omath::normalize( normals[i] );
 	}
 	return true;

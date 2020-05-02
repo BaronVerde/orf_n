@@ -101,7 +101,7 @@ std::vector<double> Ellipsoid::intersections( const omath::dvec3 origin, const o
 		// no intersections
 		result[0] = 0.0;
 		return result;
-	} else if( omath::compareFloat( discriminant, 0.0 ) ) {
+	} else if( omath::compare_float( discriminant, 0.0 ) ) {
 		// one intersection at a tangent point
 		result[0] = -0.5 * b / a;
 		return result;

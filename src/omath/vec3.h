@@ -213,7 +213,7 @@ inline vec3_t<T> operator/( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 // Boolean ops
 template<typename T>
 inline bool operator==( const vec3_t<T> &v1, const vec3_t<T> &v2) {
-	return compareFloat( v1.x, v2.x ) && compareFloat( v1.y, v2.y ) && compareFloat( v1.z, v2.z );
+	return compare_float( v1.x, v2.x ) && compare_float( v1.y, v2.y ) && compare_float( v1.z, v2.z );
 }
 
 template<typename T>

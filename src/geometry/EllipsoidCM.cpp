@@ -7,7 +7,7 @@ namespace orf_n {
 EllipsoidCM::EllipsoidCM( const omath::dvec2 axes, const unsigned int numberOfTilesPerFace ) :
 			Ellipsoid{axes.x, axes.x, axes.y}, m_numSubdivsPerFace{numberOfTilesPerFace} {
 	// @todo: between 2 and 512 ?
-	if( !omath::isPowerOf2( m_numSubdivsPerFace ) ) {
+	if( !omath::is_power_of_2( m_numSubdivsPerFace ) ) {
 		std::string s{ "CubeToEllipsoid: number of tiles per face must be power of two" };
 		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s );
 		throw std::runtime_error( "CubeToEllipsoid: number of tiles per face must be power of two." );

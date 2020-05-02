@@ -1,6 +1,6 @@
 
 #include <base/logbook.h>
-#include "TextureCube.h"
+#include <renderer/textureCube.h>
 #include <sstream>
 #include "stb/stb_image.h"
 

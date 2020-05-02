@@ -6,7 +6,7 @@
 namespace orf_n {
 
 Texture1D::Texture1D( const std::string &filename, const GLuint unit ) :
-			Texture{ GL_TEXTURE_1D, unit }, m_filename{ filename } {
+			texture{ GL_TEXTURE_1D, unit }, m_filename{ filename } {
 	uint8_t *data{ nullptr };
 	int h{ 0 };
 	data = stbi_load( filename.c_str(), &m_width, &h, &m_numChannels, 0 );
@@ -36,26 +36,26 @@ Texture1D::Texture1D( const std::string &filename, const GLuint unit ) :
 					"1D texture " + filename + " unsupported nr of channels for chosen format: " +
 					std::to_string( m_numChannels ) );
 	}
-	glTextureStorage2D( m_textureName, 1, m_format, m_width, h );
-	glTextureSubImage2D( m_textureName, 0,	// texture and mip level
+	glTextureStorage2D( m_texture_name, 1, m_format, m_width, h );
+	glTextureSubImage2D( m_texture_name, 0,	// texture and mip level
 					0, 0, m_width, h,		// offset and size
 					format, GL_UNSIGNED_BYTE, data );
 
-	bindToUnit();
+	bind_to_unit();
 
 	// Set application memory free, ogl has our data after glTextureSubImage2D()
 	if( nullptr != data )
 		stbi_image_free( data );
 
 	std::string s{ "1D texture '" + m_filename + "'; texture name #" +
-		std::to_string( m_textureName ) + "loaded." };
+		std::to_string( m_texture_name ) + "loaded." };
 	logbook::log_msg( logbook::SHADER, logbook::INFO, s );
 
 }
 
 Texture1D::~Texture1D() {
 	std::string s{ "1D texture '" + m_filename + "'; texture name #" +
-		std::to_string( m_textureName ) + "destroyed." };
+		std::to_string( m_texture_name ) + "destroyed." };
 	logbook::log_msg( logbook::SHADER, logbook::INFO, s );
 }
 

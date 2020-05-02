@@ -2,10 +2,10 @@
 #include <applications/camera/camera.h>	// near- and far plane
 #include "base/globals.h"
 #include <base/logbook.h>
+#include <renderer/texture_2d.h>
 #include <scene/scene.h>
 #include "UIOverlay.h"
 #include "omath/mat4.h"
-#include "renderer/Texture2D.h"
 #include "renderer/Uniform.h"
 #include "imgui/imgui.h"
 

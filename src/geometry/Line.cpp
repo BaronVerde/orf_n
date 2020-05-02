@@ -27,7 +27,7 @@ bool Line::clipToPlane( const Plane &plane, omath::dvec3 &outPoint ) const {
 	const omath::dvec3 ab{ m_end - m_start };
 	const double nAB{ omath::dot( plane.m_normal, ab ) };
 	// Early out if no intersection
-	if( omath::compareFloat( nAB, 0.0 ) )
+	if( omath::compare_float( nAB, 0.0 ) )
 		return false;
 	// Find intersection time along the line
 	const double nA{ omath::dot( plane.m_normal, m_start ) };

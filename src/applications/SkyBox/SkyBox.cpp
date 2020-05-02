@@ -100,7 +100,7 @@ void SkyBox::render() {
 	m_texture->bind();
 	// Set view and projection matrix
 	setUniform( m_program->getProgram(), "projectionView",
-			m_scene->get_camera()->getUntranslatedViewPerspectiveMatrix() );
+			m_scene->get_camera()->get_untranslated_view_perspective_matrix() );
 	glDrawArrays( GL_TRIANGLES, 0, 36 );
 
 	glDepthFunc( GL_LESS );

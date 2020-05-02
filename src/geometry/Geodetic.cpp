@@ -26,9 +26,9 @@ double Geodetic::getHeight() const {
 }
 
 bool Geodetic::operator==( const Geodetic &other ) const {
-	return omath::compareFloat( m_longitude, other.m_longitude ) &&
-		   omath::compareFloat( m_latitude, other.m_latitude ) &&
-		   omath::compareFloat( m_height, other.m_height );
+	return omath::compare_float( m_longitude, other.m_longitude ) &&
+		   omath::compare_float( m_latitude, other.m_latitude ) &&
+		   omath::compare_float( m_height, other.m_height );
 }
 
 bool Geodetic::operator!=( const Geodetic &other ) const {

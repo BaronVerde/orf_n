@@ -54,7 +54,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 	// Debug output
 	std::ostringstream s;
 	// Quad tree summary
-	float sizeInMemory{ (float)m_nodeCount * ( sizeof( Node ) + sizeof( orf_n::AABB ) ) };
+	float sizeInMemory{ (float)m_nodeCount * ( sizeof( Node ) + sizeof( orf_n::aabb ) ) };
 	s << "Quad tree created " << m_nodeCount << " Nodes; size in memory: " <<
 			( sizeInMemory / 1024.0f ) << "kB.\n\t" << m_topNodeCountX << '*' <<
 			m_topNodeCountZ << " top nodes.";

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <applications/camera/camera.h>
-#include "HeightMap.h"
+#include <applications/TerrainLOD/heightmap.h>
 #include "LODSelection.h"
 #include "Node.h"
 #include "omath/vec3.h"

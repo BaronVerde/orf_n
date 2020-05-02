@@ -1,15 +1,15 @@
 
 #include <applications/camera/camera.h>
+#include <applications/TerrainLOD/gridmesh.h>
 #include "base/globals.h"
 #include <scene/scene.h>
 #include "base/logbook.h"
-#include "GridMesh.h"
 #include "LODSelection.h"
 #include "Node.h"
 #include "QuadTree.h"
 #include "TerrainLOD.h"
 #include "TerrainTile.h"
-#include "geometry/AABB.h"
+#include "geometry/aabb.h"
 #include "geometry/Ellipsoid.h"
 #include "omath/mat4.h"
 #include "renderer/IndexBuffer.h"
@@ -20,12 +20,12 @@ extern bool orf_n::globals::show_app_ui;
 
 TerrainLOD::TerrainLOD() : orf_n::renderable( "TerrainLOD" ) {
 	// Prepare and check settings
-	if( !omath::isPowerOf2( terrain::LEAF_NODE_SIZE ) ||
+	if( !omath::is_power_of_2( terrain::LEAF_NODE_SIZE ) ||
 			terrain::LEAF_NODE_SIZE < 2 || terrain::LEAF_NODE_SIZE > 1024 ) {
 		std::string s{ "Settings LEAF_NODE_SIZE must be power of 2 and between 2 and 1024." };
 		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
-	if( !omath::isPowerOf2( terrain::RENDER_GRID_RESULUTION_MULT ) || terrain::RENDER_GRID_RESULUTION_MULT < 1 ) {
+	if( !omath::is_power_of_2( terrain::RENDER_GRID_RESULUTION_MULT ) || terrain::RENDER_GRID_RESULUTION_MULT < 1 ) {
 		std::string s{ "Settings RENDER_GRID_RESULUTION_MULT must be power of 2 and between 1 and LEAF_NODE_SIZE." };
 		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::ERROR, s );
 		throw std::runtime_error( s );
@@ -38,14 +38,14 @@ TerrainLOD::TerrainLOD() : orf_n::renderable( "TerrainLOD" ) {
 		std::string s{ "Settings LOD_LEVEL_DISTANCE_RATIO must be between 1.5f and 16.0f." };
 		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
-	if( !omath::isPowerOf2( terrain::GRIDMESH_DIMENSION ) ||
+	if( !omath::is_power_of_2( terrain::GRIDMESH_DIMENSION ) ||
 			terrain::GRIDMESH_DIMENSION < 8 || terrain::GRIDMESH_DIMENSION > 1024 ) {
 		std::string s{ "Gridmesh dimension must be power of 2 and > 8 and < 1024." };
 		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::WARNING, s );
 	}
 
 	// Prepare gridmesh for drawing and load terrain tiles
-	m_drawGridMesh = std::make_unique<terrain::GridMesh>( terrain::GRIDMESH_DIMENSION );
+	m_drawGridMesh = std::make_unique<terrain::gridmesh>( terrain::GRIDMESH_DIMENSION );
 	m_terrainTiles.resize( MAX_NUMBER_OF_TILES );
 	for( int i{0}; i < MAX_NUMBER_OF_TILES; ++i )
 		m_terrainTiles[i] = new terrain::TerrainTile{ TERRAIN_FILES[i] };
@@ -68,12 +68,12 @@ void TerrainLOD::setup() {
 	// Camera and selection object. Are connected because selection is based on view frustum and range.
 	// @todo parametrize or calculate initial position, direction and view range
 	std::cout << m_terrainTiles[0]->getAABB()->m_min << m_terrainTiles[0]->getAABB()->m_max << std::endl;
-	m_scene->get_camera()->setPositionAndTarget(
+	m_scene->get_camera()->set_position_and_target(
 			{ 0.0, 100.0, 0.0 }, { 2047.0, 50.0, 2047.0 }
 	);
 	m_scene->get_camera()->set_near_plane( 10.0f );
 	m_scene->get_camera()->set_far_plane( 4000.0f );
-	m_scene->get_camera()->calculateFOV();
+	m_scene->get_camera()->calculate_fov();
 
 	// @todo: no sorting for now. Should be sorted by tileIndex, distanceToCamera and lodLevel
 	// to avoid too many heightmap switches and shader uniform settings.
@@ -138,7 +138,7 @@ void TerrainLOD::render() {
 		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_diffuseLightDir", m_diffuseLightPos );
 	// Build view projection matrix relative to eye
 	const omath::dmat4 view{
-		omath::lookAt( cam->getPosition(), cam->getPosition() + omath::dvec3{cam->getFront()}, omath::dvec3{cam->getUp()} )
+		omath::lookAt( cam->get_position(), cam->get_position() + omath::dvec3{cam->get_front()}, omath::dvec3{cam->get_up()} )
 	};
 	// Identity matrix as model matrix so far
 	const omath::dmat4 mv{ view * omath::dmat4{ 1.0 } };
@@ -146,16 +146,16 @@ void TerrainLOD::render() {
 	const omath::mat4 mvRTE{
 		omath::vec4{mv[0]}, omath::vec4{mv[1]}, omath::vec4{mv[2]}, omath::vec4{ 0.0f, 0.0f, 0.0f, static_cast<float>(mv[3][3]) }
 	};
-	orf_n::setModelViewProjectionMatrixRTE( cam->getPerspectiveMatrix() * mvRTE );
-	orf_n::setViewProjectionMatrix( cam->getViewPerspectiveMatrix() );
+	orf_n::setModelViewProjectionMatrixRTE( cam->get_perspective_matrix() * mvRTE );
+	orf_n::setViewProjectionMatrix( cam->get_view_perspective__matrix() );
 	orf_n::setUniform( m_shaderTerrain->getProgram(), "debugColor", orf_n::color::gray );
-	orf_n::setCameraPosition( cam->getPosition() );
+	orf_n::setCameraPosition( cam->get_position() );
 
 	// Draw tile by tile
-	GLint drawMode{ cam->getWireframeMode() ? GL_LINES : GL_TRIANGLES };
+	GLint drawMode{ cam->get_wireframe_mode() ? GL_LINES : GL_TRIANGLES };
 	for( size_t i{0}; i < m_terrainTiles.size(); ++i ) {
 		// set tile world coords
-		const orf_n::AABB *const aabb{ m_terrainTiles[i]->getAABB() };
+		const orf_n::aabb *const aabb{ m_terrainTiles[i]->getAABB() };
 		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileMax", omath::vec2{ aabb->m_max.x, aabb->m_max.z } );
 		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileScale", omath::vec3{ aabb->m_max - aabb->m_min } );
 		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileOffset", omath::vec3{ aabb->m_min } );
@@ -178,7 +178,7 @@ void TerrainLOD::debugDrawing() {
 	// To keep the below less verbose
 	const orf_n::Program *p{ m_drawPrimitives.getProgramPtr() };
 	p->use();
-	orf_n::setUniform( p->getProgram(), "projViewMatrix", m_scene->get_camera()->getViewPerspectiveMatrix() );
+	orf_n::setUniform( p->getProgram(), "projViewMatrix", m_scene->get_camera()->get_view_perspective__matrix() );
 	glPointSize( 3.0f );
 	for( size_t i{0}; i < m_terrainTiles.size(); ++i ) {
 		if( m_showTileBoxes )
@@ -227,8 +227,8 @@ void TerrainLOD::debugDrawLowestLevelBoxes( const terrain::TerrainTile *const t 
 	const terrain::Node *const nodes{ t->getQuadTree()->getNodes() };
 	for( int i{ 0 }; i < t->getQuadTree()->getNodeCount(); ++i )
 		if( nodes[i].getLevel() == terrain::NUMBER_OF_LOD_LEVELS - 1 ) {
-			const orf_n::AABB *box{ nodes[i].getBoundingBox() };
-			if( m_scene->get_camera()->getViewFrustum().isBoxInFrustum( box ) != orf_n::OUTSIDE )
+			const orf_n::aabb *box{ nodes[i].getBoundingBox() };
+			if( m_scene->get_camera()->get_view_frustum().is_box_in_frustum( *box ) != orf_n::OUTSIDE )
 				m_drawPrimitives.drawAABB( *box, orf_n::color::cornflowerBlue );
 		}
 }

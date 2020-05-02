@@ -1,12 +1,12 @@
 
 #include "base/globals.h"
-#include <base/logbook.h>
-#include <scene/scene.h>
+#include "base/logbook.h"
+#include "renderer/sampler.h"
+#include "scene/scene.h"
 #include "IcosphereEllipsoid.h"
 #include "glad/glad.h"
 #include "omath/mat4.h"
 #include "renderer/Color.h"
-#include "renderer/Sampler.h"
 #include "renderer/Uniform.h"
 #include <iostream>
 #include <fstream>
@@ -36,20 +36,20 @@ void IcosphereEllipsoid::setup() {
 			"src/applications/IcosphereEllipsoid/IcosphereEllipsoid.frag.glsl" ) );
 	m_shader = new Program( modules );
 
-	m_texture = new Texture2D{ "resources/Textures/Ellipsoids/EarthDay_4k.jpg", 0, true };
+	m_texture = new texture_2d{ "resources/Textures/Ellipsoids/EarthDay_4k.jpg", 0, true };
 	//m_texture = new Texture2D{ "Resources/Textures/Ellipsoids/sphere1.png", 0, true };
-	setDefaultSampler( m_texture->getName(), LINEAR_CLAMP );
+	set_default_sampler( m_texture->get_name(), LINEAR_CLAMP );
 
 	m_ico = new Icosphere{ m_axes, m_numSubDivs };
 	m_vertexArray = new VertexArray3D<omath::dvec3>{ m_ico->getVertices(), 0, true };
 	m_indexBuffer = new IndexBuffer{ m_ico->getIndices() };
 
-	m_scene->get_camera()->setPositionAndTarget( { 0.0, 0.0, -15000000.0  }, { 0.0, 0.0, 0.0 } );
+	m_scene->get_camera()->set_position_and_target( { 0.0, 0.0, -15000000.0  }, { 0.0, 0.0, 0.0 } );
 	//m_scene->get_camera()->setUp( { 0.0f, 0.0f, 1.0f } );
 	m_scene->get_camera()->set_near_plane( 100.0f );
 	m_scene->get_camera()->set_far_plane( 100000000.0f );
-	m_scene->get_camera()->setMovementSpeed( 300.0f );
-	m_scene->get_camera()->calculateFOV();
+	m_scene->get_camera()->set_movement_speed( 300.0f );
+	m_scene->get_camera()->calculate_fov();
 	m_shader->use();
 	setUniform( m_shader->getProgram(), "u_oneOverRadiiSquared",
 			static_cast<omath::vec3>( m_ico->getOneOverRadiiSquared() ) );
@@ -91,7 +91,7 @@ void IcosphereEllipsoid::render() {
 	orf_n::camera *cam{ m_scene->get_camera() };	// shortcut
 	float nearPlane{ cam->get_near_plane() };
 	float farPlane{ cam->get_far_plane() };
-	float movementSpeed{ cam->getMovementSpeed() };
+	float movementSpeed{ cam->get_movement_speed() };
 	if( globals::show_app_ui ) {
 		ImGui::Begin( "Ellipsoid Params" );
 		//ImGui::Checkbox( "Origin in frustum: ", &m_visible );
@@ -112,8 +112,8 @@ void IcosphereEllipsoid::render() {
 		cam->set_near_plane( nearPlane );
 	if( farPlane != cam->get_far_plane() )
 		cam->set_far_plane( farPlane );
-	if( movementSpeed != cam->getMovementSpeed() )
-		cam->setMovementSpeed( movementSpeed );
+	if( movementSpeed != cam->get_movement_speed() )
+		cam->set_movement_speed( movementSpeed );
 
 	m_shader->use();
 	m_visible = true;
@@ -126,9 +126,9 @@ void IcosphereEllipsoid::render() {
 		m_vertexArray->bind();
 		m_indexBuffer->bind();
 		const omath::dmat4 view{ omath::lookAt(
-			cam->getPosition(),
-			cam->getPosition() + omath::dvec3{ cam->getFront() },
-			omath::dvec3{ cam->getUp() } )
+			cam->get_position(),
+			cam->get_position() + omath::dvec3{ cam->get_front() },
+			omath::dvec3{ cam->get_up() } )
 		};
 		const omath::dmat4 mv{ view * m_modelMatrix };
 		// this matrix can be used for all objects in same coord system
@@ -138,11 +138,11 @@ void IcosphereEllipsoid::render() {
 			omath::vec4{ mv[2] },
 			omath::vec4{ 0.0f, 0.0f, 0.0f, static_cast<float>( mv[3][3] ) }
 		};
-		setModelViewProjectionMatrixRTE( cam->getPerspectiveMatrix() * mvRTE );
+		setModelViewProjectionMatrixRTE( cam->get_perspective_matrix() * mvRTE );
 		// setCameraPosition() with double converts to two floats and sets high and low pos
-		setCameraPosition( cam->getPosition() );
+		setCameraPosition( cam->get_position() );
 		orf_n::setUniform( m_shader->getProgram(), "u_drawColor", orf_n::color::green * 0.5f );
-		glPolygonMode( GL_FRONT_AND_BACK, cam->getWireframeMode() ? GL_LINE : GL_FILL );
+		glPolygonMode( GL_FRONT_AND_BACK, cam->get_wireframe_mode() ? GL_LINE : GL_FILL );
 		glDrawElements( GL_TRIANGLES, m_indexBuffer->getNumber(), GL_UNSIGNED_INT, NULL );
 		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 
@@ -174,7 +174,7 @@ void IcosphereEllipsoid::readBB( const std::string &filename ) {
 	if( bbfile.is_open() ) {
 		omath::dvec3 min, max;
 		bbfile >> min.x >> min.y >> min.z >> max.x >> max.y >> max.z;
-		m_relativeBoxes.push_back( orf_n::AABB{ min, max } );
+		m_relativeBoxes.push_back( orf_n::aabb{ min, max } );
 		double lon, lat;
 		bbfile >> lon >> lat >> m_cellsize;
 		m_geodeticCoords.push_back( orf_n::Geodetic{ omath::radians(lon), omath::radians(lat) } );

@@ -1,14 +1,11 @@
 
-#include <applications/camera/camera.h>
-#include <base/globals.h>	// deltaTime
-#include <base/logbook.h>
-#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
-#include "applications/SkyBox/SkyBox.h"
+#include "applications/camera/camera.h"
+#include "base/globals.h"	// deltaTime
+#include "base/logbook.h"
+//#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
+//#include "applications/SkyBox/SkyBox.h"
 #include "applications/TerrainLOD/TerrainLOD.h"
-//#include "applications/TerrainSim/HydroTile.h"
-//#include "applications/TerrainErosion/HydroErosionMDH07.h"
 #include "renderer/Renderer.h"
-//#include "Applications/PhysicsDemo/PhysicsDemo.h"
 
 namespace orf_n {
 
@@ -20,7 +17,7 @@ Renderer::~Renderer() {}
 
 void Renderer::setupRenderer() {
 	// create render window, camera object and basic UIOverlay
-	m_window = new glfw_window( "orf-n", 1600, 1000, m_debug );
+	m_window = new glfw_window( "orf-n", 1800, 1000, m_debug );
 	// Before we proceed, perform a basic look around.
 	if( !checkEnvironment() ) {
 		std::string s{ "The graphics environment is unfit to run this program." };
@@ -46,11 +43,6 @@ void Renderer::setupRenderer() {
 	m_scene = new scene( m_window, m_camera, m_overlay );
 	//m_scene->add_renderable( 1, std::make_shared<IcosphereEllipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
 	m_scene->add_renderable( 1, std::make_shared<TerrainLOD>() );
-	//m_scene->add_renderable( 1, std::make_shared<Positions>() );
-	//m_scene->add_renderable( 1, std::make_shared<HydroErosionMDH07>() );
-	//m_scene->add_renderable( 1, std::make_shared<PhysicsDemo>() );
-	m_scene->add_renderable( 9, std::make_shared<SkyBox>() );
-
 }
 
 void Renderer::setup() const {
@@ -76,7 +68,7 @@ void Renderer::render() const {
 
 		m_scene->prepareFrame();
 		// Called after prepareFrame() because UIOverlay has to start a new frame.
-		m_scene->get_camera()->updateMoving();
+		m_scene->get_camera()->update_moving();
 
 		m_scene->render();
 		m_scene->endFrame();

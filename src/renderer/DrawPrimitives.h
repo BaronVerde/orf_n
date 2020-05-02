@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "geometry/AABB.h"
+#include "geometry/aabb.h"
 #include "Color.h"
 #include "IndexBuffer.h"
 #include "Program.h"
@@ -33,7 +33,7 @@ public:
 	 */
 	void cleanupDebugDrawing();
 
-	void drawAABB( const AABB &bb, const color_t &color ) const;
+	void drawAABB( const aabb &bb, const color_t &color ) const;
 
 	void drawOBB( const OBB &bb, const color_t &color ) const;
 

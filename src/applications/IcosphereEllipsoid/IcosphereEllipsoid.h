@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <scene/renderable.h>
-#include "geometry/AABB.h"
+#include "renderer/texture_2d.h"
+#include "scene/renderable.h"
+#include "geometry/aabb.h"
 #include "geometry/Geodetic.h"
 #include "geometry/Icosphere.h"
 #include "renderer/IndexBuffer.h"
 #include "renderer/Program.h"
-#include "renderer/Texture2D.h"
 #include "renderer/VertexArray3D.h"
 //#include "Noise/MapBuilder.h"
 
@@ -52,11 +52,11 @@ private:
 
 	orf_n::IndexBuffer *m_tileBorderIndices{ nullptr };
 
-	orf_n::Texture2D *m_texture{ nullptr };
+	orf_n::texture_2d *m_texture{ nullptr };
 
 	omath::dvec3 m_axes{ 1.0, 1.0, 1.0 };
 
-	std::vector<orf_n::AABB> m_relativeBoxes;
+	std::vector<orf_n::aabb> m_relativeBoxes;
 
 	std::vector<orf_n::Geodetic> m_geodeticCoords;
 

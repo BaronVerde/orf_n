@@ -5,22 +5,21 @@
 
 #pragma once
 
-#include <base/event_handler.h>
-#include "geometry/ViewFrustum.h"
+#include "base/event_handler.h"
+#include "geometry/view_frustum.h"
 #include "omath/mat4.h"
 
 namespace orf_n {
 
 class glfw_window;
 class Plane;
-class ViewFrustum;
 
 class camera : public event_handler {
 public:
 	// Terrain is a first person camera with double precision view matrix
 	typedef enum {
 		ORBITING = 0, FIRST_PERSON, TERRAIN
-	} cameraMode;
+	} camera_mode_t;
 
 	typedef enum {
 		// Movement of first person camera
@@ -28,7 +27,7 @@ public:
 		FAST_FORWARD, FAST_BACKWARD, FAST_RIGHT, FAST_LEFT, FAST_UP, FAST_DOWN,
 		// Movemtn of orbiting camera
 		CLOSE, RETREAT, FAST_CLOSE, FAST_RETREAT
-	} direction;
+	} direction_t;
 
 	/**
 	 * Common camera object, will be stored in the scene for all renderable objects
@@ -42,60 +41,60 @@ public:
 			omath::vec3 up = omath::vec3{ 0.0f, 1.0f, 0.0f },
 			float neaPlane = 1.0f,
 			float farPlane = 100.0f,
-			cameraMode mode = ORBITING );
+			camera_mode_t mode = ORBITING );
 
 	virtual ~camera();
 
-	const omath::mat4 &getViewMatrix() const;
+	const omath::mat4 &get_view_matrix() const;
 
-	const omath::mat4 &getViewPerspectiveMatrix() const;
+	const omath::mat4 &get_view_perspective__matrix() const;
 
-	const omath::mat4 &getUntranslatedViewPerspectiveMatrix() const;
+	const omath::mat4 &get_untranslated_view_perspective_matrix() const;
 
-	const ViewFrustum &getViewFrustum() const;
+	const view_frustum &get_view_frustum() const;
 
-	const omath::vec3 &getFront() const;
+	const omath::vec3 &get_front() const;
 
-	const omath::vec3 &getRight() const;
+	const omath::vec3 &get_right() const;
 
-	const omath::vec3 &getUp() const;
+	const omath::vec3 &get_up() const;
 
-	const omath::mat4 &getPerspectiveMatrix() const;
+	const omath::mat4 &get_perspective_matrix() const;
 
-	const omath::mat4 &getZOffsetProjMatrix() const;
+	const omath::mat4 &get_zoffset_proj_matrix() const;
 
-	const omath::dvec3 &getPosition() const;
+	const omath::dvec3 &get_position() const;
 
-	const omath::dvec3 &getTarget() const;
+	const omath::dvec3 &get_target() const;
 
-	void setPositionAndTarget( const omath::dvec3 &pos, const omath::dvec3 &target );
+	void set_position_and_target( const omath::dvec3 &pos, const omath::dvec3 &target );
 
-	void setMode( const cameraMode mode );
+	void set_mode( const camera_mode_t mode );
 
-	void setUp( const omath::vec3 &up );
+	void set_up( const omath::vec3 &up );
 
-	const float &getMovementSpeed() const;
+	const float &get_movement_speed() const;
 
-	void setMovementSpeed( const float &speed );
+	void set_movement_speed( const float &speed );
 
 	/**
 	 * Zoom angle of camera in degrees
 	 */
-	void setZoom( const float &zoom );
+	void set_zoom( const float &zoom );
 
-	const float &getZoom() const ;
+	const float &get_zoom() const ;
 
-	const bool &getWireframeMode() const;
+	const bool &get_wireframe_mode() const;
 
 	/**
 	 * Must be called on near/far plane or angle change.
 	 */
-	void calculateFOV();
+	void calculate_fov();
 
 	/**
 	 * Update camera and movement. Must be called every frame for continous movemnt.
 	 */
-	void updateMoving();
+	void update_moving();
 
 	const float &get_near_plane() const;
 
@@ -123,7 +122,7 @@ private:
 
 	float m_zoom{ 45.0f };
 
-	ViewFrustum m_frustum;
+	view_frustum m_frustum;
 
 	omath::mat4 m_viewMatrix;
 
@@ -155,7 +154,7 @@ private:
 
 	float m_pitch{ 0.0f };
 
-	cameraMode m_mode{ ORBITING };
+	camera_mode_t m_mode{ ORBITING };
 
 	float m_movementSpeed{ 30.0f };
 
@@ -167,7 +166,7 @@ private:
 	/**
 	 * Movement direction if camera is moving in firstperson mode, relative to camera axes.
 	 */
-	direction m_direction;
+	direction_t m_direction;
 
 	float m_mouseSensitivity{ 0.02f };
 
@@ -196,17 +195,17 @@ private:
 	 * Helper function to calculate distance, yaw and pitch on creation and
 	 * when position or target have been changed.
 	 */
-	void calculateInitialAngles();
+	void calculate_initial_angles();
 
 	/**
 	 * Helper func calculates cam vectors on key press or mous move, depending on mode.
 	 * Depend on prior calculateInitialValues() on camera creation or change of
 	 * position or target !
 	 */
-	void updatecameraVectors();
+	void update_camera_vectors();
 
 	// debug output
-	void printPosition() const;
+	void print_position() const;
 
 };
 

@@ -1,9 +1,8 @@
 
-#include <applications/camera/camera.h>
-#include <base/glfw_window.h>
-#include <base/globals.h>		// deltaTime
-#include "geometry/Plane.h"
-#include "geometry/ViewFrustum.h"
+#include "applications/camera/camera.h"
+#include "base/glfw_window.h"
+#include "base/globals.h"		// deltaTime
+//#include "geometry/Plane.h"
 #include "omath/mat4.h"
 #include <iostream>
 #include <string>
@@ -17,7 +16,7 @@ camera::camera( glfw_window *win,
 				omath::vec3 up,
 				float nearPlane,
 				float farPlane,
-				cameraMode mode ) :
+				camera_mode_t mode ) :
 						event_handler{ win },
 						m_window{ win },
 						m_position{ position },
@@ -39,12 +38,12 @@ camera::camera( glfw_window *win,
 	event_handler::registered_object_t o{ this, cb };
 	register_object( o );
 
-	calculateInitialAngles();
-	calculateFOV();
-	updatecameraVectors();
+	calculate_initial_angles();
+	calculate_fov();
+	update_camera_vectors();
 }
 
-void camera::calculateFOV() {
+void camera::calculate_fov() {
 	m_perspectiveMatrix = omath::perspective(
 			omath::radians( m_zoom ),
 			(float)m_window->get_width() / (float)m_window->get_height(),
@@ -55,11 +54,11 @@ void camera::calculateFOV() {
 	m_zOffsetPerspectiveMatrix = omath::perspective( omath::radians( m_zoom ),
 			(float)m_window->getWidth() / (float)m_window->getHeight(),
 			m_nearPlane * zModMul + zModAdd, m_farPlane * zModMul + zModAdd );*/
-	m_frustum.setFOV( m_zoom, (float)m_window->get_width() / (float)m_window->get_height(),
+	m_frustum.set_fov( m_zoom, (float)m_window->get_width() / (float)m_window->get_height(),
 			m_nearPlane, m_farPlane );
 }
 
-void camera::calculateInitialAngles() {
+void camera::calculate_initial_angles() {
 	// Calculate initial yaw and pitch on change of position or target
 	// m_distanceToTarget is float, direction does not need the precision
 	// @todo different cases for camera mode
@@ -70,10 +69,10 @@ void camera::calculateInitialAngles() {
 	m_yaw = omath::degrees( std::atan2( -direction.x, direction.z ) );
 	m_pitch = omath::degrees( std::atan2( direction.y,
 			std::sqrt( ( direction.x * direction.x) + ( direction.y * direction.y ) ) ) );
-	updatecameraVectors();
+	update_camera_vectors();
 }
 
-void camera::updatecameraVectors() {
+void camera::update_camera_vectors() {
 	if( ORBITING == m_mode ) {
 		//m_distanceToTarget = omath::length( m_target - m_position );
 		const float yaw{ -omath::radians( m_yaw ) };
@@ -86,7 +85,7 @@ void camera::updatecameraVectors() {
 		m_front = omath::normalize( m_target - m_position );
 		// conversion to float because precision isn't needed here
 		m_viewMatrix = omath::lookAt( omath::vec3{ m_position }, omath::vec3{ m_target }, m_up );
-		m_frustum.setCameraVectors( omath::vec3{ m_position }, omath::vec3{ m_target }, m_up );
+		m_frustum.set_camera_vectors( omath::vec3{ m_position }, omath::vec3{ m_target }, m_up );
 	} else {
 		const omath::vec3 posf{ m_position };
 		// flip yaw and pitch because intuition (at least mine ;-))
@@ -99,7 +98,7 @@ void camera::updatecameraVectors() {
 						  cy * std::cos( pitch ) };
 		m_front = omath::normalize( front );
 		m_viewMatrix = omath::lookAt( posf, posf + front, m_up );
-		m_frustum.setCameraVectors( posf, posf + front, m_up );
+		m_frustum.set_camera_vectors( posf, posf + front, m_up );
 	}
 	// Also re-calculate the right vector
 	m_right = omath::normalize( omath::cross( m_front, m_up ) );
@@ -128,7 +127,7 @@ bool camera::on_mouse_move( float x, float y ) {
 	if( m_pitch < -89.0f )
 		m_pitch = -89.0f;
 	// Update camera vectors and view frustum
-	updatecameraVectors();
+	update_camera_vectors();
 	handled = true;
 	return handled;
 }	// onMouseMove()
@@ -157,7 +156,7 @@ bool camera::on_key_pressed( int key, int scancode, int action, int mods ) {
     if( GLFW_PRESS == action ) {
     	switch( key ) {
     		case GLFW_KEY_P:
-    			printPosition();
+    			print_position();
     			handled = true;
     			break;
     		case GLFW_KEY_W:
@@ -235,10 +234,10 @@ bool camera::on_key_pressed( int key, int scancode, int action, int mods ) {
     			if( ORBITING == m_mode ) {
     				// @todo Set initial values from orbiting cam
     				m_mode = FIRST_PERSON;
-    				setPositionAndTarget( m_position, m_target );
+    				set_position_and_target( m_position, m_target );
     			} else {
     				m_mode = ORBITING;
-    				updatecameraVectors();
+    				update_camera_vectors();
     			}
     			handled = true;
     			break;
@@ -278,13 +277,13 @@ bool camera::on_framebuffer_resize( int width, int height ) {
 	bool handled = false;
 	m_window->set_width( width );
 	m_window->set_height( height );
-	calculateFOV();
+	calculate_fov();
 	// Tell the renderer that framebuffer must be resized
 	m_window->set_damaged( true );
 	return handled;
 }	// onMouseButto
 
-void camera::updateMoving() {
+void camera::update_moving() {
 	/* Has been transferred to the application for view dependent calculations
 	if( globals::showAppUI ) {
 		const float oldNearPlane{ m_nearPlane };
@@ -356,25 +355,25 @@ void camera::updateMoving() {
 				break;
 		}
 	}
-	updatecameraVectors();
+	update_camera_vectors();
 }
 
-void camera::setPositionAndTarget( const omath::dvec3 &pos, const omath::dvec3 &target ) {
+void camera::set_position_and_target( const omath::dvec3 &pos, const omath::dvec3 &target ) {
 	m_position = pos;
 	m_target = target;
-	calculateInitialAngles();
+	calculate_initial_angles();
 }
 
-const float &camera::getZoom() const {
+const float &camera::get_zoom() const {
 	return m_zoom;
 }
 
-void camera::setZoom( const float &zoom ) {
+void camera::set_zoom( const float &zoom ) {
 	m_zoom = zoom;
-	calculateFOV();
+	calculate_fov();
 }
 
-void camera::setUp( const omath::vec3 &up ) {
+void camera::set_up( const omath::vec3 &up ) {
 	m_up = up;
 }
 
@@ -388,30 +387,30 @@ const float &camera::get_far_plane() const {
 
 void camera::set_near_plane( const float &np ) {
 	m_nearPlane = np;
-	calculateFOV();
+	calculate_fov();
 }
 
 void camera::set_far_plane( const float &fp ) {
 	m_farPlane = fp;
-	calculateFOV();
+	calculate_fov();
 }
 
-void camera::setMode( const cameraMode mode ) {
+void camera::set_mode( const camera_mode_t mode ) {
 	m_mode = mode;
 }
 
-void camera::setMovementSpeed( const float &speed ) {
+void camera::set_movement_speed( const float &speed ) {
 	m_movementSpeed = speed;
 }
 
-void camera::printPosition() const {
+void camera::print_position() const {
 	std::cout << "Cam position: " << m_position <<
 			"\n    target: " << m_target <<
 			"\n    direction: " << m_front <<
 			"\n    mode: " << ( m_mode == FIRST_PERSON ? "first person\n" : "orbiting\n" );
 }
 
-const omath::mat4 &camera::getViewMatrix() const {
+const omath::mat4 &camera::get_view_matrix() const {
 	return m_viewMatrix;
 }
 
@@ -419,47 +418,47 @@ const omath::mat4 &camera::getViewMatrix() const {
 	return m_zOffsetProjectionMatrix;
 }*/
 
-const omath::mat4 &camera::getPerspectiveMatrix() const {
+const omath::mat4 &camera::get_perspective_matrix() const {
 	return m_perspectiveMatrix;
 }
 
-const omath::mat4 &camera::getViewPerspectiveMatrix() const {
+const omath::mat4 &camera::get_view_perspective__matrix() const {
 	return m_viewPerspectiveMatrix;
 }
 
-const omath::mat4 &camera::getUntranslatedViewPerspectiveMatrix() const {
+const omath::mat4 &camera::get_untranslated_view_perspective_matrix() const {
 	return m_untranslatedViewPerspectiveMatrix;
 }
 
-const omath::dvec3 &camera::getPosition() const {
+const omath::dvec3 &camera::get_position() const {
 	return m_position;
 }
 
-const float &camera::getMovementSpeed() const {
+const float &camera::get_movement_speed() const {
 	return m_movementSpeed;
 }
 
-const omath::dvec3 &camera::getTarget() const {
+const omath::dvec3 &camera::get_target() const {
 	return m_target;
 }
 
-const bool &camera::getWireframeMode() const {
+const bool &camera::get_wireframe_mode() const {
 	return m_wireframe;
 }
 
-const ViewFrustum &camera::getViewFrustum() const {
+const view_frustum& camera::get_view_frustum() const {
 	return m_frustum;
 }
 
-const omath::vec3 &camera::getFront() const {
+const omath::vec3 &camera::get_front() const {
 	return m_front;
 }
 
-const omath::vec3 &camera::getRight() const {
+const omath::vec3 &camera::get_right() const {
 	return m_right;
 }
 
-const omath::vec3 &camera::getUp() const {
+const omath::vec3 &camera::get_up() const {
 	return m_up;
 }
 

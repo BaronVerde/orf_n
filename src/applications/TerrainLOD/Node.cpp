@@ -1,11 +1,11 @@
 
-#include <base/logbook.h>
-#include "HeightMap.h"
+#include <applications/TerrainLOD/heightmap.h>
+#include "base/logbook.h"
 #include "LODSelection.h"
 #include "Node.h"
 #include "TerrainTile.h"
-#include "geometry/AABB.h"
-#include "geometry/ViewFrustum.h"
+#include "geometry/aabb.h"
+#include "geometry/view_frustum.h"
 #include <sstream>
 
 namespace terrain {
@@ -20,7 +20,7 @@ void Node::create( const int x, const int z, const int size, const int level,
 	m_z = z;
 	m_level = level;
 	m_size = size;
-	const HeightMap *heightMap{ terrainTile->getHeightMap() };
+	const heightmap *heightMap{ terrainTile->getHeightMap() };
 	// Find min/max heights at this patch of terrain
 	const int limitX = std::min( heightMap->getExtent().x, x + size + 1 );
 	// limit z = y-axis of heightmap
@@ -34,7 +34,7 @@ void Node::create( const int x, const int z, const int size, const int level,
 	const omath::dvec3 max{
 		terrainTile->getAABB()->m_min.x + m_x + m_size, m_minMaxHeight.y, terrainTile->getAABB()->m_min.z + m_z + m_size
 	};
-	m_boundingBox = new orf_n::AABB{ min, max };
+	m_boundingBox = new orf_n::aabb{ min, max };
 	// Highest level reached already ?
 	if( size == LEAF_NODE_SIZE ) {
 		if( level != NUMBER_OF_LOD_LEVELS -1 ) {
@@ -75,7 +75,7 @@ int Node::getLevel() const {
 	return m_level;
 }
 
-const orf_n::AABB *Node::getBoundingBox() const {
+const orf_n::aabb *Node::getBoundingBox() const {
 	return m_boundingBox;
 }
 
@@ -104,11 +104,11 @@ orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompl
 	const orf_n::camera *cam{ lodSelection->m_camera };
 	// Test early outs
 	orf_n::intersect_t frustumIntersection = parentCompletelyInFrustum ?
-			orf_n::INSIDE : cam->getViewFrustum().isBoxInFrustum( m_boundingBox );
+			orf_n::INSIDE : cam->get_view_frustum().is_box_in_frustum( *m_boundingBox );
 	if( orf_n::OUTSIDE == frustumIntersection )
 		return orf_n::OUTSIDE;
 	float distanceLimit = lodSelection->m_visibilityRanges[m_level];
-	if( !m_boundingBox->intersectSphereSq( cam->getPosition(), distanceLimit * distanceLimit ) )
+	if( !m_boundingBox->intersect_sphere_sq( cam->get_position(), distanceLimit * distanceLimit ) )
 		return orf_n::OUT_OF_RANGE;
 
 	orf_n::intersect_t subTLSelRes = orf_n::UNDEFINED;
@@ -118,7 +118,7 @@ orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompl
 	// Stop at one below number of lod levels
 	if( m_level != lodSelection->m_stopAtLevel ) {
 		float nextDistanceLimit = lodSelection->m_visibilityRanges[m_level+1];
-		if( m_boundingBox->intersectSphereSq( cam->getPosition(), nextDistanceLimit * nextDistanceLimit ) ) {
+		if( m_boundingBox->intersect_sphere_sq( cam->get_position(), nextDistanceLimit * nextDistanceLimit ) ) {
 			bool weAreCompletelyInFrustum = frustumIntersection == orf_n::INSIDE;
 			if( m_subTL != nullptr )
 				subTLSelRes = m_subTL->lodSelect( lodSelection, weAreCompletelyInFrustum );
@@ -159,7 +159,7 @@ orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompl
 		if( lodSelection->m_sortByDistance )
 			lodSelection->m_selectedNodes[lodSelection->m_selectionCount].minDistanceTocamera =
 					std::sqrt( lodSelection->m_selectedNodes[lodSelection->m_selectionCount].
-					node->getBoundingBox()->minDistanceFromPointSq( cam->getPosition() ) );
+					node->getBoundingBox()->min_distance_from_point_sq( cam->get_position() ) );
 		lodSelection->m_selectionCount++;
 		return orf_n::SELECTED;
 	}

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <applications/camera/camera.h>
-#include <applications/TerrainLOD/HeightMap.h>
+#include <applications/TerrainLOD/heightmap.h>
 #include <string>
 
 namespace terrain {
@@ -25,7 +25,7 @@ static const int LEAF_NODE_SIZE{ 32 };
 // Size x/z of terrain tiles
 // @todo: in a future version this could be handled dynamically,
 // also perform check on heightmap loading !
-static const omath::uvec2 TILE_SIZE{ 2048, 2048 };
+static const omath::uvec2 TILE_SIZE{ 4096, 4096 };
 
 /**
  * Determines rendering LOD level distribution based on distance from the viewer.
@@ -38,10 +38,10 @@ static const float LOD_LEVEL_DISTANCE_RATIO{ 1.8f };
 
 // [0, 1] when to start morphing to the next (lower-detailed) LOD level;
 // default is 0.67 - first 0.67 part will not be morphed, and the morph will go from 0.67 to 1.0
-static const float MORPH_START_RATIO{ 0.8f };
+static const float MORPH_START_RATIO{ 0.7f };
 
-// 1:1 texel to grid ratio
-static const int RENDER_GRID_RESULUTION_MULT{ 1 };
+// texel to grid ratio
+static const int RENDER_GRID_RESULUTION_MULT{ 4 };
 
 static const int GRIDMESH_DIMENSION{ LEAF_NODE_SIZE * RENDER_GRID_RESULUTION_MULT };
 

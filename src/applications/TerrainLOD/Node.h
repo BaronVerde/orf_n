@@ -2,15 +2,13 @@
 #pragma once
 
 #include "Settings.h"
-#include "geometry/AABB.h"
-#include "geometry/Ellipsoid.h"
-#include "geometry/Geodetic.h"
+#include "geometry/aabb.h"
 #include "omath/vec2.h"
 #include <memory>
 
 namespace terrain {
 
-class HeightMap;
+class heightmap;
 class LODSelection;
 class TerrainTile;
 
@@ -28,7 +26,7 @@ public:
 	 */
 	int getLevel() const;
 
-	const orf_n::AABB *getBoundingBox() const;
+	const orf_n::aabb *getBoundingBox() const;
 
 	const omath::vec2 &getMinMaxHeight() const;
 
@@ -70,7 +68,7 @@ private:
     Node *m_subBL{ nullptr };
     Node *m_subBR{ nullptr };
 
-    const orf_n::AABB *m_boundingBox{ nullptr };
+    const orf_n::aabb* m_boundingBox{ nullptr };
 
 };
 

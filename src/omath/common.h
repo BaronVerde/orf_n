@@ -35,7 +35,7 @@ T lerp( T v0, T v1, T t ) {
  * After libnoise !
  */
 template <typename T>
-T cubicInterpolate( const T n0, const T n1, const T n2, const T n3, const T a = 0.5 ) {
+T cubic_interpolate( const T n0, const T n1, const T n2, const T n3, const T a = 0.5 ) {
 	const T p{ ( n3 - n2 ) - ( n0 - n1 ) };
 	const T q{ ( n0 - n1 ) - p };
 	const T r{ n2 - n0 };
@@ -44,7 +44,7 @@ T cubicInterpolate( const T n0, const T n1, const T n2, const T n3, const T a = 
 }
 
 template<typename T>
-bool isPowerOf2( T val ) {
+bool is_power_of_2( T val ) {
 	if( val < T(1) )
 		return false;
 	return( val & ( val - T(1) ) ) == 0;
@@ -58,7 +58,7 @@ T clamp( const T &number, const T &minimum, const T &maximum ) {
 
 // Floating point relative and absolute comparison
 template <typename T>
-bool compareFloat( const T &a, const T &b,
+bool compare_float( const T &a, const T &b,
 		const T maxDiff, const T maxRelDiff ) {
 	if( !std::numeric_limits<T>::is_iec559 ) {
 		std::cerr << "Only floating point numbers can be float-compared.\n";
@@ -92,7 +92,7 @@ T degrees( const T radians ) {
 }
 
 template<typename T>
-T moduloFloat( T const &a, T const &b ) {
+T modulo_float( T const &a, T const &b ) {
 	if( !std::numeric_limits<T>::is_iec559 )
 		std::cerr << "'floatModulo' only accepts floating-point input.\n";
 	return a - b * floor(a / b);
@@ -106,7 +106,7 @@ T moduloFloat( T const &a, T const &b ) {
  * @return true if the two are equal within tolerances.
  */
 template <typename T>
-static inline bool compareFloat( const T x, const T y ) {
+static inline bool compare_float( const T x, const T y ) {
 	if( !std::numeric_limits<T>::is_iec559 ) {
 		std::cerr << "Only floating point numbers can be float-compared.\n";
 		return false;
@@ -120,7 +120,7 @@ static inline int signum( T val ) {
 	return (T(0) < val) - (val < T(0));
 }
 
-static inline void doubleToTwoFloats( const double &d, float &high, float &low ) {
+static inline void double_to_two_floats( const double &d, float &high, float &low ) {
 	high = static_cast<float>(d);
 	low = static_cast<float>(d - static_cast<double>(high));
 }

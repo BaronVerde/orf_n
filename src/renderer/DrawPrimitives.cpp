@@ -87,10 +87,10 @@ void DrawPrimitives::cleanupDebugDrawing() {
 	}
 }
 
-void DrawPrimitives::drawAABB( const AABB &bb, const color_t &color ) const {
+void DrawPrimitives::drawAABB( const aabb &bb, const color_t &color ) const {
 	const omath::mat4 m{ omath::mat4{ 1.0f } };
-	const omath::vec3 c{ bb.getCenter() };
-	const omath::mat4 modelM{ omath::translate( m, c ) * omath::scale( m, omath::vec3{ bb.getSize() } ) };
+	const omath::vec3 c{ bb.get_center() };
+	const omath::mat4 modelM{ omath::translate( m, c ) * omath::scale( m, omath::vec3{ bb.get_size() } ) };
 	orf_n::setUniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
 	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", color );
 	// Frame

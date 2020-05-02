@@ -1,14 +1,14 @@
 
 #include <applications/camera/camera.h>
+#include <applications/TerrainLOD/gridmesh.h>
 #include <base/logbook.h>
+#include <renderer/sampler.h>
 #include <scene/scene.h>
-#include "GridMesh.h"
 #include "LODSelection.h"
 #include "QuadTree.h"
 #include "TerrainTile.h"
 #include "omath/mat4.h"
 #include "renderer/Module.h"
-#include "renderer/Sampler.h"
 #include "renderer/Uniform.h"
 #include <iostream>
 #include <string>
@@ -20,7 +20,7 @@ TerrainTile::TerrainTile( const std::string &filename ) :
 		m_filename{filename} {
 	// Load the heightmap and tile relative and world min/max coords for the bounding boxes
 	// @todo: check if size == terrain::TILE_SIZE !
-	m_heightMap = std::make_unique<HeightMap>( filename + ".png", terrain::HeightMap::B16 );
+	m_heightMap = std::make_unique<heightmap>( filename + ".png", terrain::heightmap::B16 );
 	std::ifstream bbf{ filename + ".bb", std::ios::in };
 	if( !bbf.is_open() ) {
 		std::ostringstream s;
@@ -31,7 +31,7 @@ TerrainTile::TerrainTile( const std::string &filename ) :
 	bbf >> min.x >> min.y >> min.z >> max.x >> max.y >> max.z;
 	bbf.close();
 	//min = orf_n::
-	m_AABB = std::make_unique<orf_n::AABB>( omath::dvec3{ min.x, min.y, min.z }, omath::dvec3{ max.x, max.y, max.z } );
+	m_AABB = std::make_unique<orf_n::aabb>( omath::dvec3{ min.x, min.y, min.z }, omath::dvec3{ max.x, max.y, max.z } );
 
 	// Build quadtree with nodes and their bounding boxes.
 	m_quadTree = std::make_unique<QuadTree>( this );
@@ -49,7 +49,7 @@ TerrainTile::~TerrainTile() {
 	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s );
 }
 
-const terrain::HeightMap *TerrainTile::getHeightMap() const {
+const terrain::heightmap *TerrainTile::getHeightMap() const {
 	return m_heightMap.get();
 }
 
@@ -57,12 +57,12 @@ const terrain::QuadTree *TerrainTile::getQuadTree() const {
 	return m_quadTree.get();
 }
 
-const orf_n::AABB *TerrainTile::getAABB() const {
+const orf_n::aabb *TerrainTile::getAABB() const {
 	return m_AABB.get();
 }
 
 omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
-						  const terrain::GridMesh *const gridMesh,
+						  const terrain::gridmesh *const gridMesh,
 						  const terrain::LODSelection *const selection,
 						  const int tileIndex,
 						  const GLint drawMode ) {
@@ -87,10 +87,10 @@ omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
 						selection->getMorphConsts( prevMorphConstLevelSet-1 ) );
 			}
 			bool drawFull{ n.hasTL && n.hasTR && n.hasBL && n.hasBR };
-			const orf_n::AABB *const bb{ n.node->getBoundingBox() };
+			const orf_n::aabb *const bb{ n.node->getBoundingBox() };
 			// .w holds the current lod level
 			omath::vec4 nodeScale{
-				static_cast<float>( bb->getSize().x ), 0.0f, static_cast<float>( bb->getSize().z ),
+				static_cast<float>( bb->get_size().x ), 0.0f, static_cast<float>( bb->get_size().z ),
 				static_cast<float>( n.lodLevel )
 			};
 			omath::vec3 nodeOffset{ static_cast<float>( bb->m_min.x ),
@@ -98,7 +98,7 @@ omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
 									static_cast<float>( bb->m_min.z ) };
 			orf_n::setUniform( p->getProgram(), "g_nodeScale", nodeScale );
 			orf_n::setUniform( p->getProgram(), "g_nodeOffset", nodeOffset );
-			const int numIndices{ gridMesh->getNumberOfIndices() };
+			const int numIndices{ gridMesh->get_number_indices() };
 			if( drawFull ) {
 				glDrawElements( drawMode, numIndices, GL_UNSIGNED_INT, (const void *)0 );
 				++renderStats.x;

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Texture.h"
+#include <renderer/texture.h>
 #include <string>
 
 namespace orf_n {
@@ -9,7 +9,7 @@ namespace orf_n {
 /**
  * A 1D texture. e.g. for color ramps.
  */
-class Texture1D : public Texture {
+class Texture1D : public texture {
 public:
 	/**
 	 * Create a new 1D texture

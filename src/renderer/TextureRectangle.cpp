@@ -1,6 +1,6 @@
 
 #include <base/logbook.h>
-#include "TextureRectangle.h"
+#include <renderer/textureRectangle.h>
 #include <cmath>	// floor()
 #include "stb/stb_image.h"
 
@@ -8,7 +8,7 @@ namespace orf_n {
 
 TextureRectangle::TextureRectangle( const std::string &filename,
 									const GLuint unit )  :
-		Texture{ GL_TEXTURE_RECTANGLE, unit }, m_filename{ filename } {
+		texture{ GL_TEXTURE_RECTANGLE, unit }, m_filename{ filename } {
 
 	stbi_set_flip_vertically_on_load( true );
 	uint8_t *data{ nullptr };
@@ -49,13 +49,13 @@ TextureRectangle::TextureRectangle( const std::string &filename,
 					std::to_string( m_numChannels ) );
 	}
 
-	glTextureStorage2D( m_textureName, 1, m_format, m_size, m_size );
+	glTextureStorage2D( m_texture_name, 1, m_format, m_size, m_size );
 
-	glTextureSubImage2D( m_textureName, 0,	// texture and mip level
+	glTextureSubImage2D( m_texture_name, 0,	// texture and mip level
 			0, 0, m_size, m_size,			// offset and size
 			format, GL_UNSIGNED_BYTE, data );
 
-	bindToUnit();
+	bind_to_unit();
 
 	std::string s{ "Rectangle texture '" + filename + "' loaded, unit " + std::to_string( m_unit ) +
 				   ", size " + std::to_string( m_size ) + ", " +
@@ -77,11 +77,11 @@ void TextureRectangle::createMipmaps() {
 	if( m_mipmapsCreated )
 		return;
 	// mipmaps
-	glTextureParameteri( m_textureName, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-	glTextureParameteri( m_textureName, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-	glTextureParameteri( m_textureName, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-	glTextureParameteri( m_textureName, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
-	glGenerateTextureMipmap( m_textureName );
+	glTextureParameteri( m_texture_name, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+	glTextureParameteri( m_texture_name, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glTextureParameteri( m_texture_name, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+	glTextureParameteri( m_texture_name, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE );
+	glGenerateTextureMipmap( m_texture_name );
 	m_mipmapsCreated = true;
 }
 

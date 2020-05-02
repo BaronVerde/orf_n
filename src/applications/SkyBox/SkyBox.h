@@ -15,10 +15,10 @@
 
 #pragma once
 
+#include <renderer/textureCube.h>
 #include <scene/renderable.h>
 #include "omath/vec3.h"
 #include "renderer/Program.h"
-#include "renderer/TextureCube.h"
 #include "renderer/VertexArray3D.h"
 #include <memory>
 

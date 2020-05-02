@@ -28,10 +28,10 @@ double GeodeticExtent::getNorth() const {
 }
 
 bool GeodeticExtent::operator==( const GeodeticExtent &right ) {
-	return omath::compareFloat( m_west, right.m_west ) &&
-		   omath::compareFloat( m_south, right.m_south ) &&
-		   omath::compareFloat( m_east, right.m_east ) &&
-		   omath::compareFloat( m_north, right.m_north );
+	return omath::compare_float( m_west, right.m_west ) &&
+		   omath::compare_float( m_south, right.m_south ) &&
+		   omath::compare_float( m_east, right.m_east ) &&
+		   omath::compare_float( m_north, right.m_north );
 }
 
 bool GeodeticExtent::operator!=( const GeodeticExtent &right ) {

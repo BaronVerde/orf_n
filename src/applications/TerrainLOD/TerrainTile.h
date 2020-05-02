@@ -1,20 +1,20 @@
 
 #pragma once
 
-#include "geometry/AABB.h"
+#include "geometry/aabb.h"
 #include "renderer/Color.h"
 #include "renderer/VertexArray3D.h"
 #include <memory>
 
 namespace orf_n {
 	class Program;
-	class Texture2D;
+	class texture_2d;
 }
 
 namespace terrain {
 
-class HeightMap;
-class GridMesh;
+class heightmap;
+class gridmesh;
 class QuadTree;
 class LODSelection;
 
@@ -38,13 +38,13 @@ public:
 
 	virtual ~TerrainTile();
 
-	const HeightMap *getHeightMap() const;
+	const heightmap *getHeightMap() const;
 
 	const QuadTree *getQuadTree() const;
 
 	// Returns the bounding box relative to heightmap in flat coords
 	// @todo: this will have to give way to the cartesian bb
-	const orf_n::AABB *getAABB() const;
+	const orf_n::aabb *getAABB() const;
 
 	/**
 	 * Center of the tile in world cartesian coords
@@ -58,7 +58,7 @@ public:
 	 * Returns number of rendered nodes (x) and triangles (y)
 	 */
 	omath::uvec2 render( const orf_n::Program *const p,
-						 const terrain::GridMesh *const gridMesh,
+						 const terrain::gridmesh *const gridMesh,
 						 const terrain::LODSelection *const selection,
 						 const int tileIndex,
 						 const GLint drawMode );
@@ -70,14 +70,14 @@ private:
 	/**
 	 * @todo Heightmap texture unit is 0 hard coded. A resource manager will have to take care in the future.
 	 */
-	std::unique_ptr<HeightMap> m_heightMap{nullptr};
+	std::unique_ptr<heightmap> m_heightMap{nullptr};
 
 	std::unique_ptr<QuadTree> m_quadTree{nullptr};
 
 	/**
 	 * Bounding box relative to tile
 	 */
-	std::unique_ptr<orf_n::AABB> m_AABB{nullptr};
+	std::unique_ptr<orf_n::aabb> m_AABB{nullptr};
 
 };
 
