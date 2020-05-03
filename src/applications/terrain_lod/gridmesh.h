@@ -37,11 +37,11 @@ public:
 private:
 	const GLuint VERTEX_BUFFER_BINDING_INDEX{0};
 
-	GLuint m_vertexArray;
+	GLuint m_vertex_array;
 
-	GLuint m_indexBuffer;
+	GLuint m_index_buffer;
 
-	GLuint m_vertexBuffer;
+	GLuint m_vertex_buffer;
 
 	int m_dimension{ 0 };
 

@@ -1,19 +1,19 @@
 
-#include <applications/TerrainLOD/heightmap.h>
+#include <applications/terrain_lod/heightmap.h>
+#include <applications/terrain_lod/LODSelection.h>
+#include <applications/terrain_lod/node.h>
+#include <applications/terrain_lod/TerrainTile.h>
 #include "base/logbook.h"
-#include "LODSelection.h"
-#include "Node.h"
-#include "TerrainTile.h"
 #include "geometry/aabb.h"
 #include "geometry/view_frustum.h"
 #include <sstream>
 
 namespace terrain {
 
-Node::Node() {}
+node::node() {}
 
-void Node::create( const int x, const int z, const int size, const int level,
-		const TerrainTile *const terrainTile, Node *allNodes, int &lastIndex ) {
+void node::create( const int x, const int z, const int size, const int level,
+		const TerrainTile *const terrainTile, node *allNodes, int &lastIndex ) {
 	// @todo: plausibility checks: x and z between 0 and 65535; level between 0 and max lod levels,
 	// size between 2 and 65535
 	m_x = x;
@@ -63,43 +63,43 @@ void Node::create( const int x, const int z, const int size, const int level,
 	}
 }
 
-Node::~Node() {
+node::~node() {
 	delete m_boundingBox;
 }
 
-const omath::vec2 &Node::getMinMaxHeight() const {
+const omath::vec2 &node::getMinMaxHeight() const {
 	return m_minMaxHeight;
 }
 
-int Node::getLevel() const {
+int node::getLevel() const {
 	return m_level;
 }
 
-const orf_n::aabb *Node::getBoundingBox() const {
+const orf_n::aabb *node::getBoundingBox() const {
 	return m_boundingBox;
 }
 
-const Node *Node::getUpperRight() const {
+const node *node::getUpperRight() const {
 	return m_subTR;
 }
 
-const Node *Node::getUpperLeft() const {
+const node *node::getUpperLeft() const {
 	return m_subTL;
 }
 
-const Node *Node::getLowerRight() const {
+const node *node::getLowerRight() const {
 	return m_subBR;
 }
 
-const Node *Node::getLowerLeft() const {
+const node *node::getLowerLeft() const {
 	return m_subBL;
 }
 
-bool Node::isLeaf() const {
+bool node::isLeaf() const {
 	return m_isLeaf;
 }
 
-orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompletelyInFrustum ) {
+orf_n::intersect_t node::lodSelect( LODSelection *lodSelection, bool parentCompletelyInFrustum ) {
 	// Shortcut
 	const orf_n::camera *cam{ lodSelection->m_camera };
 	// Test early outs
@@ -159,7 +159,7 @@ orf_n::intersect_t Node::lodSelect( LODSelection *lodSelection, bool parentCompl
 		if( lodSelection->m_sortByDistance )
 			lodSelection->m_selectedNodes[lodSelection->m_selectionCount].minDistanceTocamera =
 					std::sqrt( lodSelection->m_selectedNodes[lodSelection->m_selectionCount].
-					node->getBoundingBox()->min_distance_from_point_sq( cam->get_position() ) );
+					p_node->getBoundingBox()->min_distance_from_point_sq( cam->get_position() ) );
 		lodSelection->m_selectionCount++;
 		return orf_n::SELECTED;
 	}

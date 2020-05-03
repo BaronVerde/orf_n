@@ -1,25 +1,25 @@
 
-#include <base/logbook.h>
-#include <geometry/Icosphere.h>
+#include "base/logbook.h"
+#include "icosphere.h"
 
 namespace orf_n {
 
-Icosphere::Icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs ) :
-		Ellipsoid{ radii }, m_numSubDivs{ numSubDivs }, m_index{0} {
+icosphere::icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs ) :
+		ellipsoid{ radii }, m_num_sub_divs{ numSubDivs }, m_index{0} {
 	// Create initial icosahedron, 12 vertices
 	double t{ ( 1.0 + std::sqrt( 5.0 ) ) / 2.0 };
-	addVertex( omath::dvec3{ -1,  t,  0 } );
-	addVertex( omath::dvec3{  1,  t,  0 } );
-	addVertex( omath::dvec3{ -1, -t,  0 } );
-	addVertex( omath::dvec3{  1, -t,  0 } );
-	addVertex( omath::dvec3{  0, -1,  t } );
-	addVertex( omath::dvec3{  0,  1,  t } );
-	addVertex( omath::dvec3{  0, -1, -t } );
-	addVertex( omath::dvec3{  0,  1, -t } );
-	addVertex( omath::dvec3{  t,  0, -1 } );
-	addVertex( omath::dvec3{  t,  0,  1 } );
-	addVertex( omath::dvec3{ -t,  0, -1 } );
-	addVertex( omath::dvec3{ -t,  0,  1 } );
+	add_vertex( omath::dvec3{ -1,  t,  0 } );
+	add_vertex( omath::dvec3{  1,  t,  0 } );
+	add_vertex( omath::dvec3{ -1, -t,  0 } );
+	add_vertex( omath::dvec3{  1, -t,  0 } );
+	add_vertex( omath::dvec3{  0, -1,  t } );
+	add_vertex( omath::dvec3{  0,  1,  t } );
+	add_vertex( omath::dvec3{  0, -1, -t } );
+	add_vertex( omath::dvec3{  0,  1, -t } );
+	add_vertex( omath::dvec3{  t,  0, -1 } );
+	add_vertex( omath::dvec3{  t,  0,  1 } );
+	add_vertex( omath::dvec3{ -t,  0, -1 } );
+	add_vertex( omath::dvec3{ -t,  0,  1 } );
 
 	// Create 20 triangles of the icosahedron
 	m_indices = {
@@ -34,14 +34,14 @@ Icosphere::Icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs ) :
 	};
 
 	// refine triangles
-	for( uint32_t i{0}; i < m_numSubDivs; ++i ) {
-		m_middlePointIndexCache.clear();
+	for( uint32_t i{0}; i < m_num_sub_divs; ++i ) {
+		m_middle_point_index_cache.clear();
 		std::vector<GLuint> tmpIndices;
 		for( size_t j{0}; j < m_indices.size(); j += 3 ) {
 			// replace triangle by 4 triangles
-			GLuint a{ getMiddlePoint( m_indices[j], m_indices[j+1] ) };
-			GLuint b{ getMiddlePoint( m_indices[j+1], m_indices[j+2] ) };
-			GLuint c{ getMiddlePoint( m_indices[j+2], m_indices[j] ) };
+			GLuint a{ get_middle_point( m_indices[j], m_indices[j+1] ) };
+			GLuint b{ get_middle_point( m_indices[j+1], m_indices[j+2] ) };
+			GLuint c{ get_middle_point( m_indices[j+2], m_indices[j] ) };
 			tmpIndices.push_back( m_indices[j] );
 			tmpIndices.push_back( a );
 			tmpIndices.push_back( c );
@@ -67,26 +67,26 @@ Icosphere::Icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs ) :
 
 }
 
-Icosphere::~Icosphere() {
+icosphere::~icosphere() {
 	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, "Icosphere deleted." );
 }
 
 // add vertex to mesh, fix position to be on unit sphere, return index
-GLuint Icosphere::addVertex( const omath::dvec3 &p ) {
+GLuint icosphere::add_vertex( const omath::dvec3 &p ) {
 	 m_positions.push_back( omath::normalize( p ) );
      return m_index++;
 }
 
 // Return index of point in the middle of p1 and p2 and if not existent
 // add it to the vector of positions
-GLuint Icosphere::getMiddlePoint( const GLuint &p1, const GLuint &p2 ) {
+GLuint icosphere::get_middle_point( const GLuint &p1, const GLuint &p2 ) {
 	// first check if we have it already
 	uint64_t smallerIndex{ std::min( p1, p2 ) };
 	uint64_t greaterIndex{ std::max( p1, p2 ) };
 	uint64_t indexKey{ ( smallerIndex << 32 ) + greaterIndex };
 	// If already there, then return that index
-	const std::map<uint64_t, GLuint>::iterator retVal{ m_middlePointIndexCache.find( indexKey ) };
-	if( retVal != m_middlePointIndexCache.end() ) {
+	const std::map<uint64_t, GLuint>::iterator retVal{ m_middle_point_index_cache.find( indexKey ) };
+	if( retVal != m_middle_point_index_cache.end() ) {
 		GLuint returnIndex{ retVal->second };
 		return returnIndex;
 	}
@@ -95,17 +95,17 @@ GLuint Icosphere::getMiddlePoint( const GLuint &p1, const GLuint &p2 ) {
 	omath::dvec3 point2{ m_positions[p2] };
 	omath::dvec3 middle{ omath::dvec3{ ( point1 + point2 ) / 2.0 } };
 	// add vertex makes sure point is on unit sphere
-	GLuint newIndex{ addVertex( middle ) };
+	GLuint newIndex{ add_vertex( middle ) };
 	// store it, return index
-	m_middlePointIndexCache.insert( std::make_pair( indexKey, newIndex ) );
+	m_middle_point_index_cache.insert( std::make_pair( indexKey, newIndex ) );
 	return newIndex;
 }
 
-const std::vector<omath::dvec3> &Icosphere::getVertices() const {
+const std::vector<omath::dvec3> &icosphere::get_vertices() const {
 	return m_positions;
 }
 
-const std::vector<GLuint> &Icosphere::getIndices() const {
+const std::vector<GLuint> &icosphere::get_indices() const {
 	return m_indices;
 }
 

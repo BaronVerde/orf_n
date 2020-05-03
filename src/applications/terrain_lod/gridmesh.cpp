@@ -1,5 +1,5 @@
 
-#include "gridmesh.h"
+#include <applications/terrain_lod/gridmesh.h>
 #include "base/logbook.h"
 #include "omath/vec3.h"
 #include <vector>
@@ -19,13 +19,13 @@ gridmesh::gridmesh( const int dimension ) : m_dimension{ dimension } {
 													0.0f,
 													static_cast<float>(y) / static_cast<float>(m_dimension)
 												};
-	glCreateVertexArrays( 1, &m_vertexArray );
-	glCreateBuffers( 1, &m_vertexBuffer );
-	glNamedBufferData( m_vertexBuffer, vertices.size() * sizeof(omath::vec3), vertices.data(), GL_STATIC_DRAW );
-	glVertexArrayVertexBuffer( m_vertexArray, VERTEX_BUFFER_BINDING_INDEX, m_vertexBuffer, 0, sizeof(omath::vec3) );
-	glVertexArrayAttribBinding( m_vertexArray, 0, VERTEX_BUFFER_BINDING_INDEX );
-	glVertexArrayAttribFormat( m_vertexArray, 0, 3, GL_FLOAT, GL_FALSE, 0 );
-	glEnableVertexArrayAttrib( m_vertexArray, 0 );
+	glCreateVertexArrays( 1, &m_vertex_array );
+	glCreateBuffers( 1, &m_vertex_buffer );
+	glNamedBufferData( m_vertex_buffer, vertices.size() * sizeof(omath::vec3), vertices.data(), GL_STATIC_DRAW );
+	glVertexArrayVertexBuffer( m_vertex_array, VERTEX_BUFFER_BINDING_INDEX, m_vertex_buffer, 0, sizeof(omath::vec3) );
+	glVertexArrayAttribBinding( m_vertex_array, 0, VERTEX_BUFFER_BINDING_INDEX );
+	glVertexArrayAttribFormat( m_vertex_array, 0, 3, GL_FLOAT, GL_FALSE, 0 );
+	glEnableVertexArrayAttrib( m_vertex_array, 0 );
 	std::vector<GLuint> indices( m_number_of_indices );
 	int index = 0;
 	int halfD = vertexDimension / 2;
@@ -78,16 +78,16 @@ gridmesh::gridmesh( const int dimension ) : m_dimension{ dimension } {
 		}
 	}
 	m_endIndexBottomRight = index;
-	glCreateBuffers( 1, &m_indexBuffer );
-	glNamedBufferData( m_indexBuffer, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW );
-	glVertexArrayElementBuffer( m_vertexArray, m_indexBuffer );
+	glCreateBuffers( 1, &m_index_buffer );
+	glNamedBufferData( m_index_buffer, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW );
+	glVertexArrayElementBuffer( m_vertex_array, m_index_buffer );
 
 	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO,
 			"Gridmesh dimension " + std::to_string( m_dimension ) + " created." );
 }
 
 void gridmesh::bind() const {
-	glBindVertexArray( m_vertexArray );
+	glBindVertexArray( m_vertex_array );
 }
 
 void gridmesh::unbind() const {
@@ -95,10 +95,10 @@ void gridmesh::unbind() const {
 }
 
 gridmesh::~gridmesh() {
-	glDisableVertexArrayAttrib( m_vertexArray, 0 );
-	glDeleteBuffers( 1, &m_indexBuffer );
-	glDeleteBuffers( 1, &m_vertexBuffer );
-	glDeleteVertexArrays( 1, &m_vertexArray );
+	glDisableVertexArrayAttrib( m_vertex_array, 0 );
+	glDeleteBuffers( 1, &m_index_buffer );
+	glDeleteBuffers( 1, &m_vertex_buffer );
+	glDeleteVertexArrays( 1, &m_vertex_array );
 	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO,
 			"Gridmesh dimension " + std::to_string( m_dimension ) + " destroyed." );
 }

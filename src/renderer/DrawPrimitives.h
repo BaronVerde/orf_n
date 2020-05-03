@@ -16,7 +16,7 @@
 namespace orf_n {
 
 class OBB;
-class Ellipsoid;
+class ellipsoid;
 
 class DrawPrimitives {
 public:
@@ -37,7 +37,7 @@ public:
 
 	void drawOBB( const OBB &bb, const color_t &color ) const;
 
-	void drawEllipsoid( const Ellipsoid &ellipsoid, const color_t &color ) const;
+	void drawEllipsoid( const ellipsoid &ellipsoid, const color_t &color ) const;
 
 	void drawSphere( const omath::vec3 &position, const float &radius, const color_t &color ) const;
 

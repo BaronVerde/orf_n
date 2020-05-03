@@ -1,11 +1,11 @@
 
 #include <base/logbook.h>
-#include <geometry/EllipsoidCM.h>
+#include <geometry/ellipsoidCM.h>
 
 namespace orf_n {
 
 EllipsoidCM::EllipsoidCM( const omath::dvec2 axes, const unsigned int numberOfTilesPerFace ) :
-			Ellipsoid{axes.x, axes.x, axes.y}, m_numSubdivsPerFace{numberOfTilesPerFace} {
+			ellipsoid{axes.x, axes.x, axes.y}, m_numSubdivsPerFace{numberOfTilesPerFace} {
 	// @todo: between 2 and 512 ?
 	if( !omath::is_power_of_2( m_numSubdivsPerFace ) ) {
 		std::string s{ "CubeToEllipsoid: number of tiles per face must be power of two" };

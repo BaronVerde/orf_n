@@ -6,26 +6,26 @@
 
 #pragma once
 
-#include <geometry/Ellipsoid.h>
-#include <omath/vec3.h>
+#include "ellipsoid.h"
+#include "omath/vec3.h"
 #include <vector>
 #include <map>
-#include "../../extern/glad/glad.h"
+#include "glad/glad.h"
 
 namespace orf_n {
 
-class Icosphere : public Ellipsoid {
+class icosphere : public ellipsoid {
 public:
-	Icosphere( const omath::dvec3 &radii, const uint32_t &numSubDivs );
+	icosphere( const omath::dvec3 &radii, const uint32_t &num_sub_divs );
 
-	virtual ~Icosphere();
+	virtual ~icosphere();
 
-	const std::vector<omath::dvec3> &getVertices() const;
+	const std::vector<omath::dvec3> &get_vertices() const;
 
-	const std::vector<GLuint> &getIndices() const;
+	const std::vector<GLuint> &get_indices() const;
 
 private:
-	uint32_t m_numSubDivs;
+	uint32_t m_num_sub_divs;
 
 	/**
 	 * Array of position vertices for the IcoSphere
@@ -41,16 +41,16 @@ private:
 	 * For each iteration, temporarily store the indices with a key to avoid
 	 * duplicate indices when subdividing. Internal use.
 	 */
-    std::map<uint64_t, GLuint> m_middlePointIndexCache;
+    std::map<uint64_t, GLuint> m_middle_point_index_cache;
 
     /**
      * Helper funcs and counter
      */
     GLuint m_index{0};
 
-	GLuint addVertex( const omath::dvec3 &p );
+	GLuint add_vertex( const omath::dvec3 &p );
 
-	GLuint getMiddlePoint( const GLuint &p1, const GLuint &p2 );
+	GLuint get_middle_point( const GLuint &p1, const GLuint &p2 );
 
 };
 

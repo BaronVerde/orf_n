@@ -1,5 +1,5 @@
 
-#include <geometry/GeodeticExtent.h>
+#include <geometry/geodeticExtent.h>
 #include <omath/common.h>
 
 namespace orf_n {
@@ -7,9 +7,9 @@ namespace orf_n {
 GeodeticExtent::GeodeticExtent( const double &w, const double &s, const double &e, const double &n ) :
 		m_west{ w }, m_south{ s }, m_east{ e }, m_north{ n } {}
 
-GeodeticExtent::GeodeticExtent( const Geodetic &bl, const Geodetic &ur ) :
-		m_west{ bl.getLongitude() }, m_south{ bl.getLatitude() },
-		m_east{ ur.getLongitude() }, m_north{ ur.getLatitude() } {}
+GeodeticExtent::GeodeticExtent( const geodetic &bl, const geodetic &ur ) :
+		m_west{ bl.get_longitude() }, m_south{ bl.get_latitude() },
+		m_east{ ur.get_longitude() }, m_north{ ur.get_latitude() } {}
 
 double GeodeticExtent::getWest() const {
 	return m_west;

@@ -1,7 +1,7 @@
 
-#include <applications/TerrainLOD/LODSelection.h>
-#include <applications/TerrainLOD/Node.h>
-#include <applications/TerrainLOD/QuadTree.h>
+#include <applications/terrain_lod/LODSelection.h>
+#include <applications/terrain_lod/node.h>
+#include <applications/terrain_lod/quadtree.h>
 #include <base/logbook.h>
 #include <omath/common.h>	// lerp()
 #include <sstream>

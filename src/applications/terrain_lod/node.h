@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Settings.h"
+#include <applications/terrain_lod/settings.h>
 #include "geometry/aabb.h"
 #include "omath/vec2.h"
 #include <memory>
@@ -12,11 +12,11 @@ class heightmap;
 class LODSelection;
 class TerrainTile;
 
-class Node {
+class node {
 public:
-	Node();
+	node();
 
-	virtual ~Node();
+	virtual ~node();
 
 	bool isLeaf() const;
 
@@ -32,17 +32,17 @@ public:
 
 	// worldPositionCellsize: .x = lower left latitude, .y = longitude, .z = cellsize
     void create( const int x, const int z, const int size, const int level,
-    		const TerrainTile *const terrainTile, Node *allNodes, int &lastIndex );
+    		const TerrainTile *const terrainTile, node *allNodes, int &lastIndex );
 
     orf_n::intersect_t lodSelect( LODSelection *lodSelection, bool parentCompletelyInFrustum = false );
 
-    const Node *getUpperRight() const;
+    const node *getUpperRight() const;
 
-    const Node *getUpperLeft() const;
+    const node *getUpperLeft() const;
 
-    const Node *getLowerRight() const;
+    const node *getLowerRight() const;
 
-    const Node *getLowerLeft() const;
+    const node *getLowerLeft() const;
 
 private:
 	int m_x;
@@ -58,15 +58,15 @@ private:
 
 	omath::vec2 m_minMaxHeight;
 
-    // When isLeaf() these can be reused for something else.
+    // @todo When isLeaf() these can be reused for something else.
 	// currently they store float heights for ray triangle test but that could be
 	// stored in a matrix without 4x redundancy like here. Also, these could/should be
 	// indices into CDLODQuadTree::m_allNodesBuffer - no additional memory will then be used
     // if compiled for 64bit, and they could also be unsigned short-s if having less 65535 nodes
-    Node *m_subTL{ nullptr };
-    Node *m_subTR{ nullptr };
-    Node *m_subBL{ nullptr };
-    Node *m_subBR{ nullptr };
+    node *m_subTL{ nullptr };
+    node *m_subTR{ nullptr };
+    node *m_subBL{ nullptr };
+    node *m_subBR{ nullptr };
 
     const orf_n::aabb* m_boundingBox{ nullptr };
 

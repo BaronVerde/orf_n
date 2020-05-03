@@ -1,7 +1,7 @@
 
 #include <base/logbook.h>
-#include "geometry/Ellipsoid.h"
-#include "geometry/Icosphere.h"
+#include <geometry/icosphere.h>
+#include "geometry/ellipsoid.h"
 #include "geometry/OBB.h"
 #include "omath/mat4.h"
 #include "DrawPrimitives.h"
@@ -55,9 +55,9 @@ void DrawPrimitives::setupDebugDrawing() {
 		const std::vector<omath::dvec3> lineVertices{ 2 };
 		m_lineArray = std::make_unique<VertexArray3D<omath::dvec3>>( lineVertices, 0, true, orf_n::Buffer::DYNAMIC_DATA );
 		// Setup buffers for a unit icosphere with 2 subdivisions. 'Nuff for debug drawing
-		Icosphere is{ omath::dvec3{ 0.5, 0.5, 0.5 }, 2 };
-		m_sphereArray = std::make_unique<VertexArray3D<omath::dvec3>>( is.getVertices(), 0, true );
-		m_sphereIndices = std::make_unique<IndexBuffer>( is.getIndices() );
+		icosphere is{ omath::dvec3{ 0.5, 0.5, 0.5 }, 2 };
+		m_sphereArray = std::make_unique<VertexArray3D<omath::dvec3>>( is.get_vertices(), 0, true );
+		m_sphereIndices = std::make_unique<IndexBuffer>( is.get_indices() );
 		logbook::log_msg( logbook::RENDERER, logbook::INFO, "Debug drawing set up." );
 		m_allSetup = true;
 	}
@@ -125,11 +125,11 @@ void DrawPrimitives::drawOBB( const OBB &bb, const color_t &color ) const {
 	glDrawArrays( GL_POINTS, 1, 1 );
 }
 
-void DrawPrimitives::drawEllipsoid( const Ellipsoid &ellipsoid, const color_t &color ) const {
+void DrawPrimitives::drawEllipsoid( const ellipsoid &eps, const color_t &color ) const {
 	const omath::mat4 m{ 1.0f };
-	const omath::vec3 position{ ellipsoid.getPosition() };
+	const omath::vec3 position{ eps.get_position() };
 	const omath::mat4 modelM{
-		omath::translate( m, position ) * omath::scale( m, omath::vec3{ ellipsoid.getRadii() } )
+		omath::translate( m, position ) * omath::scale( m, omath::vec3{ eps.get_radii() } )
 	};
 	orf_n::setUniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
 	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", color );

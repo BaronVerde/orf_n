@@ -15,7 +15,7 @@ namespace terrain {
 
 class heightmap;
 class gridmesh;
-class QuadTree;
+class quad_tree;
 class LODSelection;
 
 class TerrainTile {
@@ -40,7 +40,7 @@ public:
 
 	const heightmap *getHeightMap() const;
 
-	const QuadTree *getQuadTree() const;
+	const quad_tree *getQuadTree() const;
 
 	// Returns the bounding box relative to heightmap in flat coords
 	// @todo: this will have to give way to the cartesian bb
@@ -72,7 +72,7 @@ private:
 	 */
 	std::unique_ptr<heightmap> m_heightMap{nullptr};
 
-	std::unique_ptr<QuadTree> m_quadTree{nullptr};
+	std::unique_ptr<quad_tree> m_quadTree{nullptr};
 
 	/**
 	 * Bounding box relative to tile

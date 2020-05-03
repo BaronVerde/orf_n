@@ -1,8 +1,8 @@
 
 #pragma once
 
+#include <applications/terrain_lod/settings.h>
 #include <scene/renderable.h>
-#include "Settings.h"
 #include "renderer/Color.h"
 #include "renderer/DrawPrimitives.h"
 #include "renderer/VertexArray3D.h"

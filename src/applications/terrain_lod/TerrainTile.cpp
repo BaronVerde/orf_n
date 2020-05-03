@@ -1,12 +1,12 @@
 
 #include <applications/camera/camera.h>
-#include <applications/TerrainLOD/gridmesh.h>
+#include <applications/terrain_lod/gridmesh.h>
+#include <applications/terrain_lod/LODSelection.h>
+#include <applications/terrain_lod/quadtree.h>
+#include <applications/terrain_lod/TerrainTile.h>
 #include <base/logbook.h>
 #include <renderer/sampler.h>
 #include <scene/scene.h>
-#include "LODSelection.h"
-#include "QuadTree.h"
-#include "TerrainTile.h"
 #include "omath/mat4.h"
 #include "renderer/Module.h"
 #include "renderer/Uniform.h"
@@ -34,7 +34,7 @@ TerrainTile::TerrainTile( const std::string &filename ) :
 	m_AABB = std::make_unique<orf_n::aabb>( omath::dvec3{ min.x, min.y, min.z }, omath::dvec3{ max.x, max.y, max.z } );
 
 	// Build quadtree with nodes and their bounding boxes.
-	m_quadTree = std::make_unique<QuadTree>( this );
+	m_quadTree = std::make_unique<quad_tree>( this );
 
 	std::ostringstream s;
 	s << "Terrain tile '" << filename << "'loaded.";
@@ -53,7 +53,7 @@ const terrain::heightmap *TerrainTile::getHeightMap() const {
 	return m_heightMap.get();
 }
 
-const terrain::QuadTree *TerrainTile::getQuadTree() const {
+const terrain::quad_tree *TerrainTile::getQuadTree() const {
 	return m_quadTree.get();
 }
 
@@ -87,7 +87,7 @@ omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
 						selection->getMorphConsts( prevMorphConstLevelSet-1 ) );
 			}
 			bool drawFull{ n.hasTL && n.hasTR && n.hasBL && n.hasBR };
-			const orf_n::aabb *const bb{ n.node->getBoundingBox() };
+			const orf_n::aabb *const bb{ n.p_node->getBoundingBox() };
 			// .w holds the current lod level
 			omath::vec4 nodeScale{
 				static_cast<float>( bb->get_size().x ), 0.0f, static_cast<float>( bb->get_size().z ),

@@ -7,7 +7,7 @@
 #pragma once
 
 #include <base/globals.h>
-#include <geometry/Ellipsoid.h>
+#include <geometry/ellipsoid.h>
 #include <geometry/OBB.h>
 #include <geometry/Sphere.h>
 #include <omath/vec3.h>

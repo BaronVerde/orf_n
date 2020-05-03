@@ -1,13 +1,13 @@
 
+#include <applications/terrain_lod/node.h>
+#include <applications/terrain_lod/quadtree.h>
+#include <applications/terrain_lod/TerrainTile.h>
 #include <base/logbook.h>
-#include "Node.h"
-#include "QuadTree.h"
-#include "TerrainTile.h"
 #include <sstream>
 
 namespace terrain {
 
-QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
+quad_tree::quad_tree( const TerrainTile *const terrainTile ) :
 		m_terrainTile{ terrainTile } {
 	if( m_terrainTile->getHeightMap()->getExtent().x > 65535 || m_terrainTile->getHeightMap()->getExtent().y > 65535 ) {
 		std::string s{ "Heightmap too large (>65535) for the quad tree." };
@@ -28,13 +28,13 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 		totalNodeCount += nodeCountX * nodeCountZ;
 	}
 	// Initialize the tree memory, create tree nodes, and extract min/max Ys (heights)
-	m_allNodes = new Node[totalNodeCount];
+	m_allNodes = new node[totalNodeCount];
 	int nodeCounter = 0;
 	m_topNodeCountX = ( m_rasterSizeX - 1 ) / m_topNodeSize + 1;
 	m_topNodeCountZ = ( m_rasterSizeZ - 1 ) / m_topNodeSize + 1;
-	m_topLevelNodes = new Node**[m_topNodeCountZ];
+	m_topLevelNodes = new node**[m_topNodeCountZ];
 	for( int z{ 0 }; z < m_topNodeCountZ; ++z ) {
-		m_topLevelNodes[z] = new Node*[m_topNodeCountX];
+		m_topLevelNodes[z] = new node*[m_topNodeCountX];
 		for( int x{ 0 }; x < m_topNodeCountX; ++x ) {
 			m_topLevelNodes[z][x] = &m_allNodes[nodeCounter];
 			nodeCounter++;
@@ -54,7 +54,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 	// Debug output
 	std::ostringstream s;
 	// Quad tree summary
-	float sizeInMemory{ (float)m_nodeCount * ( sizeof( Node ) + sizeof( orf_n::aabb ) ) };
+	float sizeInMemory{ (float)m_nodeCount * ( sizeof( node ) + sizeof( orf_n::aabb ) ) };
 	s << "Quad tree created " << m_nodeCount << " Nodes; size in memory: " <<
 			( sizeInMemory / 1024.0f ) << "kB.\n\t" << m_topNodeCountX << '*' <<
 			m_topNodeCountZ << " top nodes.";
@@ -76,7 +76,7 @@ QuadTree::QuadTree( const TerrainTile *const terrainTile ) :
 
 }
 
-QuadTree::~QuadTree() {
+quad_tree::~quad_tree() {
 	if( m_allNodes != nullptr )
 		delete[] m_allNodes;
 	if( m_topLevelNodes != nullptr ) {
@@ -86,15 +86,15 @@ QuadTree::~QuadTree() {
 	}
 }
 
-const Node *QuadTree::getNodes() const {
+const node *quad_tree::getNodes() const {
 	return m_allNodes;
 }
 
-int QuadTree::getNodeCount() const {
+int quad_tree::getNodeCount() const {
 	return m_nodeCount;
 }
 
-void QuadTree::lodSelect( LODSelection *lodSelection ) const {
+void quad_tree::lodSelect( LODSelection *lodSelection ) const {
 	for( int z{ 0 }; z < m_topNodeCountZ; ++z )
 		for( int x{ 0 }; x < m_topNodeCountX; ++x )
 			m_topLevelNodes[z][x]->lodSelect( lodSelection, false );

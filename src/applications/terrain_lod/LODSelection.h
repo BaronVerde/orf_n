@@ -6,19 +6,19 @@
 
 #pragma once
 
+#include <applications/terrain_lod/settings.h>
 #include "applications/camera/camera.h"
-#include "Settings.h"
 #include "omath/vec4.h"
 
 namespace terrain {
 
-class Node;
-class QuadTree;
+class node;
+class quad_tree;
 
 class LODSelection {
 public:
 	typedef struct selectedNode_t {
-		Node *node{ nullptr };
+		node *p_node{ nullptr };
 		int tileIndex{ -1 };
 		int lodLevel{ -1 };
 		bool hasTL{ false };
@@ -29,8 +29,8 @@ public:
 
 		selectedNode_t() {};
 
-		selectedNode_t( Node *n, int tileIndex, int lvl, bool tl, bool tr, bool bl, bool br ) :
-		node{n}, tileIndex{tileIndex}, lodLevel{lvl}, hasTL{tl}, hasTR{tr}, hasBL{bl}, hasBR{br} {}
+		selectedNode_t( node *n, int tileIndex, int lvl, bool tl, bool tr, bool bl, bool br ) :
+			p_node{n}, tileIndex{tileIndex}, lodLevel{lvl}, hasTL{tl}, hasTR{tr}, hasBL{bl}, hasBR{br} {}
 	} selectedNode_t;
 
 	LODSelection( const orf_n::camera *cam, bool sortByDistance = false );

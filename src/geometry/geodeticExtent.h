@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <geometry/Geodetic.h>
+#include <geometry/geodetic.h>
 
 namespace orf_n {
 
@@ -12,7 +12,7 @@ public:
 	 */
 	GeodeticExtent( const double &w, const double &s, const double &e, const double &n );
 
-	GeodeticExtent( const Geodetic &bottomLeft, const Geodetic &upperRight );
+	GeodeticExtent( const geodetic &bottomLeft, const geodetic &upperRight );
 
 	virtual ~GeodeticExtent();
 

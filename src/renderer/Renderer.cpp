@@ -1,10 +1,10 @@
 
+#include <applications/terrain_lod/TerrainLOD.h>
 #include "applications/camera/camera.h"
 #include "base/globals.h"	// deltaTime
 #include "base/logbook.h"
 //#include "applications/IcosphereEllipsoid/IcosphereEllipsoid.h"
 //#include "applications/SkyBox/SkyBox.h"
-#include "applications/TerrainLOD/TerrainLOD.h"
 #include "renderer/Renderer.h"
 
 namespace orf_n {

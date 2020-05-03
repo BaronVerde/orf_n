@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include <geometry/Ellipsoid.h>
+#include <geometry/ellipsoid.h>
 
 namespace orf_n {
 
-class EllipsoidCM : public Ellipsoid {
+class EllipsoidCM : public ellipsoid {
 public:
 	/**
 	 * Axes; .x are the semi major axes in cartesian x and y (equatorial) plane,

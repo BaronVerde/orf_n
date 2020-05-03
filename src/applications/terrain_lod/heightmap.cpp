@@ -1,5 +1,5 @@
 
-#include <applications/TerrainLOD/heightmap.h>
+#include <applications/terrain_lod/heightmap.h>
 #include <base/logbook.h>
 #include <renderer/sampler.h>
 #include <iostream>

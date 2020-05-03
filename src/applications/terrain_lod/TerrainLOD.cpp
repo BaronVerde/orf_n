@@ -1,16 +1,16 @@
 
 #include <applications/camera/camera.h>
-#include <applications/TerrainLOD/gridmesh.h>
+#include <applications/terrain_lod/gridmesh.h>
+#include <applications/terrain_lod/LODSelection.h>
+#include <applications/terrain_lod/node.h>
+#include <applications/terrain_lod/quadtree.h>
+#include <applications/terrain_lod/TerrainLOD.h>
+#include <applications/terrain_lod/TerrainTile.h>
+#include <geometry/ellipsoid.h>
 #include "base/globals.h"
 #include <scene/scene.h>
 #include "base/logbook.h"
-#include "LODSelection.h"
-#include "Node.h"
-#include "QuadTree.h"
-#include "TerrainLOD.h"
-#include "TerrainTile.h"
 #include "geometry/aabb.h"
-#include "geometry/Ellipsoid.h"
 #include "omath/mat4.h"
 #include "renderer/IndexBuffer.h"
 #include "renderer/Module.h"
@@ -191,29 +191,29 @@ void TerrainLOD::debugDrawing() {
 				bool drawFull = n.hasTL && n.hasTR && n.hasBL && n.hasBR;
 				if( drawFull )
 					m_drawPrimitives.drawAABB(
-							n.node->getBoundingBox()->expand( -0.003f ),
-							orf_n::color::rainbow[n.node->getLevel()]
+							n.p_node->getBoundingBox()->expand( -0.003f ),
+							orf_n::color::rainbow[n.p_node->getLevel()]
 					);
 				else {
 					if( n.hasTL )
 						m_drawPrimitives.drawAABB(
-								n.node->getUpperLeft()->getBoundingBox()->expand( -0.002f ),
-								orf_n::color::rainbow[n.node->getUpperLeft()->getLevel()]
+								n.p_node->getUpperLeft()->getBoundingBox()->expand( -0.002f ),
+								orf_n::color::rainbow[n.p_node->getUpperLeft()->getLevel()]
 						);
 					if( n.hasTR )
 						m_drawPrimitives.drawAABB(
-								n.node->getUpperRight()->getBoundingBox()->expand( -0.002f ),
-								orf_n::color::rainbow[n.node->getUpperRight()->getLevel()]
+								n.p_node->getUpperRight()->getBoundingBox()->expand( -0.002f ),
+								orf_n::color::rainbow[n.p_node->getUpperRight()->getLevel()]
 						);
 					if( n.hasBL )
 						m_drawPrimitives.drawAABB(
-								n.node->getLowerLeft()->getBoundingBox()->expand( -0.002f ),
-								orf_n::color::rainbow[n.node->getLowerLeft()->getLevel()]
+								n.p_node->getLowerLeft()->getBoundingBox()->expand( -0.002f ),
+								orf_n::color::rainbow[n.p_node->getLowerLeft()->getLevel()]
 						);
 					if( n.hasBR )
 						m_drawPrimitives.drawAABB(
-								n.node->getLowerRight()->getBoundingBox()->expand( -0.002f ),
-								orf_n::color::rainbow[n.node->getLowerRight()->getLevel()]
+								n.p_node->getLowerRight()->getBoundingBox()->expand( -0.002f ),
+								orf_n::color::rainbow[n.p_node->getLowerRight()->getLevel()]
 						);
 				}
 			}
@@ -224,7 +224,7 @@ void TerrainLOD::debugDrawing() {
 
 // Draw all bounding boxes of heightmap
 void TerrainLOD::debugDrawLowestLevelBoxes( const terrain::TerrainTile *const t ) const {
-	const terrain::Node *const nodes{ t->getQuadTree()->getNodes() };
+	const terrain::node *const nodes{ t->getQuadTree()->getNodes() };
 	for( int i{ 0 }; i < t->getQuadTree()->getNodeCount(); ++i )
 		if( nodes[i].getLevel() == terrain::NUMBER_OF_LOD_LEVELS - 1 ) {
 			const orf_n::aabb *box{ nodes[i].getBoundingBox() };

@@ -2,9 +2,9 @@
 #pragma once
 
 #include <applications/camera/camera.h>
-#include <applications/TerrainLOD/heightmap.h>
-#include "LODSelection.h"
-#include "Node.h"
+#include <applications/terrain_lod/heightmap.h>
+#include <applications/terrain_lod/LODSelection.h>
+#include <applications/terrain_lod/node.h>
 #include "omath/vec3.h"
 
 namespace terrain {
@@ -12,13 +12,13 @@ namespace terrain {
 class TerrainTile;
 
 // @todo: needs overwork. Much data is meaningless
-class QuadTree {
+class quad_tree {
 public:
-	QuadTree( const TerrainTile *const terrainTile );
+	quad_tree( const TerrainTile *const terrainTile );
 
-	virtual ~QuadTree();
+	virtual ~quad_tree();
 
-	const Node *getNodes() const;
+	const node *getNodes() const;
 
 	int getNodeCount() const;
 
@@ -38,9 +38,9 @@ private:
 
 	int m_nodeCount{ 0 };
 
-	Node *m_allNodes{ nullptr };
+	node *m_allNodes{ nullptr };
 
-	Node ***m_topLevelNodes{ nullptr };
+	node ***m_topLevelNodes{ nullptr };
 
 	const TerrainTile *const m_terrainTile{nullptr};
 

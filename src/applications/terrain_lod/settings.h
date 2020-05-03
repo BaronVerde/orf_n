@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <applications/camera/camera.h>
-#include <applications/TerrainLOD/heightmap.h>
+#include <applications/terrain_lod/heightmap.h>
+#include "applications/camera/camera.h"
 #include <string>
 
 namespace terrain {

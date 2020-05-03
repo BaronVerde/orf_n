@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include <geometry/geodetic.h>
+#include <geometry/icosphere.h>
 #include "renderer/texture_2d.h"
 #include "scene/renderable.h"
 #include "geometry/aabb.h"
-#include "geometry/Geodetic.h"
-#include "geometry/Icosphere.h"
 #include "renderer/IndexBuffer.h"
 #include "renderer/Program.h"
 #include "renderer/VertexArray3D.h"
@@ -31,7 +31,7 @@ public:
 	virtual void cleanup() override final;
 
 private:
-	orf_n::Icosphere *m_ico{ nullptr };
+	orf_n::icosphere *m_ico{ nullptr };
 
 	orf_n::Program *m_shader{ nullptr };
 
@@ -58,7 +58,7 @@ private:
 
 	std::vector<orf_n::aabb> m_relativeBoxes;
 
-	std::vector<orf_n::Geodetic> m_geodeticCoords;
+	std::vector<orf_n::geodetic> m_geodeticCoords;
 
 	double m_cellsize{0.0};
 

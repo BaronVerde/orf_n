@@ -29,6 +29,12 @@ T lerp( T v0, T v1, T t ) {
   return( ( static_cast<T>(1) - t ) * v0 + t * v1 );
 }
 
+// Get time independent lerp function. The bigger the rate, the faster the lerp
+template<typename T>
+T time_independent_lerp( T delta_time, T lerp_rate ) {
+	return T{1} - std::exp( -std::abs( delta_time * lerp_rate ) );
+}
+
 /**
  * Interpolates between n1 and n2 with given pre-n1 value n0 and post-n1 value n3
  * If a is 0, function returns n1, if a is 1.0, function returns n2

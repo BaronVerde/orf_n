@@ -1,198 +1,107 @@
-//////////////////////////////////////////////////////////////////////
-// Copyright (C) 2009 - Filip Strugar.
-// Distributed under the zlib License (see readme.txt)
-//////////////////////////////////////////////////////////////////////
 
-#include "DXUT.h"
+#include <applications/terrain_lod/shadow_renderer.h>
+#include <applications/terrain_lod/sky.h>
 
-#include "DemoShadowsRenderer.h"
+namespace terrain {
 
-#include "DemoCamera.h"
-
-#include "DemoSky.h"
-
-#include "DxCanvas.h"
-
-#include "iniparser\src\IniParser.hpp"
-
-#include "CDLODRenderer.h"
-
-#include "DemoRenderer.h"
-
-#ifdef MY_EXTENDED_STUFF
-#include "IProf/prof.h"
-#endif
-
-CascadedShadowMap::CascadedShadowMap(void)
-{
-   m_mainRenderer = NULL;
-
-   //m_depthBuffer = NULL;
-
-   m_lastShadowCamRightVec = D3DXVECTOR3( 0, 1, 0 );
-
-   m_scratchSurface = NULL;
-
-   m_shadowForward   = D3DXVECTOR3( 0, 0, 0 );
-
-   m_defPoolTexturesCreated = false;
-
-   m_settings.Flags = SF_IgnoreZ;
+cascaded_shadow_map::cascaded_shadow_map() {
+	m_mainRenderer = NULL;
+	//m_depthBuffer = NULL;
+	m_lastShadowCamRightVec = D3DXVECTOR3( 0, 1, 0 );
+	//m_scratchSurface = NULL;
+	m_shadowForward   = D3DXVECTOR3( 0, 0, 0 );
+	m_defPoolTexturesCreated = false;
+	m_settings.Flags = SF_IgnoreZ;
 }
 
-CascadedShadowMap::~CascadedShadowMap(void)
-{
-   //SAFE_RELEASE( m_depthBuffer );
-   SAFE_RELEASE( m_scratchSurface );
-   delete[] m_layersArray;
-   m_layersArray = NULL;
+cascaded_shadow_map::~cascaded_shadow_map() {
+	for( int i = 0; i < sizeof(m_cascades)/sizeof(m_cascades[0]); i++ ) {
+		SAFE_RELEASE( m_cascades[i].ShadowMap );
+		SAFE_RELEASE( m_cascades[i].ShadowMapDepth );
+	}
+	//SAFE_RELEASE( m_depthBuffer );
+	SAFE_RELEASE( m_scratchSurface );
+	m_defPoolTexturesCreated = false;
+	//SAFE_RELEASE( m_depthBuffer );
+	SAFE_RELEASE( m_scratchSurface );
+	delete[] m_layersArray;
+	m_layersArray = NULL;
 }
 
-void CascadedShadowMap::Initialize(DemoRenderer * mainRenderer)
-{
-   OnLostDevice();
-   OnDestroyDevice();
-
-   m_mainRenderer = mainRenderer;
-
-   //m_DLODLevelsPerCascade = mainRenderer->GetSettings().ShadowmapDLODLevelsPerCascade;
-   //m_cascadeCount = (m_mainRenderer->GetSettings().LODLevelCount + m_DLODLevelsPerCascade - 1) / m_DLODLevelsPerCascade;
-   //m_cascadeCount = m_mainRenderer->GetSettings().LODLevelCount;
-
-   //for( int i = 0; i < m_cascadeCount; i++ )
-   //{
-   //   assert( m_cascades[i].ShadowMap == NULL );   // calling Initialize where it's not supposed to be called?
-   //   m_cascades[i].DLODLevelFrom  = i * m_DLODLevelsPerCascade;
-   //   m_cascades[i].DLODLevelTo    = (i+1) * m_DLODLevelsPerCascade - 1;
-   //}
-
-   //CascadedVolumeMap::Update()
-   
-   m_layerCount = m_mainRenderer->GetSettings().LODLevelCount;
-   m_layersArray = new Layer*[m_layerCount];
-   for( int i = 0; i < m_layerCount; i++ )
-      m_layersArray[i] = &m_cascades[i];
-
-
-   m_defPoolTexturesCreated = false;
+void cascaded_shadow_map::Initialize(DemoRenderer * mainRenderer) {
+	m_mainRenderer = mainRenderer;
+	m_layerCount = m_mainRenderer->GetSettings().LODLevelCount;
+	m_layersArray = new Layer*[m_layerCount];
+	for( int i = 0; i < m_layerCount; i++ )
+		m_layersArray[i] = &m_cascades[i];
+	m_defPoolTexturesCreated = false;
 }
 
-void CascadedShadowMap::Deinitialize( )
-{
-   OnLostDevice();
-   OnDestroyDevice();
+void cascaded_shadow_map::Deinitialize() {}
+
+void cascaded_shadow_map::InitializeRuntimeData() {
+	if( m_mainRenderer == NULL )
+		return;
+	if( m_defPoolTexturesCreated )
+		return;
+	m_defPoolTexturesCreated = true;
+	IDirect3DDevice9* device = GetD3DDevice();
+	m_textureResolution = (m_mainRenderer->GetSettings().ShadowmapHighQuality)?(4096):(1536);
+	// start with a smooth big 6.0 radius
+	float samplingRadius = m_textureResolution / 384.0f;
+	// reduce radius by this amount for each level - 2.0 would be correct,
+	// but less is good enough while still retaining smoothnes on higher levels
+	const float samplingRadiusStep = 1.75f;
+	for( int i = 0; i < m_layerCount; ++i ) {
+		SAFE_RELEASE( m_cascades[i].ShadowMap );
+		SAFE_RELEASE( m_cascades[i].ShadowMapDepth );
+		//V( device->CreateTexture( textureResolution, textureResolution, 1, D3DUSAGE_RENDERTARGET, D3DFMT_R32F, D3DPOOL_DEFAULT, &m_cascades[i].ShadowMap, NULL ) );
+		if( vaGetShadowMapSupport() == smsATIShadows ) {
+			if( FAILED( device->CreateTexture( m_textureResolution, m_textureResolution, 1,
+					D3DUSAGE_DEPTHSTENCIL, (D3DFORMAT)(MAKEFOURCC('D','F','2','4')),
+					D3DPOOL_DEFAULT, &m_cascades[i].ShadowMapDepth, NULL ) ) ) {
+				//vaFatalError( "Unable to create DF24 ATI depthstencil" );
+				m_cascades[i].ShadowMapDepth = NULL;
+			}
+		} else {
+			if( FAILED( device->CreateTexture( m_textureResolution, m_textureResolution, 1,
+					D3DUSAGE_DEPTHSTENCIL, D3DFMT_D24S8, D3DPOOL_DEFAULT, &m_cascades[i].ShadowMapDepth, NULL ) ) )
+				m_cascades[i].ShadowMapDepth = NULL;
+		}
+		// calculate sampling radius so that the transition between layers is smooth
+		m_cascades[i].SamplingTexelRadius = ::max( 1.1f, samplingRadius );
+		samplingRadius /= samplingRadiusStep;
+	}
+	CascadedVolumeMap::Reset();
+	//SAFE_RELEASE( m_depthBuffer );
+	SAFE_RELEASE( m_scratchSurface );
+	//V( device->CreateDepthStencilSurface( textureResolution, textureResolution, D3DFMT_D24X8, D3DMULTISAMPLE_NONE, 0, true, &m_depthBuffer, NULL ) );
+	if( FAILED( device->CreateRenderTarget( m_textureResolution, m_textureResolution, D3DFMT_A8R8G8B8,
+			D3DMULTISAMPLE_NONE, 0, false, &m_scratchSurface, NULL ) ) )
+		m_scratchSurface = NULL;
 }
 
-void CascadedShadowMap::InitializeRuntimeData( )
-{
-   if( m_mainRenderer == NULL )
-      return;
-
-   if( m_defPoolTexturesCreated )
-      return;
-   m_defPoolTexturesCreated = true;
-
-   //HRESULT hr;
-   IDirect3DDevice9* device = GetD3DDevice();
-
-   m_textureResolution = (m_mainRenderer->GetSettings().ShadowmapHighQuality)?(4096):(1536);
-
-   float samplingRadius = m_textureResolution / 384.0f; // start with a smooth big 6.0 radius
-   const float samplingRadiusStep = 1.75f; // reduce radius by this amount for each level - 2.0 would be correct, but less is good enough while still retaining smoothnes on higher levels
-
-   for( int i = 0; i < m_layerCount; i++ )
-   {
-      SAFE_RELEASE( m_cascades[i].ShadowMap );
-      SAFE_RELEASE( m_cascades[i].ShadowMapDepth );
-      //V( device->CreateTexture( textureResolution, textureResolution, 1, D3DUSAGE_RENDERTARGET, D3DFMT_R32F, D3DPOOL_DEFAULT, &m_cascades[i].ShadowMap, NULL ) );
-
-      if( vaGetShadowMapSupport() == smsATIShadows )
-      {
-         if( FAILED( device->CreateTexture( m_textureResolution, m_textureResolution, 1, D3DUSAGE_DEPTHSTENCIL, (D3DFORMAT)(MAKEFOURCC('D','F','2','4')), D3DPOOL_DEFAULT, &m_cascades[i].ShadowMapDepth, NULL ) ) )
-         {
-            //vaFatalError( "Unable to create DF24 ATI depthstencil" );
-			 m_cascades[i].ShadowMapDepth = NULL;
-         }
-
-      }
-      else
-      {
-         if( FAILED( device->CreateTexture( m_textureResolution, m_textureResolution, 1, D3DUSAGE_DEPTHSTENCIL, D3DFMT_D24S8, D3DPOOL_DEFAULT, &m_cascades[i].ShadowMapDepth, NULL ) ) )
-		 {
-			 m_cascades[i].ShadowMapDepth = NULL;
-		 }
-      }
-
-      //////////////////////////////////////////////////////////////////////////
-      // calculate sampling radius so that the transition between layers is smooth
-      m_cascades[i].SamplingTexelRadius = ::max( 1.1f, samplingRadius );
-
-      samplingRadius /= samplingRadiusStep;
-   }
-   CascadedVolumeMap::Reset();
-   //SAFE_RELEASE( m_depthBuffer );
-   SAFE_RELEASE( m_scratchSurface );
-   //V( device->CreateDepthStencilSurface( textureResolution, textureResolution, D3DFMT_D24X8, D3DMULTISAMPLE_NONE, 0, true, &m_depthBuffer, NULL ) );
-   if( FAILED( device->CreateRenderTarget( m_textureResolution, m_textureResolution, D3DFMT_A8R8G8B8, D3DMULTISAMPLE_NONE, 0, false, &m_scratchSurface, NULL ) ) )
-   {
-	   m_scratchSurface = NULL;
-   }
+void cascaded_shadow_map::UpdateShaderSettings( D3DXMACRO * newMacroDefines ) {
+	if( m_mainRenderer == NULL )
+		return;
+	// copy and add our own
+	D3DXMACRO macros[16] = { NULL };
+	int i;
+	for( i = 0; i < 14; i++ ) {
+		if( newMacroDefines[i].Name == NULL )
+			break;
+		macros[i].Name = newMacroDefines[i].Name;
+		macros[i].Definition = newMacroDefines[i].Definition;
+	}
+	macros[i].Name       = "IS_GENERATING_SHADOWS";
+	macros[i].Definition = "1";
+	macros[i].Name       = NULL;
+	macros[i].Definition = NULL;
+	m_vsShadow.SetShaderInfo( "Shaders/CDLODTerrain.vsh", "terrainShadow", macros );
+	m_psShadow.SetShaderInfo( "Shaders/misc.psh", "writeShadow", macros );
 }
 
-HRESULT CascadedShadowMap::OnCreateDevice( )
-{
-   return S_OK;
-}
-
-HRESULT CascadedShadowMap::OnResetDevice( const D3DSURFACE_DESC * pBackBufferSurfaceDesc )
-{
-
-   return S_OK;
-}
-
-void CascadedShadowMap::OnLostDevice( )
-{
-   for( int i = 0; i < sizeof(m_cascades)/sizeof(m_cascades[0]); i++ )
-   {
-      SAFE_RELEASE( m_cascades[i].ShadowMap );
-      SAFE_RELEASE( m_cascades[i].ShadowMapDepth );
-   }
-   //SAFE_RELEASE( m_depthBuffer );
-   SAFE_RELEASE( m_scratchSurface );
-   m_defPoolTexturesCreated = false;
-}
-
-void CascadedShadowMap::OnDestroyDevice( )
-{
-}
-//
-void CascadedShadowMap::UpdateShaderSettings( D3DXMACRO * newMacroDefines )
-{
-   if( m_mainRenderer == NULL )
-      return;
-
-   // copy and add our own
-   D3DXMACRO macros[16] = { NULL };
-   int i;
-   for( i = 0; i < 14; i++ )
-   {
-      if( newMacroDefines[i].Name == NULL )
-         break;
-      macros[i].Name = newMacroDefines[i].Name;
-      macros[i].Definition = newMacroDefines[i].Definition;
-   }
-   macros[i].Name       = "IS_GENERATING_SHADOWS";
-   macros[i].Definition = "1";
-
-   macros[i].Name       = NULL;
-   macros[i].Definition = NULL;
-
-   m_vsShadow.SetShaderInfo( "Shaders/CDLODTerrain.vsh", "terrainShadow", macros );
-   m_psShadow.SetShaderInfo( "Shaders/misc.psh", "writeShadow", macros );
-}
-//
-struct ShadowRenderContext
-{
+struct ShadowRenderContext {
    IDirect3DDevice9 *                  D3DDevice;
    DemoCamera *                        Camera;
    DemoSky *                           Sky;
@@ -214,7 +123,7 @@ struct ShadowRenderContext
    const DemoRenderer *                MainRenderer;
 };
 //
-bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLayer * parentLayer )
+bool cascaded_shadow_map::CSMLayer::RenderShadowMap( void * _renderContext, CSMLayer * parentLayer )
 {
    ShadowRenderContext & renderContext = *((ShadowRenderContext*)_renderContext);
    
@@ -268,50 +177,6 @@ bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLay
       obb.MaxY = -FLT_MAX;
       obb.MaxZ = -FLT_MAX;
 
-      // old way of calculating shadow receivers
-#if 0
-      int qtRasterX = terrainDLODSelection.GetQuadTree()->GetRasterSizeX();
-      int qtRasterY = terrainDLODSelection.GetQuadTree()->GetRasterSizeY();
-      MapDimensions mapDims = terrainDLODSelection.GetQuadTree()->GetWorldMapDims();
-
-      int nodesInShadow = 0;
-      for( int i = 0; i < terrainDLODSelection.GetSelectionCount(); i++ )
-      {
-         const CDLODQuadTree::SelectedNode & nodeSel = terrainDLODSelection.GetSelection()[i];
-         if( nodeSel.LODLevel < currentCascade.DLODLevelFrom || nodeSel.LODLevel > currentCascade.DLODLevelTo )
-            continue;
-
-         nodesInShadow++;
-
-         AABB boundingBox;
-         nodeSel.pNode->GetAABB( boundingBox, qtRasterX, qtRasterY, mapDims );
-
-         D3DXVECTOR3 corners[8];
-         boundingBox.GetCornerPoints(corners);
-
-         for( int j = 0; j < 8; j++ )
-         {
-            float dx = D3DXVec3Dot( &m_shadowRight, &corners[j] );
-            float dy = D3DXVec3Dot( &m_shadowUp, &corners[j] );
-            float dz = D3DXVec3Dot( &m_shadowForward, &corners[j] );
-
-            obb.MinX = ::min( obb.MinX, dx );
-            obb.MinY = ::min( obb.MinY, dy );
-            obb.MinZ = ::min( obb.MinZ, dz );
-            obb.MaxX = ::max( obb.MaxX, dx );
-            obb.MaxY = ::max( obb.MaxY, dy );
-            obb.MaxZ = ::max( obb.MaxZ, dz );
-         }
-      }
-      
-      if( nodesInShadow == 0 )
-      {
-         currentCascade.HasData = false;
-         return true;
-      }
-      currentCascade.HasData = true;
-#endif
-
       // calculate shadow coverage - our cascade bounding box
       AABB boundingBox( this->BoxMin, this->BoxMax );
       D3DXVECTOR3 boundingBoxSize = boundingBox.Size();
@@ -344,18 +209,10 @@ bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLay
       float obbDepth    = obb.MaxZ - obb.MinZ;
 
       // make the shadow map cover area fixed to help eliminate precision and flickering problems
-#if 1
-
       float obbRealWidth = cascadeLODLevelDiameterNoZ * 1.01f;
       float obbRealHeight = cascadeLODLevelDiameterNoZ * 1.01f;
-
       //assert( obbRealWidth >= obbWidth );
       //assert( obbRealHeight >= obbHeight );
-#else
-      // just keep the sensible width/height ratio
-      const float obbRealWidth   = ::max( obbWidth, obbHeight * 0.667f );
-      const float obbRealHeight  = ::max( obbHeight, obbWidth * 0.667f );
-#endif
 
       this->WorldSpaceTexelSizeX = obbRealWidth / (float)ShadowmapTextureResolution;
       this->WorldSpaceTexelSizeY = obbRealHeight / (float)ShadowmapTextureResolution;
@@ -367,7 +224,6 @@ bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLay
 
       // this was used to control shadow step to prevent flickering - not used anymore since now each cascade is
       // refreshed in steps and is not rendered continuously (every frame) as before
-#if 1
       float allowedShadowCamStep = ::max( WorldSpaceTexelSizeX, WorldSpaceTexelSizeY ) * 2.0f;
       float mx = D3DXVec3Dot( &shadowCamEye, &renderContext.ShadowRight );
       float my = D3DXVec3Dot( &shadowCamEye, &renderContext.ShadowUp );
@@ -376,7 +232,6 @@ bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLay
       my -= fmodf( my, allowedShadowCamStep ) + allowedShadowCamStep * 0.5f;
       mz -= fmodf( mz, allowedShadowCamStep ) + allowedShadowCamStep * 0.5f;
       shadowCamEye = mx * renderContext.ShadowRight + my * renderContext.ShadowUp + mz * renderContext.ShadowForward;
-#endif
 
       // A pile of hacks be here.
       float maxShadowLengthK = tanf( ::min( acosf( ::min( 1.0f, -renderContext.ShadowForward.z ) ), 1.4f ) );
@@ -391,26 +246,6 @@ bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLay
       //depth bias
       device->SetRenderState(D3DRS_DEPTHBIAS, *(DWORD*)&fDepthBias);
       device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)&fBiasSlope);
-
-
-      // debug render shadow frustum
-#if 0
-      D3DXVECTOR3 tri00 = shadowCamEye - renderContext.ShadowUp * (obbRealHeight * 0.5f) - renderContext.ShadowRight * (obbRealWidth * 0.5f);
-      D3DXVECTOR3 tri01 = shadowCamEye - renderContext.ShadowUp * (obbRealHeight * 0.5f) + renderContext.ShadowRight * (obbRealWidth * 0.5f);
-      D3DXVECTOR3 tri02 = shadowCamEye + renderContext.ShadowUp * (obbRealHeight * 0.5f) - renderContext.ShadowRight * (obbRealWidth * 0.5f);
-      D3DXVECTOR3 tri03 = shadowCamEye + renderContext.ShadowUp * (obbRealHeight * 0.5f) + renderContext.ShadowRight * (obbRealWidth * 0.5f);
-
-      D3DXVECTOR3 tri10 = shadowCamEye - renderContext.ShadowUp * (obbRealHeight * 0.5f) - renderContext.ShadowRight * (obbRealWidth * 0.5f) + renderContext.ShadowForward * obbDepth;
-      D3DXVECTOR3 tri11 = shadowCamEye - renderContext.ShadowUp * (obbRealHeight * 0.5f) + renderContext.ShadowRight * (obbRealWidth * 0.5f) + renderContext.ShadowForward * obbDepth;
-      D3DXVECTOR3 tri12 = shadowCamEye + renderContext.ShadowUp * (obbRealHeight * 0.5f) - renderContext.ShadowRight * (obbRealWidth * 0.5f) + renderContext.ShadowForward * obbDepth;
-      D3DXVECTOR3 tri13 = shadowCamEye + renderContext.ShadowUp * (obbRealHeight * 0.5f) + renderContext.ShadowRight * (obbRealWidth * 0.5f) + renderContext.ShadowForward * obbDepth;
-
-      //
-      GetCanvas3D()->DrawQuad(tri00, tri01, tri02, tri03, 0xFF000000, 0x8000FF00 );
-      GetCanvas3D()->DrawQuad(tri10, tri11, tri12, tri13, 0xFF000000, 0x8000FF00 );
-      GetCanvas3D()->DrawQuad(tri00, tri01, tri10, tri11, 0xFF000000, 0x8000FF00 );
-      GetCanvas3D()->DrawQuad(tri02, tri03, tri12, tri13, 0xFF000000, 0x8000FF00 );
-#endif
 
       // used for z-noise, offsets or anything similar
       this->ApproxWorldTexelSize = ::max( WorldSpaceTexelSizeX, WorldSpaceTexelSizeY );
@@ -512,7 +347,7 @@ bool CascadedShadowMap::CSMLayer::RenderShadowMap( void * _renderContext, CSMLay
    return !cdlodSelection.IsVisDistTooSmall();
 }
 //
-bool CascadedShadowMap::CSMLayer::Update( const D3DXVECTOR3 & observerPos, float newVisibilityRange, CascadedVolumeMap * parent, bool forceUpdate )
+bool cascaded_shadow_map::CSMLayer::Update( const D3DXVECTOR3 & observerPos, float newVisibilityRange, CascadedVolumeMap * parent, bool forceUpdate )
 {
    if( !Layer::Update( observerPos, newVisibilityRange, parent, forceUpdate ) )
       return false;
@@ -523,7 +358,7 @@ bool CascadedShadowMap::CSMLayer::Update( const D3DXVECTOR3 & observerPos, float
    return true;
 }
 //
-HRESULT CascadedShadowMap::Render( float deltaTime, DemoCamera * camera, DemoSky * lightMgr, int gridMeshDim, bool useDetailHeightmap, const CDLODQuadTree::LODSelection & terrainDLODSelection, CDLODRenderStats * renderStats )
+HRESULT cascaded_shadow_map::Render( float deltaTime, DemoCamera * camera, DemoSky * lightMgr, int gridMeshDim, bool useDetailHeightmap, const CDLODQuadTree::LODSelection & terrainDLODSelection, CDLODRenderStats * renderStats )
 {
    HRESULT hr;
    IDirect3DDevice9* device = GetD3DDevice();
@@ -584,18 +419,6 @@ HRESULT CascadedShadowMap::Render( float deltaTime, DemoCamera * camera, DemoSky
    }
 
    int numberUpdated = CascadedVolumeMap::Update( deltaTime, camera->GetPosition(), terrainDLODSelection.GetLODLevelRanges() );
-
-   //// TODO: remove this
-   //numberUpdated = 1;
-
-#if 0
-   for( int i = m_layerCount-1; i >= 0; i-- )
-   {
-      CSMLayer & layer = m_cascades[i];
-      GetCanvas3D()->DrawBox( layer.BoxMin, layer.BoxMax, 0xFF000000, 0x20FF8080 );
-   }
-   GetCanvas2D()->DrawString( 150, 150, "m_lowestUpdated: %d", m_lowestUpdated );
-#endif
 
    // if there's nothing to do get out now
    if( numberUpdated == 0 )
@@ -740,4 +563,5 @@ HRESULT CascadedShadowMap::Render( float deltaTime, DemoCamera * camera, DemoSky
 
    return S_OK;
 }
-//
+
+}
