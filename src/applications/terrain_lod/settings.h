@@ -34,7 +34,7 @@ static const omath::uvec2 TILE_SIZE{ 4096, 4096 };
  * on more distant areas, and vice versa.
  * Must be between 1.5 and 16.0 !
  */
-static const float LOD_LEVEL_DISTANCE_RATIO{ 1.8f };
+static const float LOD_LEVEL_DISTANCE_RATIO{ 2.5f };
 
 // [0, 1] when to start morphing to the next (lower-detailed) LOD level;
 // default is 0.67 - first 0.67 part will not be morphed, and the morph will go from 0.67 to 1.0
@@ -43,6 +43,12 @@ static const float MORPH_START_RATIO{ 0.7f };
 // texel to grid ratio
 static const int RENDER_GRID_RESULUTION_MULT{ 4 };
 
+static const float HEIGHT_FACTOR{2.0f};
+
 static const int GRIDMESH_DIMENSION{ LEAF_NODE_SIZE * RENDER_GRID_RESULUTION_MULT };
+
+static const bool SHADOW_MAP_HIGH_QUALITY{false};
+
+static const int SHADOW_MAP_RESOLUTION{SHADOW_MAP_HIGH_QUALITY ? 4096 : 1536 };
 
 }

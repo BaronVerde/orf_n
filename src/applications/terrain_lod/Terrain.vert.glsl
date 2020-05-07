@@ -21,6 +21,8 @@ layout( location = 0 ) in vec3 position;
 // Texture with height values 0..1 ( * 65535 for real world values) above reference ellipsoid
 layout( binding = 0 ) uniform sampler2D g_tileHeightmap;
 
+uniform float u_height_factor = 1.0f;
+
 // use linear filter manually. Not necessary if heightmap sampler is GL_LINEAR
 // uniform bool u_useLinearFilter = false;
 // --- Tile specific data (set on in the render loop on tile switch) ---
@@ -147,14 +149,14 @@ void main() {
 
 	// Pre-sample height to be able to precisely calculate morphing value.
 	vec2 preUV = calculateUV( vertex.xz );
-	vertex.y = sampleHeightmap( preUV );	
+	vertex.y = sampleHeightmap( preUV ) * u_height_factor;
 	float eyeDistance = distance( vertex, u_cameraPositionHigh );
 
 	vertOut.morphLerpK = 1.0f - clamp( g_morphConsts.z - eyeDistance * g_morphConsts.w, 0.0f, 1.0f );
 	vertex.xz = morphVertex( position, vertex.xz, vertOut.morphLerpK );
 
 	vertOut.heightmapUV = calculateUV( vertex.xz );
-	vertex.y = sampleHeightmap( vertOut.heightmapUV );
+	vertex.y = sampleHeightmap( vertOut.heightmapUV ) * u_height_factor;
 
 	// calculate position in world coordinates with the formula:
 	// world position = tileOffset + tileVertexPosition * cellsize

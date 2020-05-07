@@ -1,11 +1,11 @@
 
 #include <base/logbook.h>
 #include <geometry/icosphere.h>
+#include <renderer/uniform.h>
 #include "geometry/ellipsoid.h"
 #include "geometry/OBB.h"
 #include "omath/mat4.h"
 #include "DrawPrimitives.h"
-#include "Uniform.h"
 #include "glad/glad.h"
 
 namespace orf_n {
@@ -25,14 +25,14 @@ void DrawPrimitives::setupDebugDrawing() {
 		logbook::log_msg( logbook::RENDERER, logbook::WARNING, "Debug drawing already set up." );
 	else {
 		// Load shaders
-		std::vector<std::shared_ptr<orf_n::Module>> modules;
+		std::vector<std::shared_ptr<orf_n::module>> modules;
 		modules.push_back(
-				std::make_shared<Module>( GL_VERTEX_SHADER, "src/renderer/DrawPrimitives.vert.glsl" )
+				std::make_shared<module>( GL_VERTEX_SHADER, "src/renderer/DrawPrimitives.vert.glsl" )
 		);
 		modules.push_back(
-				std::make_shared<Module>( GL_FRAGMENT_SHADER, "src/renderer/DrawPrimitives.frag.glsl" )
+				std::make_shared<module>( GL_FRAGMENT_SHADER, "src/renderer/DrawPrimitives.frag.glsl" )
 		);
-		m_shaderDebug = std::make_unique<Program>( modules );
+		m_shaderDebug = std::make_unique<program>( modules );
 
 		// Vertex array and indices for an aabb
 		const std::vector<omath::dvec3> boxVertices {
@@ -91,8 +91,8 @@ void DrawPrimitives::drawAABB( const aabb &bb, const color_t &color ) const {
 	const omath::mat4 m{ omath::mat4{ 1.0f } };
 	const omath::vec3 c{ bb.get_center() };
 	const omath::mat4 modelM{ omath::translate( m, c ) * omath::scale( m, omath::vec3{ bb.get_size() } ) };
-	orf_n::setUniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", color );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", color );
 	// Frame
 	m_boxArray->bind();
 	m_boxIndices->bind();
@@ -100,7 +100,7 @@ void DrawPrimitives::drawAABB( const aabb &bb, const color_t &color ) const {
 	// Center dot
 	m_lineArray->bind();
 	m_lineArray->updateSubData( &c[0], 3 * sizeof( GL_FLOAT ), 0 );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
 	glDrawArrays( GL_POINTS, 1, 1 );
 }
 
@@ -112,8 +112,8 @@ void DrawPrimitives::drawOBB( const OBB &bb, const color_t &color ) const {
 		omath::mat4{ bb.getOrientation() } *
 		omath::scale( id, omath::vec3{ 2.0f * omath::vec3{ bb.getHalfSize() } } )
 	};
-	orf_n::setUniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", color );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", color );
 	// Shape
 	m_boxArray->bind();
 	m_boxIndices->bind();
@@ -121,7 +121,7 @@ void DrawPrimitives::drawOBB( const OBB &bb, const color_t &color ) const {
 	// Center dot
 	m_lineArray->bind();
 	m_lineArray->updateSubData( &pos[0], 3 * sizeof( GL_FLOAT ), 0 );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
 	glDrawArrays( GL_POINTS, 1, 1 );
 }
 
@@ -131,8 +131,8 @@ void DrawPrimitives::drawEllipsoid( const ellipsoid &eps, const color_t &color )
 	const omath::mat4 modelM{
 		omath::translate( m, position ) * omath::scale( m, omath::vec3{ eps.get_radii() } )
 	};
-	orf_n::setUniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", color );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", color );
 	// Shaoe
 	m_sphereArray->bind();
 	m_sphereIndices->bind();
@@ -140,7 +140,7 @@ void DrawPrimitives::drawEllipsoid( const ellipsoid &eps, const color_t &color )
 	// Center dot
 	m_lineArray->bind();
 	m_lineArray->updateSubData( &position[0], 3 * sizeof( GL_FLOAT ), 0 );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
 	glDrawArrays( GL_POINTS, 1, 1 );
 }
 
@@ -150,8 +150,8 @@ void DrawPrimitives::drawSphere( const omath::vec3 &position,
 	const omath::mat4 modelM{
 		omath::translate( m, position ) * omath::scale( m, omath::vec3{ radius, radius, radius } )
 	};
-	orf_n::setUniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", color );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "modelMatrix", modelM );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", color );
 	// Shape
 	m_sphereArray->bind();
 	m_sphereIndices->bind();
@@ -159,11 +159,11 @@ void DrawPrimitives::drawSphere( const omath::vec3 &position,
 	// Center dot
 	m_lineArray->bind();
 	m_lineArray->updateSubData( &position[0], 3 * sizeof( GL_FLOAT ), 0 );
-	orf_n::setUniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
+	orf_n::set_uniform( m_shaderDebug->getProgram(), "debugColor", orf_n::color::red );
 	glDrawArrays( GL_POINTS, 1, 1 );
 }
 
-const Program *DrawPrimitives::getProgramPtr() const {
+const program *DrawPrimitives::getProgramPtr() const {
 	return m_shaderDebug.get();
 }
 

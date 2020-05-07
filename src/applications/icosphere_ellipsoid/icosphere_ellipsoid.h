@@ -8,21 +8,21 @@
 
 #pragma once
 
-#include <geometry/geodetic.h>
-#include <geometry/icosphere.h>
+#include <renderer/program.h>
+#include "geometry/geodetic.h"
+#include "geometry/icosphere.h"
 #include "renderer/texture_2d.h"
 #include "scene/renderable.h"
 #include "geometry/aabb.h"
 #include "renderer/IndexBuffer.h"
-#include "renderer/Program.h"
 #include "renderer/VertexArray3D.h"
 //#include "Noise/MapBuilder.h"
 
-class IcosphereEllipsoid : public orf_n::renderable {
+class icosphere_ellipsoid : public orf_n::renderable {
 public:
-	IcosphereEllipsoid(	const omath::vec3 &axes, const uint32_t numSubDivs );
+	icosphere_ellipsoid( const omath::vec3 &axes, const uint32_t numSubDivs );
 
-	virtual ~IcosphereEllipsoid();
+	virtual ~icosphere_ellipsoid();
 
 	virtual void setup() override final;
 
@@ -33,7 +33,7 @@ public:
 private:
 	orf_n::icosphere *m_ico{ nullptr };
 
-	orf_n::Program *m_shader{ nullptr };
+	orf_n::program *m_shader{ nullptr };
 
 	orf_n::IndexBuffer *m_indexBuffer{ nullptr };
 

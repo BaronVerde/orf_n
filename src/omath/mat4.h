@@ -4,7 +4,6 @@
 #include <omath/mat3.h>
 #include <omath/vec4.h>
 #include <cstring>	// memcpy()
-#include <array>
 
 namespace omath {
 
@@ -93,7 +92,7 @@ struct mat4_t {
 		value[1] = m[1];
 		value[2] = m[2];
 		value[3] = m[3];
-		return *this;;
+		return *this;
 	}
 
 	template<typename U>
@@ -300,6 +299,15 @@ template <typename T>
 std::ostream &operator<<( std::ostream &o, const mat4_t<T> &m ) {
 	o << '(' << m[0] << ',' << m[1] << ',' << m[2] << ',' << m[3] << ')';
 	return o;
+}
+
+template<typename T>
+inline static mat4_t<T> transpose( const mat4_t<T>& m ) {
+	omath::mat4_t<T> mtrans;
+	for( int i=0; i<4; i++ )
+		for( int j=0; j<4;j++ )
+			mtrans[i][j] = m[j][i];
+	return mtrans;
 }
 
 template<typename T>

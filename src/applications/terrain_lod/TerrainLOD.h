@@ -14,7 +14,7 @@ namespace terrain {
 }
 
 namespace orf_n {
-	class Program;
+	class program;
 	class IndexBuffer;
 }
 
@@ -54,7 +54,7 @@ private:
 
 	std::unique_ptr<terrain::gridmesh> m_drawGridMesh{ nullptr };
 
-	std::unique_ptr<orf_n::Program> m_shaderTerrain{ nullptr };
+	std::unique_ptr<orf_n::program> m_shaderTerrain{ nullptr };
 
 	/**
 	 * Selection object. Used to store selected nodes for rendering every frame.

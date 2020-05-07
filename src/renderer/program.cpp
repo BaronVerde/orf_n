@@ -1,13 +1,13 @@
 
 #include <base/logbook.h>
-#include "Program.h"
+#include <renderer/program.h>
 #include <fstream>
 #include <stdexcept>
 #include <sstream>
 
 namespace orf_n {
 
-Program::Program( const std::vector<std::shared_ptr<Module>> &modules ) {
+program::program( const std::vector<std::shared_ptr<module>> &modules ) {
     if( modules.size() == 0 ) {
     	std::string s{ "No shader modules specified for program." };
     	logbook::log_msg( logbook::SHADER, logbook::ERROR, s );
@@ -19,7 +19,7 @@ Program::Program( const std::vector<std::shared_ptr<Module>> &modules ) {
     	logbook::log_msg( logbook::SHADER, logbook::ERROR, s );
     	throw std::runtime_error( s );
     }
-    for( const std::shared_ptr<Module> &m : modules ) {
+    for( const std::shared_ptr<module> &m : modules ) {
         glAttachShader( m_program, m->getShader() );
         std::ostringstream s;
         s << "Attaching shader '" << m->getFilename() << "; #" << m->getShader() << '.';
@@ -31,25 +31,25 @@ Program::Program( const std::vector<std::shared_ptr<Module>> &modules ) {
     logbook::log_msg( logbook::SHADER, logbook::INFO, s.str() );
 }
 
-Program::~Program() {
+program::~program() {
 	glDeleteProgram( m_program );
 	logbook::log_msg( logbook::SHADER, logbook::INFO,
 			"Shader program #" + std::to_string( m_program ) + " destroyed." );
 }
 
-GLuint Program::getProgram() const {
+GLuint program::getProgram() const {
 	return m_program;
 }
 
-void Program::use() const {
+void program::use() const {
 	glUseProgram( m_program );
 }
 
-void Program::unUse() const {
+void program::unUse() const {
 	glUseProgram( 0 );
 }
 
-void Program::link() const {
+void program::link() const {
 	glLinkProgram( m_program );
 	GLint linked;
 	glGetProgramiv( m_program, GL_LINK_STATUS, &linked );

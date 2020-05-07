@@ -55,7 +55,7 @@ public:
 				// case: comes as double -> must be coverted before being sent to the buffer
 				std::vector<omath::vec3> tempVertices( 2 * vertexData.size() );
 				for( size_t i{0}; i < vertexData.size(); ++i )
-					omath::doubleToTwoFloats( vertexData[i], tempVertices[2*i], tempVertices[2*i+1] );
+					omath::double_to_two_floats( vertexData[i], tempVertices[2*i], tempVertices[2*i+1] );
 				m_buffer = std::make_unique<Buffer>(
 						GL_ARRAY_BUFFER, tempVertices.size() * sizeof( omath::vec3 ),
 						tempVertices.data(),

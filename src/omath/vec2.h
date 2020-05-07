@@ -32,6 +32,10 @@ struct vec2_t {
 
 	vec2_t( const T& scalar ) : x{scalar}, y{scalar} {}
 
+	// hack: construct from array for nv_model
+	vec2_t( const T* const arr ) :
+		x{arr[0]}, y{arr[1]} {}
+
 	template<typename U>
 	vec2_t( U const& s1, U const& s2 ) :
 		x{static_cast<T>(s1)}, y{static_cast<T>(s2)} {}
@@ -272,6 +276,20 @@ std::ostream &operator<<( std::ostream &o, const vec2_t<T> &v ) {
 template<typename T>
 static inline const vec2_t<T> abs( const vec2_t<T> &v ) {
 	return vec2_t<T>{ std::abs( v.x ), std::abs( v.y ) };
+}
+
+// componentwise min
+template<typename T>
+static inline vec2_t<T> vec2_min( const vec2_t<T>& left, const vec2_t<T>& right ) {
+    const vec2_t<T> rt{ std::min( left.x, right.x ), std::min( left.y, right.y ) };
+    return rt;
+}
+
+// componentwise max
+template<typename T>
+static inline vec2_t<T> vec3_max( const vec2_t<T>& left, const vec2_t<T>& right ) {
+    const vec2_t<T> rt{ std::max( left.x, right.x ), std::max( left.y, right.y ) };
+    return rt;
 }
 
 typedef vec2_t<float> vec2;

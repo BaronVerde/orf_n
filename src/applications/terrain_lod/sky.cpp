@@ -14,7 +14,7 @@ sky_renderer::sky_renderer() {
 	m_directionalLightDirTarget = omath::vec3{0.0f};
 	m_directionalLightDirTargetL1 = omath::vec3{0.0f};
 	// do an icosphere
-	m_sun_mesh = new orf_n::icosphere( of_n::vec3{300.0f}, 5 );
+	m_sun_mesh = new orf_n::icosphere( omath::vec3{300.0f}, 5 );
 	glCreateVertexArrays( 1, &m_vertex_array );
 	glCreateBuffers( 1, &m_vertex_buffer );
 	glCreateBuffers( 1, &m_index_buffer );

@@ -1,6 +1,7 @@
 
-#include <applications/terrain_lod/cascaded_volume_map.h>
+#include "cascaded_volume_map.h"
 #include "base/globals.h"
+#include "settings.h"
 #include <cassert>
 
 namespace terrain {
@@ -39,7 +40,7 @@ bool cascaded_volume_map::layer::update( const omath::vec3& observer_pos, float 
 
 // Resets all layers to 0 bounding boxes
 void cascaded_volume_map::reset() {
-	for( int i = m_layer_count-1; i >= 0 && m_update_frame_budget >= 1.0f; --i ) {
+	for( int i = NUMBER_OF_LOD_LEVELS-1; i >= 0 && m_update_frame_budget >= 1.0f; --i ) {
 		layer* layer = m_layers_array[i];
 		layer->box_min += layer->box_max;
 		layer->box_min *= 0.5;
@@ -53,7 +54,7 @@ int cascaded_volume_map::update( const omath::vec3& observer_pos, const float vi
 	if( m_update_frame_budget > m_settings.allowed_updates_per_frame )
 		m_update_frame_budget = m_settings.allowed_updates_per_frame;
 #if _DEBUG
-	for( int i = 0; i < m_layer_count-1; i++ )
+	for( int i = 0; i < NUMBER_OF_LOD_LEVELS-1; i++ )
 		assert( visibility_ranges[i] < visibility_ranges[i+1] );
 	assert( m_settings.volume_extension_mul >= 1.0f );
 	assert( m_settings.movement_prediction_offset_mul >= 0.0f && m_settings.movement_prediction_offset_mul < 1.0f );
@@ -62,7 +63,7 @@ int cascaded_volume_map::update( const omath::vec3& observer_pos, const float vi
 #endif
 	int number_updated = 0;
 	// Update layers if needed
-	for( int i = m_layer_count-1; i >= 0 && m_update_frame_budget >= 1.0f; i-- ) {
+	for( int i = NUMBER_OF_LOD_LEVELS-1; i >= 0 && m_update_frame_budget >= 1.0f; i-- ) {
 		layer* layer = m_layers_array[i];
 		if( layer->update( observer_pos, visibility_ranges[i], this ) ) {
 			number_updated++;

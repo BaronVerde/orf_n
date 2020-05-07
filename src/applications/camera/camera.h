@@ -82,7 +82,8 @@ public:
 	 */
 	void set_zoom( const float &zoom );
 
-	const float &get_zoom() const ;
+	// get zoom in degrees
+	const float &get_zoom() const;
 
 	const bool &get_wireframe_mode() const;
 

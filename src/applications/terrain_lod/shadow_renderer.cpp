@@ -1,84 +1,53 @@
 
-#include <applications/terrain_lod/shadow_renderer.h>
-#include <applications/terrain_lod/sky.h>
+#include "shadow_renderer.h"
+#include "sky.h"
+#include "settings.h"
 
 namespace terrain {
 
 cascaded_shadow_map::cascaded_shadow_map() {
-	m_mainRenderer = NULL;
-	//m_depthBuffer = NULL;
-	m_lastShadowCamRightVec = D3DXVECTOR3( 0, 1, 0 );
-	//m_scratchSurface = NULL;
-	m_shadowForward   = D3DXVECTOR3( 0, 0, 0 );
-	m_defPoolTexturesCreated = false;
-	m_settings.Flags = SF_IgnoreZ;
+	m_settings.flags = SF_IgnoreZ;
+	m_layers_array = new layer*[NUMBER_OF_LOD_LEVELS];
+	for( int i = 0; i < NUMBER_OF_LOD_LEVELS; ++i )
+		m_layers_array[i] = &m_cascades[i];
 }
 
 cascaded_shadow_map::~cascaded_shadow_map() {
-	for( int i = 0; i < sizeof(m_cascades)/sizeof(m_cascades[0]); i++ ) {
-		SAFE_RELEASE( m_cascades[i].ShadowMap );
-		SAFE_RELEASE( m_cascades[i].ShadowMapDepth );
-	}
-	//SAFE_RELEASE( m_depthBuffer );
-	SAFE_RELEASE( m_scratchSurface );
-	m_defPoolTexturesCreated = false;
-	//SAFE_RELEASE( m_depthBuffer );
-	SAFE_RELEASE( m_scratchSurface );
-	delete[] m_layersArray;
-	m_layersArray = NULL;
+	delete [] m_layers_array;
 }
 
-void cascaded_shadow_map::Initialize(DemoRenderer * mainRenderer) {
-	m_mainRenderer = mainRenderer;
-	m_layerCount = m_mainRenderer->GetSettings().LODLevelCount;
-	m_layersArray = new Layer*[m_layerCount];
-	for( int i = 0; i < m_layerCount; i++ )
-		m_layersArray[i] = &m_cascades[i];
-	m_defPoolTexturesCreated = false;
+void cascaded_shadow_map::cleanup() {
+	for( int i = 0; i < NUMBER_OF_LOD_LEVELS; ++i )
+		glDeleteRenderbuffers( 1, &m_cascades[i].ShadowMapDepth );
+	glDeleteFramebuffers( 1, &m_scratchSurface );
 }
 
-void cascaded_shadow_map::Deinitialize() {}
-
-void cascaded_shadow_map::InitializeRuntimeData() {
-	if( m_mainRenderer == NULL )
-		return;
+void cascaded_shadow_map::setup() {
 	if( m_defPoolTexturesCreated )
 		return;
 	m_defPoolTexturesCreated = true;
-	IDirect3DDevice9* device = GetD3DDevice();
-	m_textureResolution = (m_mainRenderer->GetSettings().ShadowmapHighQuality)?(4096):(1536);
 	// start with a smooth big 6.0 radius
-	float samplingRadius = m_textureResolution / 384.0f;
+	float samplingRadius = (float)SHADOW_MAP_RESOLUTION / 384.0f;
 	// reduce radius by this amount for each level - 2.0 would be correct,
 	// but less is good enough while still retaining smoothnes on higher levels
 	const float samplingRadiusStep = 1.75f;
-	for( int i = 0; i < m_layerCount; ++i ) {
-		SAFE_RELEASE( m_cascades[i].ShadowMap );
-		SAFE_RELEASE( m_cascades[i].ShadowMapDepth );
-		//V( device->CreateTexture( textureResolution, textureResolution, 1, D3DUSAGE_RENDERTARGET, D3DFMT_R32F, D3DPOOL_DEFAULT, &m_cascades[i].ShadowMap, NULL ) );
-		if( vaGetShadowMapSupport() == smsATIShadows ) {
-			if( FAILED( device->CreateTexture( m_textureResolution, m_textureResolution, 1,
-					D3DUSAGE_DEPTHSTENCIL, (D3DFORMAT)(MAKEFOURCC('D','F','2','4')),
-					D3DPOOL_DEFAULT, &m_cascades[i].ShadowMapDepth, NULL ) ) ) {
-				//vaFatalError( "Unable to create DF24 ATI depthstencil" );
-				m_cascades[i].ShadowMapDepth = NULL;
-			}
-		} else {
-			if( FAILED( device->CreateTexture( m_textureResolution, m_textureResolution, 1,
-					D3DUSAGE_DEPTHSTENCIL, D3DFMT_D24S8, D3DPOOL_DEFAULT, &m_cascades[i].ShadowMapDepth, NULL ) ) )
-				m_cascades[i].ShadowMapDepth = NULL;
-		}
+	glCreateFramebuffers( 1, &m_scratchSurface );
+	for( int i = 0; i < NUMBER_OF_LOD_LEVELS; ++i ) {
+		glCreateRenderbuffers( 1, &m_cascades[i].ShadowMapDepth );
+		glNamedRenderbufferStorage(
+				m_cascades[i].ShadowMapDepth, GL_R32F, SHADOW_MAP_RESOLUTION, SHADOW_MAP_RESOLUTION
+		);
 		// calculate sampling radius so that the transition between layers is smooth
-		m_cascades[i].SamplingTexelRadius = ::max( 1.1f, samplingRadius );
+		m_cascades[i].SamplingTexelRadius = std::max( 1.1f, samplingRadius );
 		samplingRadius /= samplingRadiusStep;
+		// check completeness
+		glNamedFramebufferRenderbuffer(
+				m_scratchSurface, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_cascades[i].ShadowMapDepth
+		);
+		if( GL_FRAMEBUFFER_COMPLETE != glCheckNamedFramebufferStatus( m_scratchSurface, GL_DRAW_FRAMEBUFFER ) )
+			std::cerr << "Error creating csm framebuffer. Framebuffer incomplete." << std::endl;
 	}
-	CascadedVolumeMap::Reset();
-	//SAFE_RELEASE( m_depthBuffer );
-	SAFE_RELEASE( m_scratchSurface );
-	//V( device->CreateDepthStencilSurface( textureResolution, textureResolution, D3DFMT_D24X8, D3DMULTISAMPLE_NONE, 0, true, &m_depthBuffer, NULL ) );
-	if( FAILED( device->CreateRenderTarget( m_textureResolution, m_textureResolution, D3DFMT_A8R8G8B8,
-			D3DMULTISAMPLE_NONE, 0, false, &m_scratchSurface, NULL ) ) )
-		m_scratchSurface = NULL;
+	cascaded_volume_map::reset();
 }
 
 void cascaded_shadow_map::UpdateShaderSettings( D3DXMACRO * newMacroDefines ) {

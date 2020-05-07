@@ -41,6 +41,10 @@ struct vec3_t {
 	vec3_t( const T &s1, const vec2_t<T> &v ) :
 			x{s1}, y{v.x}, z{v.z} {}
 
+	// hack: construct from array for nv_model
+	vec3_t( const T* arr ) :
+		x{arr[0]}, y{arr[1]}, z{arr[2]} {}
+
 	template<typename U>
 	vec3_t<T>( const vec3_t<U> &other ) :
 		x{static_cast<T>(other.x)}, y{static_cast<T>(other.y)}, z{static_cast<T>(other.z)} {}
@@ -294,7 +298,7 @@ typedef vec3_t<double> dvec3;
 typedef vec3_t<int> ivec3;
 typedef vec3_t<unsigned int> uvec3;
 
-static inline void doubleToTwoFloats( const omath::dvec3 &d, omath::vec3 &high, omath::vec3 &low ) {
+static inline void double_to_two_floats( const omath::dvec3 &d, omath::vec3 &high, omath::vec3 &low ) {
 	high.x = static_cast<float>( d.x );
 	high.y = static_cast<float>( d.y );
 	high.z = static_cast<float>( d.z );
@@ -319,8 +323,22 @@ static inline vec3 calculatePositionRTE(
 }
 
 template<typename T>
-static inline bool compareFloat( const omath::vec3_t<T> &one, const omath::vec3_t<T> &other ) {
+static inline bool compare_float( const omath::vec3_t<T> &one, const omath::vec3_t<T> &other ) {
 	return( compareFloat( one.x, other.x ) && compareFloat( one.y, other.y ) && compareFloat( one.z, other.z ) );
+}
+
+// componentwise min
+template<typename T>
+static inline vec3_t<T> vec3_min( const vec3_t<T>& left, const vec3_t<T>& right ) {
+    const vec3_t<T> rt{ std::min( left.x, right.x ), std::min( left.y, right.y ), std::min( left.z, right.z ) };
+    return rt;
+}
+
+// componentwise max
+template<typename T>
+static inline vec3_t<T> vec3_max( const vec3_t<T>& left, const vec3_t<T>& right ) {
+    const vec3_t<T> rt{ std::max( left.x, right.x ), std::max( left.y, right.y ), std::max( left.z, right.z ) };
+    return rt;
 }
 
 }	// namespace omath

@@ -44,7 +44,7 @@ const GLint SUL_MODEL_VIEW_PROJECTION_MATRIX_RTE { 18 };
 
 static inline void setCameraPosition( const omath::dvec3 &pos ) {
 	omath::vec3 h{ 0.0f }, l{  0.0f };
-	doubleToTwoFloats( pos, h, l );
+	double_to_two_floats( pos, h, l );
 	glUniform3fv( SUL_CAMERA_POSITION_HIGH, 1, &h[0] );
 	glUniform3fv( SUL_CAMERA_POSITION_LOW, 1, &l[0] );
 }
@@ -94,7 +94,7 @@ static inline void setDiffuseSpecularAmbientShininess( const omath::vec4 &dsas )
 }
 
 // Generic uniform setters for shader vars. Not the fastest ...
-static inline void setUniform( const GLuint program, const std::string &name, bool value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, bool value ) {
 	glUniform1i( glGetUniformLocation( program, name.c_str() ), (GLint)value );
 }
 
@@ -102,43 +102,43 @@ static inline void setUniform( const GLuint program, const std::string &name, bo
  * @brief This is the right overload for textures. Despite they being declared as GLuint
  * the api expects a GLint. So cast the texture before calling setUniform().
  */
-static inline void setUniform( const GLuint program, const std::string &name, const GLint &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const GLint &value ) {
 	glUniform1i( glGetUniformLocation( program, name.c_str() ), value );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const GLuint &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const GLuint &value ) {
 	glUniform1ui( glGetUniformLocation( program, name.c_str() ), value );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const GLfloat &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const GLfloat &value ) {
 	glUniform1f( glGetUniformLocation( program, name.c_str() ), value );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const GLdouble &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const GLdouble &value ) {
 	glUniform1d( glGetUniformLocation( program, name.c_str() ), value );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::vec2 &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::vec2 &value ) {
 	glUniform2fv( glGetUniformLocation( program, name.c_str() ), 1, &value[0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::vec3 &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::vec3 &value ) {
 	glUniform3fv( glGetUniformLocation( program, name.c_str() ), 1, &value[0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::vec4 &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::vec4 &value ) {
 	glUniform4fv(glGetUniformLocation( program, name.c_str() ), 1, &value[0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::dvec2 &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::dvec2 &value ) {
 	glUniform2dv( glGetUniformLocation( program, name.c_str() ), 1, &value[0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::dvec3 &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::dvec3 &value ) {
 	glUniform3dv( glGetUniformLocation( program, name.c_str() ), 1, &value[0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::dvec4 &value ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::dvec4 &value ) {
 	glUniform4dv(glGetUniformLocation( program, name.c_str() ), 1, &value[0] );
 }
 
@@ -146,27 +146,27 @@ static inline void setUniform( const GLuint program, const std::string &name, co
  * @todo: Try omath::value_ptr(trans) as last argument.
  * omath stores matrices not in the way OpenGL expects them.
  */
-/*static inline void setUniform( const GLuint program, const std::string &name, const omath::mat2 &mat ) {
+/*static inline void set_uniform( const GLuint program, const std::string &name, const omath::mat2 &mat ) {
 	glUniformMatrix2fv( glGetUniformLocation( program, name.c_str() ), 1, GL_FALSE, &mat[0][0] );
 }*/
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::mat3 &mat ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::mat3 &mat ) {
 	glUniformMatrix3fv( glGetUniformLocation( program, name.c_str() ), 1, GL_FALSE, &mat[0][0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::mat4 &mat ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::mat4 &mat ) {
 	glUniformMatrix4fv( glGetUniformLocation( program, name.c_str() ), 1, GL_FALSE, &mat[0][0] );
 }
 
-/*static inline void setUniform( const GLuint program, const std::string &name, const omath::dmat2 &mat ) {
+/*static inline void set_uniform( const GLuint program, const std::string &name, const omath::dmat2 &mat ) {
 	glUniformMatrix2dv( glGetUniformLocation( program, name.c_str() ), 1, GL_FALSE, &mat[0][0] );
 }*/
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::dmat3 &mat ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::dmat3 &mat ) {
 	glUniformMatrix3dv( glGetUniformLocation( program, name.c_str() ), 1, GL_FALSE, &mat[0][0] );
 }
 
-static inline void setUniform( const GLuint program, const std::string &name, const omath::dmat4 &mat ) {
+static inline void set_uniform( const GLuint program, const std::string &name, const omath::dmat4 &mat ) {
 	glUniformMatrix4dv( glGetUniformLocation( program, name.c_str() ), 1, GL_FALSE, &mat[0][0] );
 }
 

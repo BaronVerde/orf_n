@@ -14,7 +14,7 @@
 
 namespace orf_n {
 
-class Module {
+class module {
 public:
 	/**
 	 * @brief Struct for shader modules
@@ -23,14 +23,13 @@ public:
 	 * GL_GEOMETRY_SHADER, or GL_FRAGMENT_SHADER, GL_COMPUTE_SHADER
 	 * @param filename Pathname to shader.
 	 */
-	Module( const GLenum stage, const std::string &filename );
+	module( const GLenum stage, const std::string &filename );
 
-	/**
-	 * Same as above, only the text comes as a char* (e.g. inline)
-	 */
-	Module( const GLenum stage, const GLchar *moduleText[] );
+	module( const GLenum stage, const char** shader_source );
 
-	virtual ~Module();
+	module( const GLenum stage, const GLuint shader );
+
+	virtual ~module();
 
 	/**
 	 * Return the shader stage for binding to a pipeline.
@@ -62,11 +61,16 @@ private:
 	 */
 	bool m_isShader;
 
-	/**
-	 * static helper function
-	 */
-	static std::vector<GLchar> readShaderSourceFile( const std::string &filename );
+	// Load a single standard glsl shader source file
+	static std::vector<GLchar> load_shader_source( const std::string& filename );
+
+	// Loads a source file. Scans for #include and loads the files named afetr that
+	// Do not use <> or "" to bracket the filename, just plain whitespace !
+	// Do not set clear_code to false if you don't want the code of the last loaded file.
+	static std::vector<GLchar> parse_shader_source_file( const std::string& filename, bool clear_code = true );
+
+	bool compile_shader( const char** shader_source );
 
 };
 
-} /* namespace orf_n */
+}

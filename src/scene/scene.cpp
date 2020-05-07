@@ -5,7 +5,7 @@
 
 namespace orf_n {
 
-scene::scene( glfw_window *win, camera *cam, UIOverlay *ovl ) :
+scene::scene( glfw_window *win, camera *cam, ui_overlay *ovl ) :
 	renderable{ "Scene" }, m_window{ win }, m_camera{ cam }, m_overlay{ ovl } {
 	logbook::log_msg( logbook::SCENE, logbook::INFO, "Scene '" + get_name() + "' created" );
 }

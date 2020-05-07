@@ -1,15 +1,15 @@
 
 #include <applications/camera/camera.h>
-#include <applications/terrain_lod/gridmesh.h>
-#include <applications/terrain_lod/LODSelection.h>
-#include <applications/terrain_lod/quadtree.h>
-#include <applications/terrain_lod/TerrainTile.h>
+#include "gridmesh.h"
+#include "LODSelection.h"
+#include "quadtree.h"
+#include "TerrainTile.h"
 #include <base/logbook.h>
 #include <renderer/sampler.h>
+#include <renderer/uniform.h>
 #include <scene/scene.h>
 #include "omath/mat4.h"
-#include "renderer/Module.h"
-#include "renderer/Uniform.h"
+#include "renderer/program.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -61,12 +61,12 @@ const orf_n::aabb *TerrainTile::getAABB() const {
 	return m_AABB.get();
 }
 
-omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
+omath::uvec2 TerrainTile::render( const orf_n::program *const p,
 						  const terrain::gridmesh *const gridMesh,
 						  const terrain::LODSelection *const selection,
 						  const int tileIndex,
 						  const GLint drawMode ) {
-	omath::uvec2 renderStats{0};
+	omath::uvec2 renderStats{ 0, 0 };
 	m_heightMap->bind();
 	// Submeshes are evenly spaced in index buffer. Else calc offsets individually.
 	const int halfD{ gridMesh->getEndIndexTL() };
@@ -83,7 +83,7 @@ omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
 			// Set LOD level specific consts if they have changed from last lod level
 			if( prevMorphConstLevelSet != n.lodLevel ) {
 				prevMorphConstLevelSet = n.lodLevel;
-				orf_n::setUniform( p->getProgram(), "g_morphConsts",
+				orf_n::set_uniform( p->getProgram(), "g_morphConsts",
 						selection->getMorphConsts( prevMorphConstLevelSet-1 ) );
 			}
 			bool drawFull{ n.hasTL && n.hasTR && n.hasBL && n.hasBR };
@@ -96,8 +96,8 @@ omath::uvec2 TerrainTile::render( const orf_n::Program *const p,
 			omath::vec3 nodeOffset{ static_cast<float>( bb->m_min.x ),
 									static_cast<float>( bb->m_min.y ) + static_cast<float>( bb->m_max.y ) * 0.5f,
 									static_cast<float>( bb->m_min.z ) };
-			orf_n::setUniform( p->getProgram(), "g_nodeScale", nodeScale );
-			orf_n::setUniform( p->getProgram(), "g_nodeOffset", nodeOffset );
+			orf_n::set_uniform( p->getProgram(), "g_nodeScale", nodeScale );
+			orf_n::set_uniform( p->getProgram(), "g_nodeOffset", nodeOffset );
 			const int numIndices{ gridMesh->get_number_indices() };
 			if( drawFull ) {
 				glDrawElements( drawMode, numIndices, GL_UNSIGNED_INT, (const void *)0 );

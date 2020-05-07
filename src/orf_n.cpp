@@ -1,9 +1,9 @@
 
 #include <base/globals.h>
 #include <base/logbook.h>
+#include <renderer/renderer.h>
 #include "glad/glad.h"
 #include <iostream>
-#include "renderer/Renderer.h"
 #include <cstring>	// strcmp()
 //#include "../utils/asc2png.h"
 
@@ -28,7 +28,7 @@ int main( int argc, char *argv[] ) {
 	}
 
 	try {
-		Renderer* r = new Renderer( debug );
+		renderer* r = new renderer( debug );
 		r->setupRenderer();
 		r->setup();
 		r->render();

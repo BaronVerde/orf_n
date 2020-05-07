@@ -37,7 +37,6 @@ public:
 protected:
 	settings m_settings;
 	layer** m_layers_array{nullptr};
-	int m_layer_count{0};
 	double m_currentTime{0.0f};
 	float m_update_frame_budget{1.0f};
 	int m_lowest_updated{0xFF};

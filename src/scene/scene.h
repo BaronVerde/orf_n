@@ -6,15 +6,15 @@
 #pragma once
 
 #include <applications/camera/camera.h>
+#include <applications/ui_overlay/ui_overlay.h>
 #include <base/glfw_window.h>
 #include <scene/renderable.h>
-#include "applications/UIOverlay/UIOverlay.h"
 
 namespace orf_n {
 
 class scene : public renderable {
 public:
-	scene( glfw_window *win, camera *cam, UIOverlay *ovl );
+	scene( glfw_window *win, camera *cam, ui_overlay *ovl );
 
 	virtual ~scene();
 
@@ -39,7 +39,7 @@ private:
 
 	camera *m_camera{ nullptr };
 
-	UIOverlay *m_overlay{ nullptr };
+	ui_overlay *m_overlay{ nullptr };
 
 	/**
 	 * Renderables in order for rendering.

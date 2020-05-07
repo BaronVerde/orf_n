@@ -12,10 +12,10 @@
 
 namespace orf_n {
 
-class Renderer {
+class renderer {
 public:
-	Renderer( bool debug = false );
-	virtual ~Renderer();
+	renderer( bool debug = false );
+	virtual ~renderer();
 
 	/**
 	 * Create the window, eventhandler and camera object.
@@ -55,7 +55,7 @@ private:
 
 	Framebuffer *m_framebuffer{ nullptr };
 
-	UIOverlay *m_overlay{ nullptr };
+	ui_overlay *m_overlay{ nullptr };
 
 	/**
 	 * A stub now. In future, suitability checks should be done here.

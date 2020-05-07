@@ -8,17 +8,17 @@
 #pragma once
 
 #include <base/glfw_window.h>
+#include <renderer/program.h>
 #include <scene/renderable.h>
-#include "renderer/Program.h"
 #include "imgui/imgui.h"
 
 namespace orf_n {
 
-class UIOverlay : public renderable, event_handler {
+class ui_overlay : public renderable, event_handler {
 public:
-	UIOverlay( glfw_window *win );
+	ui_overlay( glfw_window *win );
 
-	virtual ~UIOverlay();
+	virtual ~ui_overlay();
 
 	void setup() override final;
 
@@ -28,9 +28,9 @@ public:
 
 	void cleanup() override final;
 
-	UIOverlay &operator=( const UIOverlay &eh ) = delete;
+	ui_overlay &operator=( const ui_overlay &eh ) = delete;
 
-	UIOverlay( const UIOverlay &eh ) = delete;
+	ui_overlay( const ui_overlay &eh ) = delete;
 
 private:
 	/**
@@ -43,7 +43,7 @@ private:
 
 	glfw_window *m_window;
 
-	Program *m_shader;
+	program *m_shader;
 
 	GLuint m_fontTexture;
 

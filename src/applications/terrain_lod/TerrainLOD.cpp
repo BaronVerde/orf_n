@@ -1,20 +1,20 @@
 
 #include <applications/camera/camera.h>
-#include <applications/terrain_lod/gridmesh.h>
-#include <applications/terrain_lod/LODSelection.h>
-#include <applications/terrain_lod/node.h>
-#include <applications/terrain_lod/quadtree.h>
-#include <applications/terrain_lod/TerrainLOD.h>
-#include <applications/terrain_lod/TerrainTile.h>
+#include "gridmesh.h"
+#include "LODSelection.h"
+#include "node.h"
+#include "quadtree.h"
+#include "TerrainLOD.h"
+#include "TerrainTile.h"
 #include <geometry/ellipsoid.h>
+#include <renderer/uniform.h>
 #include "base/globals.h"
 #include <scene/scene.h>
 #include "base/logbook.h"
 #include "geometry/aabb.h"
 #include "omath/mat4.h"
 #include "renderer/IndexBuffer.h"
-#include "renderer/Module.h"
-#include "renderer/Uniform.h"
+#include "renderer/program.h"
 
 extern bool orf_n::globals::show_app_ui;
 
@@ -51,12 +51,12 @@ TerrainLOD::TerrainLOD() : orf_n::renderable( "TerrainLOD" ) {
 		m_terrainTiles[i] = new terrain::TerrainTile{ TERRAIN_FILES[i] };
 
 	// Create terrain shaders
-	std::vector<std::shared_ptr<orf_n::Module>> modules;
-	modules.push_back( std::make_shared<orf_n::Module>( GL_VERTEX_SHADER,
-			"src/applications/TerrainLOD/Terrain.vert.glsl" ) );
-	modules.push_back( std::make_shared<orf_n::Module>( GL_FRAGMENT_SHADER,
-			"src/applications/TerrainLOD/Terrain.frag.glsl" ) );
-	m_shaderTerrain = std::make_unique<orf_n::Program>( modules );
+	std::vector<std::shared_ptr<orf_n::module>> modules;
+	modules.push_back( std::make_shared<orf_n::module>( GL_VERTEX_SHADER,
+			"src/applications/terrain_lod/Terrain.vert.glsl" ) );
+	modules.push_back( std::make_shared<orf_n::module>( GL_FRAGMENT_SHADER,
+			"src/applications/terrain_lod/Terrain.frag.glsl" ) );
+	m_shaderTerrain = std::make_unique<orf_n::program>( modules );
 }
 
 TerrainLOD::~TerrainLOD() {
@@ -90,10 +90,11 @@ void TerrainLOD::setup() {
 	// Used to clamp edges to correct terrain size (only max-es needs clamping, min-s are clamped implicitly)
 	m_tileToTexture = omath::vec2{ ( w - 1.0f ) / w, ( h - 1.0f ) / h };
 	m_heightMapInfo = omath::vec4{ w, h, 1.0f / w, 1.0f / h };
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileToTexture", m_tileToTexture );
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_heightmapTextureInfo", m_heightMapInfo );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_tileToTexture", m_tileToTexture );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_heightmapTextureInfo", m_heightMapInfo );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "u_height_factor", terrain::HEIGHT_FACTOR );
 	// Set dimensions of the gridmesh used for rendering an individual node
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_gridDim", omath::vec3{
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_gridDim", omath::vec3{
 		static_cast<float>(terrain::GRIDMESH_DIMENSION),
 		static_cast<float>(terrain::GRIDMESH_DIMENSION) * 0.5f,
 		2.0f / static_cast<float>(terrain::GRIDMESH_DIMENSION)
@@ -103,10 +104,10 @@ void TerrainLOD::setup() {
 	const omath::vec4 lightColorDiffuse{ 0.65f, 0.65f, 0.65f, 1.0f };
 	const omath::vec4 fogColor{ 0.0f, 0.5f, 0.5f, 1.0f };
 	const omath::vec4 colorMult{ 1.0f, 1.0f, 1.0f, 1.0f };
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_lightColorDiffuse", lightColorDiffuse );
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_lightColorAmbient", lightColorAmbient );
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_colorMult", colorMult );
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "g_diffuseLightDir", m_diffuseLightPos );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_lightColorDiffuse", lightColorDiffuse );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_lightColorAmbient", lightColorAmbient );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_colorMult", colorMult );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_diffuseLightDir", m_diffuseLightPos );
 }
 
 void TerrainLOD::render() {
@@ -135,7 +136,7 @@ void TerrainLOD::render() {
 	m_renderStats.reset();
 	m_shaderTerrain->use();
 	if( refreshUniforms )
-		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_diffuseLightDir", m_diffuseLightPos );
+		orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_diffuseLightDir", m_diffuseLightPos );
 	// Build view projection matrix relative to eye
 	const omath::dmat4 view{
 		omath::lookAt( cam->get_position(), cam->get_position() + omath::dvec3{cam->get_front()}, omath::dvec3{cam->get_up()} )
@@ -148,7 +149,7 @@ void TerrainLOD::render() {
 	};
 	orf_n::setModelViewProjectionMatrixRTE( cam->get_perspective_matrix() * mvRTE );
 	orf_n::setViewProjectionMatrix( cam->get_view_perspective__matrix() );
-	orf_n::setUniform( m_shaderTerrain->getProgram(), "debugColor", orf_n::color::gray );
+	orf_n::set_uniform( m_shaderTerrain->getProgram(), "debugColor", orf_n::color::gray );
 	orf_n::setCameraPosition( cam->get_position() );
 
 	// Draw tile by tile
@@ -156,9 +157,9 @@ void TerrainLOD::render() {
 	for( size_t i{0}; i < m_terrainTiles.size(); ++i ) {
 		// set tile world coords
 		const orf_n::aabb *const aabb{ m_terrainTiles[i]->getAABB() };
-		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileMax", omath::vec2{ aabb->m_max.x, aabb->m_max.z } );
-		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileScale", omath::vec3{ aabb->m_max - aabb->m_min } );
-		orf_n::setUniform( m_shaderTerrain->getProgram(), "g_tileOffset", omath::vec3{ aabb->m_min } );
+		orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_tileMax", omath::vec2{ aabb->m_max.x, aabb->m_max.z } );
+		orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_tileScale", omath::vec3{ aabb->m_max - aabb->m_min } );
+		orf_n::set_uniform( m_shaderTerrain->getProgram(), "g_tileOffset", omath::vec3{ aabb->m_min } );
 		omath::uvec2 renderStats{
 			m_terrainTiles[i]->render( m_shaderTerrain.get(), m_drawGridMesh.get(), m_lodSelection, (int)i, drawMode )
 		};
@@ -176,9 +177,9 @@ void TerrainLOD::cleanup() {
 // ******** Debug stuff
 void TerrainLOD::debugDrawing() {
 	// To keep the below less verbose
-	const orf_n::Program *p{ m_drawPrimitives.getProgramPtr() };
+	const orf_n::program *p{ m_drawPrimitives.getProgramPtr() };
 	p->use();
-	orf_n::setUniform( p->getProgram(), "projViewMatrix", m_scene->get_camera()->get_view_perspective__matrix() );
+	orf_n::set_uniform( p->getProgram(), "projViewMatrix", m_scene->get_camera()->get_view_perspective__matrix() );
 	glPointSize( 3.0f );
 	for( size_t i{0}; i < m_terrainTiles.size(); ++i ) {
 		if( m_showTileBoxes )

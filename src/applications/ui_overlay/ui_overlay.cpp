@@ -3,10 +3,10 @@
 #include "base/globals.h"
 #include <base/logbook.h>
 #include <renderer/texture_2d.h>
+#include <renderer/uniform.h>
 #include <scene/scene.h>
-#include "UIOverlay.h"
+#include "ui_overlay.h"
 #include "omath/mat4.h"
-#include "renderer/Uniform.h"
 #include "imgui/imgui.h"
 
 namespace orf_n {
@@ -15,12 +15,12 @@ extern double globals::delta_time;
 extern bool globals::show_app_ui;
 
 // Low priority, rendered last
-UIOverlay::UIOverlay( glfw_window *win ) :
-		renderable{ "UIOverlay" }, event_handler{ win }, m_window{ win } {}
+ui_overlay::ui_overlay( glfw_window *win ) :
+		renderable{ "ui_overlay" }, event_handler{ win }, m_window{ win } {}
 
-UIOverlay::~UIOverlay() {}
+ui_overlay::~ui_overlay() {}
 
-void UIOverlay::setup() {
+void ui_overlay::setup() {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -56,12 +56,12 @@ void UIOverlay::setup() {
 	io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
 
 	// Create the shaders
-	std::vector<std::shared_ptr<Module>> modules;
-	modules.push_back( std::make_shared<Module>( GL_VERTEX_SHADER,
-			"src/applications/UIOverlay/UIOverlay.vert" ) );
-	modules.push_back( std::make_shared<Module>( GL_FRAGMENT_SHADER,
-			"src/applications/UIOverlay/UIOverlay.frag" ) );
-	m_shader = new Program( modules );
+	std::vector<std::shared_ptr<module>> modules;
+	modules.push_back( std::make_shared<module>( GL_VERTEX_SHADER,
+			"src/applications/ui_overlay/ui_overlay.vert" ) );
+	modules.push_back( std::make_shared<module>( GL_FRAGMENT_SHADER,
+			"src/applications/ui_overlay/ui_overlay.frag" ) );
+	m_shader = new program( modules );
 	m_AttribLocationTex = glGetUniformLocation( m_shader->getProgram(), "Texture");
 	m_AttribLocationPosition = glGetAttribLocation( m_shader->getProgram(), "Position");
 	m_AttribLocationUV = glGetAttribLocation( m_shader->getProgram(), "UV");
@@ -88,7 +88,7 @@ void UIOverlay::setup() {
     glBindTextureUnit( FONT_TEXTURE_UNIT, m_fontTexture );
     // Store our identifier
     m_shader->use();
-    setUniform( m_shader->getProgram(), "Texture", FONT_TEXTURE_UNIT );
+    set_uniform( m_shader->getProgram(), "Texture", FONT_TEXTURE_UNIT );
     m_shader->unUse();
     io.Fonts->TexID = (void *)(intptr_t)m_fontTexture;
     if( !io.Fonts->IsBuilt() )
@@ -109,11 +109,11 @@ void UIOverlay::setup() {
 }
 
 // Called here to enable Apps to use the UI in their render() method.
-void UIOverlay::prepareFrame() {
+void ui_overlay::prepareFrame() {
 	ImGui::NewFrame();
 }
 
-void UIOverlay::render() {
+void ui_overlay::render() {
 	if( !m_showUI ) {
 		// An assertion would fail if the frame, begun in prepareFrame(), was not ended.
 		ImGui::EndFrame();
@@ -242,7 +242,7 @@ void UIOverlay::render() {
 	glDisable( GL_SCISSOR_TEST );
 }
 
-void UIOverlay::cleanup() {
+void ui_overlay::cleanup() {
 	de_register_object( this );
 	glDeleteBuffers( 1, &m_vboHandle );
 	glDeleteBuffers( 1, &m_elementsHandle );
@@ -253,7 +253,7 @@ void UIOverlay::cleanup() {
 
 // functions to be called by the event_handler if UIOverlay is present
 // virtual
-bool UIOverlay::on_mouse_move( float x, float y ) {
+bool ui_overlay::on_mouse_move( float x, float y ) {
 	if( m_window->is_cursor_disabled() )
 		return false;
     ImGuiIO& io = ImGui::GetIO();
@@ -274,7 +274,7 @@ bool UIOverlay::on_mouse_move( float x, float y ) {
 }
 
 // virtual
-bool UIOverlay::on_mouse_button( int button, int action, int mods ) {
+bool ui_overlay::on_mouse_button( int button, int action, int mods ) {
 	if( m_window->is_cursor_disabled() )
 		return false;
 	bool handled = false;
@@ -295,12 +295,12 @@ bool UIOverlay::on_mouse_button( int button, int action, int mods ) {
 }
 
 // virtual
-bool UIOverlay::on_mouse_scroll( float xOffset, float yOffset ) {
+bool ui_overlay::on_mouse_scroll( float xOffset, float yOffset ) {
 	return true;
 }
 
 // virtual
-bool UIOverlay::on_key_pressed( int key, int scancode, int action, int mods ) {
+bool ui_overlay::on_key_pressed( int key, int scancode, int action, int mods ) {
 	// Toggle UI with ctrl-U
 	bool handled{ false };
 	if( GLFW_PRESS == action && GLFW_KEY_U == key && ( GLFW_MOD_CONTROL & mods ) ) {
@@ -311,7 +311,7 @@ bool UIOverlay::on_key_pressed( int key, int scancode, int action, int mods ) {
 }
 
 // virtual
-bool UIOverlay::on_char( unsigned int code ) {
+bool ui_overlay::on_char( unsigned int code ) {
 	if( code > 0 && code < 0x10000 ) {
 		ImGuiIO& io = ImGui::GetIO();
 		io.AddInputCharacter( (unsigned short)code );

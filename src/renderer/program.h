@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "Module.h"
+#include "module.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -12,16 +12,16 @@ namespace orf_n {
  * A class for shader programs built from Modules (stages).
  */
 
-class Program {
+class program {
 public:
 	/**
 	 * @brief Create a new shaderprogram based on module objects.
 	 * @param modules A vector of shared pointers. It is kept as long
 	 * as the program is alive.
 	 */
-	Program( const std::vector<std::shared_ptr<Module>> &modules );
+	program( const std::vector<std::shared_ptr<module>> &modules );
 
-	virtual ~Program();
+	virtual ~program();
 
 	/**
 	 * @brief Return the program name.

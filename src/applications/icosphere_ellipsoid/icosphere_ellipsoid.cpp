@@ -1,5 +1,6 @@
 
-#include <applications/IcosphereEllipsoid/icosphereEllipsoid.h>
+#include <renderer/uniform.h>
+#include "icosphere_ellipsoid.h"
 #include "base/globals.h"
 #include "base/logbook.h"
 #include "renderer/sampler.h"
@@ -7,7 +8,6 @@
 #include "glad/glad.h"
 #include "omath/mat4.h"
 #include "renderer/Color.h"
-#include "renderer/Uniform.h"
 #include <iostream>
 #include <fstream>
 //#include "Geometry/ViewFrustum.h"
@@ -16,25 +16,25 @@ using namespace orf_n;
 
 extern bool globals::show_app_ui;
 
-IcosphereEllipsoid::IcosphereEllipsoid(	const omath::vec3 &axes,
+icosphere_ellipsoid::icosphere_ellipsoid(	const omath::vec3 &axes,
 										const uint32_t numSubDivs ) :
-				renderable{ "IcosphereEllipsoid" },
+				renderable{ "icosphere_ellipsoid" },
 				m_axes{ axes },
 				m_numSubDivs{ numSubDivs } {}
 
-IcosphereEllipsoid::~IcosphereEllipsoid() {
+icosphere_ellipsoid::~icosphere_ellipsoid() {
 	logbook::log_msg( logbook::RENDERER, logbook::INFO,
 			"IcosphereEllipsoid cleaned up and deleted." );
 }
 
-void IcosphereEllipsoid::setup() {
+void icosphere_ellipsoid::setup() {
 	// Create the shaders
-	std::vector<std::shared_ptr<Module>> modules;
-	modules.push_back( std::make_shared<Module>( GL_VERTEX_SHADER,
-			"src/applications/IcosphereEllipsoid/IcosphereEllipsoid.vert.glsl" ) );
-	modules.push_back( std::make_shared<Module>( GL_FRAGMENT_SHADER,
-			"src/applications/IcosphereEllipsoid/IcosphereEllipsoid.frag.glsl" ) );
-	m_shader = new Program( modules );
+	std::vector<std::shared_ptr<module>> modules;
+	modules.push_back( std::make_shared<module>( GL_VERTEX_SHADER,
+			"src/applications/icosphere_ellipsoid/icosphere_ellipsoid.vert.glsl" ) );
+	modules.push_back( std::make_shared<module>( GL_FRAGMENT_SHADER,
+			"src/applications/icosphere_ellipsoid/icosphere_ellipsoid.frag.glsl" ) );
+	m_shader = new program( modules );
 
 	m_texture = new texture_2d{ "resources/Textures/Ellipsoids/EarthDay_4k.jpg", 0, true };
 	//m_texture = new Texture2D{ "Resources/Textures/Ellipsoids/sphere1.png", 0, true };
@@ -51,7 +51,7 @@ void IcosphereEllipsoid::setup() {
 	m_scene->get_camera()->set_movement_speed( 300.0f );
 	m_scene->get_camera()->calculate_fov();
 	m_shader->use();
-	setUniform( m_shader->getProgram(), "u_oneOverRadiiSquared",
+	set_uniform( m_shader->getProgram(), "u_oneOverRadiiSquared",
 			static_cast<omath::vec3>( m_ico->getOneOverRadiiSquared() ) );
 
 	// read bounding boxes and fill m_relativeBoxes and m_geodeticCoords
@@ -87,7 +87,7 @@ void IcosphereEllipsoid::setup() {
 	logbook::log_msg( logbook::RENDERER, logbook::INFO, "IcosphereEllipsoid created and set up." );
 }
 
-void IcosphereEllipsoid::render() {
+void icosphere_ellipsoid::render() {
 	orf_n::camera *cam{ m_scene->get_camera() };	// shortcut
 	float nearPlane{ cam->get_near_plane() };
 	float farPlane{ cam->get_far_plane() };
@@ -141,7 +141,7 @@ void IcosphereEllipsoid::render() {
 		setModelViewProjectionMatrixRTE( cam->get_perspective_matrix() * mvRTE );
 		// setCameraPosition() with double converts to two floats and sets high and low pos
 		setCameraPosition( cam->get_position() );
-		orf_n::setUniform( m_shader->getProgram(), "u_drawColor", orf_n::color::green * 0.5f );
+		orf_n::set_uniform( m_shader->getProgram(), "u_drawColor", orf_n::color::green * 0.5f );
 		glPolygonMode( GL_FRONT_AND_BACK, cam->get_wireframe_mode() ? GL_LINE : GL_FILL );
 		glDrawElements( GL_TRIANGLES, m_indexBuffer->getNumber(), GL_UNSIGNED_INT, NULL );
 		glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
@@ -149,7 +149,7 @@ void IcosphereEllipsoid::render() {
 		// Debug
 		m_tileBorderArray->bind();
 		m_tileBorderIndices->bind();
-		orf_n::setUniform( m_shader->getProgram(), "u_drawColor", orf_n::color::blue );
+		orf_n::set_uniform( m_shader->getProgram(), "u_drawColor", orf_n::color::blue );
 		glEnable( GL_PRIMITIVE_RESTART );
 		glDrawElements( GL_LINE_LOOP, m_tileBorderIndices->getNumber(), GL_UNSIGNED_INT, (void *)0 );
 		glDisable( GL_PRIMITIVE_RESTART );
@@ -158,7 +158,7 @@ void IcosphereEllipsoid::render() {
 
 }
 
-void IcosphereEllipsoid::cleanup() {
+void icosphere_ellipsoid::cleanup() {
 	delete m_tileBorderIndices;
 	delete m_tileBorderArray;
 	delete m_texture;
@@ -169,7 +169,7 @@ void IcosphereEllipsoid::cleanup() {
 	delete m_ico;
 }
 
-void IcosphereEllipsoid::readBB( const std::string &filename ) {
+void icosphere_ellipsoid::readBB( const std::string &filename ) {
 	std::ifstream bbfile{ filename, std::ios::in };
 	if( bbfile.is_open() ) {
 		omath::dvec3 min, max;
@@ -189,7 +189,7 @@ void IcosphereEllipsoid::readBB( const std::string &filename ) {
 
 // Cut out
 /*ImGui::Separator();
-		ImGui::Checkbox( "Perlin Module active", &m_perlinActive );
+		ImGui::Checkbox( "Perlin module active", &m_perlinActive );
 		ImGui::InputInt( "Octave count (4-30)", &m_perlinOctaveCount );
 		if( ImGui::IsItemHovered() )
 			ImGui::SetTooltip( "Number of octaves; 4-30; the more, the longer it takes" );

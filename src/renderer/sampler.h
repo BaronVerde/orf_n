@@ -14,7 +14,8 @@ typedef enum {
 	NEAREST_CLAMP,
 	LINEAR_CLAMP,
 	NEAREST_REPEAT,
-	LINEAR_REPEAT
+	LINEAR_REPEAT,
+	LINEAR_MIPMAP_CLAMP
 } sampler_type_t;
 
 static inline void set_default_sampler( GLuint texture, sampler_type_t type ) {
@@ -42,6 +43,12 @@ static inline void set_default_sampler( GLuint texture, sampler_type_t type ) {
 			glTextureParameteri( texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 			glTextureParameteri( texture, GL_TEXTURE_WRAP_S, GL_REPEAT );
 			glTextureParameteri( texture, GL_TEXTURE_WRAP_T, GL_REPEAT );
+			break;
+		case LINEAR_MIPMAP_CLAMP:
+			glTextureParameteri( texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+			glTextureParameteri( texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+			glTextureParameteri( texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+			glTextureParameteri( texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 			break;
 	}
 }

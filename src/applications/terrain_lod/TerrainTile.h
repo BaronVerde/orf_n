@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace orf_n {
-	class Program;
+	class program;
 	class texture_2d;
 }
 
@@ -57,7 +57,7 @@ public:
 	 * Needs a pointer to the shader to pass in uniforms
 	 * Returns number of rendered nodes (x) and triangles (y)
 	 */
-	omath::uvec2 render( const orf_n::Program *const p,
+	omath::uvec2 render( const orf_n::program *const p,
 						 const terrain::gridmesh *const gridMesh,
 						 const terrain::LODSelection *const selection,
 						 const int tileIndex,

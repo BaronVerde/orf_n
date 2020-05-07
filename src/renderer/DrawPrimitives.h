@@ -7,10 +7,10 @@
  */
 #pragma once
 
+#include <renderer/program.h>
 #include "geometry/aabb.h"
 #include "Color.h"
 #include "IndexBuffer.h"
-#include "Program.h"
 #include "VertexArray3D.h"
 
 namespace orf_n {
@@ -41,7 +41,7 @@ public:
 
 	void drawSphere( const omath::vec3 &position, const float &radius, const color_t &color ) const;
 
-	const Program *getProgramPtr() const;
+	const program *getProgramPtr() const;
 
 	const VertexArray3D<omath::dvec3> *getBoxArray() const;
 
@@ -59,7 +59,7 @@ private:
 
 	virtual ~DrawPrimitives();
 
-	std::unique_ptr<Program> m_shaderDebug{ nullptr };
+	std::unique_ptr<program> m_shaderDebug{ nullptr };
 
 	std::unique_ptr<VertexArray3D<omath::dvec3>> m_boxArray{ nullptr };
 

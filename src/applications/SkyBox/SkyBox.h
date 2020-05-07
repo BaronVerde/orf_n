@@ -15,10 +15,10 @@
 
 #pragma once
 
+#include <renderer/program.h>
 #include <renderer/textureCube.h>
 #include <scene/renderable.h>
 #include "omath/vec3.h"
-#include "renderer/Program.h"
 #include "renderer/VertexArray3D.h"
 #include <memory>
 
@@ -37,7 +37,7 @@ public:
 private:
 	std::unique_ptr<orf_n::TextureCube> m_texture{ nullptr };
 
-	std::unique_ptr<orf_n::Program> m_program{ nullptr };
+	std::unique_ptr<orf_n::program> m_program{ nullptr };
 
 	std::unique_ptr<orf_n::VertexArray3D<omath::vec3>> m_skyboxArray{ nullptr };
 
