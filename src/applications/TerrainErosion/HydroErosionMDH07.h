@@ -2,13 +2,13 @@
 #pragma once
 
 #include "omath/vec2.h"
-#include "scene/Renderable.h"
+#include "scene/renderable.h"
 //#include <random>
 
 // general @todo: set boundary flows to 0 !
 // extend model to the eight neighbour cells !
 
-class HydroErosionMDH07 : public orf_n::Renderable {
+class HydroErosionMDH07 : public orf_n::renderable {
 public:
 
 	//static std::minstd_rand randomEngine(42);

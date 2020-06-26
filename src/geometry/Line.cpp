@@ -20,7 +20,7 @@ bool Line::testOBB( const OBB &obb ) const {
 	raycastResult_t result;
 	if( !ray.raycast( obb, &result ) )
 		return false;
-	return result.t >= 0.0 && result.t * result.t <= magnitudeSq( m_end - m_start );
+	return result.t >= 0.0 && result.t * result.t <= magnitude_sq( m_end - m_start );
 }
 
 bool Line::clipToPlane( const Plane &plane, omath::dvec3 &outPoint ) const {

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <omath/common.h>
+#include "omath/common.h"
 #include <iostream>
 
 namespace omath {

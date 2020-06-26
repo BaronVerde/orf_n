@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include <omath/vec2.h>
+#include "omath/vec2.h"
+#include <cassert>
 
 namespace omath {
 
@@ -30,7 +31,7 @@ struct vec3_t {
 	vec3_t &operator=( vec3_t<T> &&rhs ) = default;
 
 	vec3_t( const T &scalar ) :
-			x{scalar}, y{scalar}, z{scalar} {}
+		x{scalar}, y{scalar}, z{scalar} {}
 
 	vec3_t( const T &s1, const T &s2, const T &s3 ) :
 			x{s1}, y{s2}, z{s3} {}
@@ -42,7 +43,7 @@ struct vec3_t {
 			x{s1}, y{v.x}, z{v.z} {}
 
 	// hack: construct from array for nv_model
-	vec3_t( const T* arr ) :
+	vec3_t( const T *arr ) :
 		x{arr[0]}, y{arr[1]}, z{arr[2]} {}
 
 	template<typename U>
@@ -146,6 +147,10 @@ struct vec3_t {
 		return *this;
 	}
 
+	bool has_nans() const {
+		return std::isnan(x) || std::isnan(y) || std::isnan(z);
+	}
+
 };
 
 template <typename T>
@@ -246,7 +251,7 @@ static inline T magnitude( const vec3_t<T> &l ) {
 }
 
 template <typename T>
-static inline T magnitudeSq( const vec3_t<T> &l ) {
+static inline T magnitude_sq( const vec3_t<T> &l ) {
 	return dot( l, l );
 }
 
@@ -256,8 +261,8 @@ static inline T distance( const vec3_t<T> &l, const vec3_t<T> &r ) {
 }
 
 template <typename T>
-static inline T distanceSq( const vec3_t<T> &l, const vec3_t<T> &r ) {
-	return magnitudeSq( l - r );
+static inline T distance_sq( const vec3_t<T> &l, const vec3_t<T> &r ) {
+	return magnitude_sq( l - r );
 }
 
 template <typename T>
@@ -269,12 +274,12 @@ static inline vec3_t<T> normalize( const vec3_t<T> &v ) {
 
 template <typename T>
 static inline T angle( const vec3_t<T> &l, const vec3_t<T> &r ) {
-	return std::acos( dot( l, r ) / std::sqrt( magnitudeSq(l) * magnitudeSq(r) ) );
+	return std::acos( dot( l, r ) / std::sqrt( magnitude_sq(l) * magnitude_sq(r) ) );
 }
 
 template <typename T>
 static inline vec3_t<T> project( const vec3_t<T> &length, const vec3_t<T> &direction ) {
-	return direction * ( dot( length, direction ) / magnitudeSq(direction) );
+	return direction * ( dot( length, direction ) / magnitude_sq(direction) );
 }
 
 template <typename T>
@@ -311,7 +316,7 @@ static inline void double_to_two_floats( const omath::dvec3 &d, omath::vec3 &hig
  * Moves the world position into camera space.
  * Takes in the position's high and low part and the camera position's high andf low part.
  * Result is reunited single precision float vector camPos - pos */
-static inline vec3 calculatePositionRTE(
+static inline vec3 calculate_position_rte(
 		const omath::vec3 &posHigh, const omath::vec3 &posLow,
 		const omath::vec3 &camPosHigh, const omath::vec3 &camPosLow ) {
 	vec3 t1 = posLow - camPosLow;
@@ -324,7 +329,7 @@ static inline vec3 calculatePositionRTE(
 
 template<typename T>
 static inline bool compare_float( const omath::vec3_t<T> &one, const omath::vec3_t<T> &other ) {
-	return( compareFloat( one.x, other.x ) && compareFloat( one.y, other.y ) && compareFloat( one.z, other.z ) );
+	return( compare_float( one.x, other.x ) && compare_float( one.y, other.y ) && compare_float( one.z, other.z ) );
 }
 
 // componentwise min

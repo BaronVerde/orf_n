@@ -2,7 +2,7 @@
 #include "HydroErosionMDH07.h"
 #include <iomanip>
 
-HydroErosionMDH07::HydroErosionMDH07() : orf_n::Renderable( "HydroErosionMDH07" ) {}
+HydroErosionMDH07::HydroErosionMDH07() : orf_n::renderable( "HydroErosionMDH07" ) {}
 
 HydroErosionMDH07::~HydroErosionMDH07() {}
 

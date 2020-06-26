@@ -1,12 +1,12 @@
 
 #include "applications/terrain_lod/TerrainLOD.h"
-#include "applications/shadow_map/shadow_map.h"
+//#include "applications/shadow_map/shadow_map.h" needs the framebuffer to be disabled as it is now !
 #include "renderer/renderer.h"
 #include "applications/camera/camera.h"
 #include "base/globals.h"	// deltaTime
 #include "base/logbook.h"
 //#include "applications/icosphere_ellipsoid/icosphere_ellipsoid.h"
-//#include "applications/SkyBox/SkyBox.h"
+#include "applications/SkyBox/SkyBox.h"
 
 namespace orf_n {
 
@@ -43,9 +43,9 @@ void renderer::setupRenderer() {
 	// Build the scene and set it up.
 	m_scene = new scene( m_window, m_camera, m_overlay );
 	//m_scene->add_renderable( 1, std::make_shared<icosphere_ellipsoid>( Ellipsoid::WGS84_ELLIPSOID, 7 ) );
-	//m_scene->add_renderable( 1, std::make_shared<TerrainLOD>() );
-	m_scene->add_renderable( 1, std::make_shared<shadow_map>() );
-	//m_scene->add_renderable( 1, std::make_shared<SkyBox>() );
+	m_scene->add_renderable( 1, std::make_shared<TerrainLOD>() );
+	//m_scene->add_renderable( 1, std::make_shared<shadow_map>() );
+	m_scene->add_renderable( 1, std::make_shared<SkyBox>() );
 }
 
 void renderer::setup() const {
@@ -66,8 +66,8 @@ void renderer::render() const {
 
 		//glEnable( GL_FRAMEBUFFER_SRGB );
 		// Render in the framebuffer first
-		//m_framebuffer->bind( GL_DRAW_FRAMEBUFFER );
-		//m_framebuffer->clear( omath::vec4{ 0.0f, 0.0f, 0.0f, 1.0f } );
+		m_framebuffer->bind( GL_DRAW_FRAMEBUFFER );
+		m_framebuffer->clear( omath::vec4{ 0.0f, 0.0f, 0.0f, 1.0f } );
 
 		m_scene->prepareFrame();
 		// Called after prepareFrame() because UIOverlay has to start a new frame.
@@ -78,15 +78,15 @@ void renderer::render() const {
 		//glDisable( GL_FRAMEBUFFER_SRGB );
 
 		// Blit framebuffer to default window framebuffer
-		//m_framebuffer->bind( GL_READ_FRAMEBUFFER );
+		m_framebuffer->bind( GL_READ_FRAMEBUFFER );
 		// or m_framebuffer->unbind()
-		//glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 );
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 );
 		// clear to blue to distinguish between draw framebuffer; color::blue
-		/*glClearColor( 0.0f, 0.0f, 1.0f, 1.0f );
-		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );*/
-		/*glBlitFramebuffer( 0, 0, m_window->get_width(), m_window->get_height(),
+		glClearColor( 0.0f, 0.0f, 1.0f, 1.0f );
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		glBlitFramebuffer( 0, 0, m_window->get_width(), m_window->get_height(),
 						   0, 0, m_window->get_width(), m_window->get_height(),
-						   GL_COLOR_BUFFER_BIT, GL_NEAREST );*/
+						   GL_COLOR_BUFFER_BIT, GL_NEAREST );
 
 		glfwPollEvents();
 		glfwSwapBuffers( m_scene->get_window()->get_window() );

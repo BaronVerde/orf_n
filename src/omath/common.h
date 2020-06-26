@@ -1,3 +1,6 @@
+
+// @todo: use a flag to check for nans in constructors !
+
 #pragma once
 
 #include <limits>
@@ -26,7 +29,7 @@ const double TWO_PI = 2.0 * M_PI;
 // returns v0 when t == 0 and v1 when t == 1
 template<typename T>
 T lerp( T v0, T v1, T t ) {
-  return( ( static_cast<T>(1) - t ) * v0 + t * v1 );
+	return( ( static_cast<T>(1) - t ) * v0 + t * v1 );
 }
 
 /**
@@ -56,10 +59,10 @@ T clamp( const T &number, const T &minimum, const T &maximum ) {
 	return clamped;
 }
 
-// Floating point relative and absolute comparison
+/* Compares two float numbers combining absolute and relative tolerance.
+ * http://www.realtimecollisiondetection.net/pubs/Tolerances/ */
 template <typename T>
-bool compare_float( const T &a, const T &b,
-		const T maxDiff, const T maxRelDiff ) {
+bool compare_float( const T &a, const T &b, const T maxDiff, const T maxRelDiff ) {
 	if( !std::numeric_limits<T>::is_iec559 ) {
 		std::cerr << "Only floating point numbers can be float-compared.\n";
 		return false;
@@ -98,13 +101,6 @@ T modulo_float( T const &a, T const &b ) {
 	return a - b * floor(a / b);
 }
 
-/**
- * @brief Compares two float numbers combining absolute and relative tolerance.
- * http://www.realtimecollisiondetection.net/pubs/Tolerances/
- * @param x
- * @param y
- * @return true if the two are equal within tolerances.
- */
 template <typename T>
 static inline bool compare_float( const T x, const T y ) {
 	if( !std::numeric_limits<T>::is_iec559 ) {
