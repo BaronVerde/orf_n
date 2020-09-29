@@ -60,9 +60,9 @@ quad_tree::quad_tree( const TerrainTile *const terrainTile ) :
 			m_topNodeCountZ << " top nodes.";
 	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
 	// Debug: List of all Nodes
-	/*for( int i{ 0 }; i < m_nodeCount; ++i ) {
+	for( int i{ 0 }; i < m_nodeCount; ++i ) {
 		s.str( std::string() );
-		Node *n{ &m_allNodes[i] };
+		node *n{ &m_allNodes[i] };
 		s << "Node " << i << " Level " << n->getLevel() << " BB " << *n->getBoundingBox();
 		if( n->isLeaf() )
 			s << "; is leaf node.";
@@ -71,8 +71,8 @@ quad_tree::quad_tree( const TerrainTile *const terrainTile ) :
 					n->getUpperRight()->getLevel() << '/' << n->getLowerLeft()->getLevel() <<
 					'/' << n->getLowerRight()->getLevel();
 		}
-		orf_n::Logbook::log_msg( orf_n::Logbook::TERRAIN, orf_n::Logbook::INFO, s.str() );
-	}*/
+		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
+	}
 
 }
 

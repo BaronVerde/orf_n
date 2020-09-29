@@ -10,7 +10,7 @@ namespace terrain {
 /**
  * No more than 15 lod levels !
  */
-static const int NUMBER_OF_LOD_LEVELS{ 6 };
+static const int NUMBER_OF_LOD_LEVELS{ 3 };
 
 // @todo: Is there a connection at all ?
 static const int NUMBER_OF_GRID_MESHES{ NUMBER_OF_LOD_LEVELS + 1 };
@@ -20,7 +20,7 @@ static const int MAX_NUMBER_SELECTED_NODES{ 1024 };
 
 // @todo: calc from number of lod levels and heightmap size. Memory usage rises for small nodes.
 // Must be power of 2.
-static const int LEAF_NODE_SIZE{ 32 };
+static const int LEAF_NODE_SIZE{ 128 };
 
 // Size x/z of terrain tiles
 // @todo: in a future version this could be handled dynamically,

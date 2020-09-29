@@ -103,6 +103,7 @@ orf_n::intersect_t node::lodSelect( LODSelection *lodSelection, bool parentCompl
 	// Shortcut
 	const orf_n::camera *cam{ lodSelection->m_camera };
 	// Test early outs
+	orf_n::view_frustum f = cam->get_view_frustum();
 	orf_n::intersect_t frustumIntersection = parentCompletelyInFrustum ?
 			orf_n::INSIDE : cam->get_view_frustum().is_box_in_frustum( *m_boundingBox );
 	if( orf_n::OUTSIDE == frustumIntersection )

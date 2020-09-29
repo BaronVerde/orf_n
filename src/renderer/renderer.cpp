@@ -18,7 +18,7 @@ renderer::~renderer() {}
 
 void renderer::setupRenderer() {
 	// create render window, camera object and basic UIOverlay
-	m_window = new glfw_window( "orf-n", 1800, 1000, m_debug );
+	m_window = new glfw_window( "orf-n", 1600, 900, m_debug );
 	// Before we proceed, perform a basic look around.
 	if( !checkEnvironment() ) {
 		std::string s{ "The graphics environment is unfit to run this program." };

@@ -232,63 +232,68 @@ inline bool operator!=( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 
 // Geometry
 template <typename T>
-static inline T dot( const vec3_t<T> &l, const vec3_t<T> &r ) {
+inline T dot( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	if( !std::numeric_limits<T>::is_iec559 )
 		std::cerr << "'dot' only accepts floating-point input.\n";
 	return l.x * r.x + l.y * r.y + l.z * r.z;
 }
 
 template <typename T>
-static inline vec3_t<T> cross( const vec3_t<T> &l, const vec3_t<T> &r ) {
+inline T abs_dot( const vec3_t<T> &v1, const vec3_t<T> &v2) {
+	return std::abs( dot( v1, v2 ) );
+}
+
+template <typename T>
+inline vec3_t<T> cross( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return vec3_t<T> { l.y * r.z - l.z * r.y,
 					 l.z * r.x - l.x * r.z,
 					 l.x * r.y - l.y * r.x };
 }
 
 template <typename T>
-static inline T magnitude( const vec3_t<T> &l ) {
+inline T magnitude( const vec3_t<T> &l ) {
 	return std::sqrt( dot( l, l ) );
 }
 
 template <typename T>
-static inline T magnitude_sq( const vec3_t<T> &l ) {
+inline T magnitude_sq( const vec3_t<T> &l ) {
 	return dot( l, l );
 }
 
 template <typename T>
-static inline T distance( const vec3_t<T> &l, const vec3_t<T> &r ) {
+inline T distance( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return magnitude( l - r );
 }
 
 template <typename T>
-static inline T distance_sq( const vec3_t<T> &l, const vec3_t<T> &r ) {
+inline T distance_sq( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return magnitude_sq( l - r );
 }
 
 template <typename T>
-static inline vec3_t<T> normalize( const vec3_t<T> &v ) {
+inline vec3_t<T> normalize( const vec3_t<T> &v ) {
 	if( !std::numeric_limits<T>::is_iec559 )
 		std::cerr << "'normalize' only accepts floating-point input.\n";
 	return vec3_t<T>{ v / magnitude( v ) };
 }
 
 template <typename T>
-static inline T angle( const vec3_t<T> &l, const vec3_t<T> &r ) {
+inline T angle( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return std::acos( dot( l, r ) / std::sqrt( magnitude_sq(l) * magnitude_sq(r) ) );
 }
 
 template <typename T>
-static inline vec3_t<T> project( const vec3_t<T> &length, const vec3_t<T> &direction ) {
+inline vec3_t<T> project( const vec3_t<T> &length, const vec3_t<T> &direction ) {
 	return direction * ( dot( length, direction ) / magnitude_sq(direction) );
 }
 
 template <typename T>
-static inline vec3_t<T> perpendicular( const vec3_t<T> &length, const vec3_t<T> &direction ) {
+inline vec3_t<T> perpendicular( const vec3_t<T> &length, const vec3_t<T> &direction ) {
 	return length - project( length, direction );
 }
 
 template <typename T>
-static inline vec3_t<T> reflection( const vec3_t<T> &sourceVector, const vec3_t<T> &normal ) {
+inline vec3_t<T> reflection( const vec3_t<T> &sourceVector, const vec3_t<T> &normal ) {
 	return sourceVector - normal * ( dot( sourceVector, normal ) * 2.0f );
 }
 
@@ -303,7 +308,7 @@ typedef vec3_t<double> dvec3;
 typedef vec3_t<int> ivec3;
 typedef vec3_t<unsigned int> uvec3;
 
-static inline void double_to_two_floats( const omath::dvec3 &d, omath::vec3 &high, omath::vec3 &low ) {
+inline void double_to_two_floats( const omath::dvec3 &d, omath::vec3 &high, omath::vec3 &low ) {
 	high.x = static_cast<float>( d.x );
 	high.y = static_cast<float>( d.y );
 	high.z = static_cast<float>( d.z );
@@ -316,7 +321,7 @@ static inline void double_to_two_floats( const omath::dvec3 &d, omath::vec3 &hig
  * Moves the world position into camera space.
  * Takes in the position's high and low part and the camera position's high andf low part.
  * Result is reunited single precision float vector camPos - pos */
-static inline vec3 calculate_position_rte(
+inline vec3 calculate_position_rte(
 		const omath::vec3 &posHigh, const omath::vec3 &posLow,
 		const omath::vec3 &camPosHigh, const omath::vec3 &camPosLow ) {
 	vec3 t1 = posLow - camPosLow;
@@ -328,22 +333,49 @@ static inline vec3 calculate_position_rte(
 }
 
 template<typename T>
-static inline bool compare_float( const omath::vec3_t<T> &one, const omath::vec3_t<T> &other ) {
+inline bool compare_float( const omath::vec3_t<T> &one, const omath::vec3_t<T> &other ) {
 	return( compare_float( one.x, other.x ) && compare_float( one.y, other.y ) && compare_float( one.z, other.z ) );
+}
+
+template <typename T>
+T min_component( const vec3_t<T> &v) {
+	return std::min(v.x, std::min(v.y, v.z));
+}
+
+template <typename T>
+T max_component( const vec3_t<T> &v) {
+    return std::max(v.x, std::max(v.y, v.z));
 }
 
 // componentwise min
 template<typename T>
-static inline vec3_t<T> vec3_min( const vec3_t<T>& left, const vec3_t<T>& right ) {
+inline vec3_t<T> min( const vec3_t<T>& left, const vec3_t<T>& right ) {
     const vec3_t<T> rt{ std::min( left.x, right.x ), std::min( left.y, right.y ), std::min( left.z, right.z ) };
     return rt;
 }
 
 // componentwise max
 template<typename T>
-static inline vec3_t<T> vec3_max( const vec3_t<T>& left, const vec3_t<T>& right ) {
+inline vec3_t<T> max( const vec3_t<T>& left, const vec3_t<T>& right ) {
     const vec3_t<T> rt{ std::max( left.x, right.x ), std::max( left.y, right.y ), std::max( left.z, right.z ) };
     return rt;
+}
+
+// permutes coordinates according to given indices
+template <typename T>
+vec3_t<T> permute( const vec3_t<T> &v, int x, int y, int z) {
+	return vec3_t<T>{ v[x], v[y], v[z] };
+}
+
+// For a given normalized vector v1, constructs 2 vectors of an orthogonal local coordinate system
+// The 3rd vector can simply be obtained by crossing v2 and v3
+template <typename T>
+void coordinate_system( const vec3_t<T> &v1, vec3_t<T> *v2, vec3_t<T> *v3 ) {
+	if( std::abs(v1.x) > std::abs(v1.y) )
+		*v2 = vec3_t<T>(-v1.z, 0, v1.x) / std::sqrt(v1.x * v1.x + v1.z * v1.z);
+    else
+        *v2 = vec3_t<T>(0, v1.z, -v1.y) / std::sqrt(v1.y * v1.y + v1.z * v1.z);
+    *v3 = cross( v1, *v2 );
 }
 
 }	// namespace omath
