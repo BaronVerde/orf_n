@@ -47,6 +47,8 @@ public:
 
 	void reset();
 
+	void print_selection() const;
+
 	const omath::vec4 getMorphConsts( const int lodLevel ) const;
 
 	const orf_n::camera *m_camera{ nullptr };

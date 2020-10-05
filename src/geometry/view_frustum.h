@@ -39,6 +39,8 @@ public:
 
 	intersect_t is_box_in_frustum( const aabb& box ) const;
 
+	void print() const;
+
 private:
 	// store camera position and reference vectors for rapid use in intersection tests
 	omath::dvec3 m_camera_position;

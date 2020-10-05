@@ -159,6 +159,10 @@ bool camera::on_key_pressed( int key, int scancode, int action, int mods ) {
     			print_position();
     			handled = true;
     			break;
+    		case GLFW_KEY_M:
+    			m_frustum.print();
+    			handled = true;
+    			break;
     		case GLFW_KEY_W:
     			m_isMoving = true;
     			if( FIRST_PERSON == m_mode ) {
@@ -404,10 +408,9 @@ void camera::set_movement_speed( const float &speed ) {
 }
 
 void camera::print_position() const {
-	std::cout << "Cam position: " << m_position <<
-			"\n    target: " << m_target <<
-			"\n    direction: " << m_front <<
-			"\n    mode: " << ( m_mode == FIRST_PERSON ? "first person\n" : "orbiting\n" );
+	std::cout << "Cam position: " << m_position << "; target: " << m_target <<
+			"; mode: " << ( m_mode == FIRST_PERSON ? "first person\n" : "orbiting\n" ) <<
+			"Cam front: " << m_front << "; up: " << m_up << "; right: " << m_right << std::endl;
 }
 
 const omath::mat4 &camera::get_view_matrix() const {

@@ -1,5 +1,7 @@
 
 #include "view_frustum.h"
+#include "omath/vec3.h"
+#include <iostream>
 
 namespace orf_n {
 
@@ -82,6 +84,14 @@ intersect_t view_frustum::is_sphere_in_frustum( const omath::dvec3& center, cons
 intersect_t view_frustum::is_box_in_frustum( const aabb& box ) const {
 	// @todo I am so lazy ...
 	return is_sphere_in_frustum( box.get_center(), box.get_diagonal_size() * 0.5 );
+}
+
+void view_frustum::print() const {
+	std::cout << "View frusum:\ncamera position: " << m_camera_position << '\n' <<
+			"view frustum x " << m_x << '\n' << "view frustum y " << m_y << '\n' <<
+			"view frustum z " << m_z << '\n' << "Near " << m_near_d << " far " << m_far_d <<
+			" width " << m_width << " height " << m_height << " ratio " << m_ratio <<
+			std::endl;
 }
 
 /*

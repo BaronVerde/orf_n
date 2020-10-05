@@ -1,9 +1,9 @@
 
-#include <applications/terrain_lod/LODSelection.h>
-#include <applications/terrain_lod/node.h>
-#include <applications/terrain_lod/quadtree.h>
-#include <base/logbook.h>
-#include <omath/common.h>	// lerp()
+#include "LODSelection.h"
+#include "node.h"
+#include "quadtree.h"
+#include "base/logbook.h"
+#include "omath/common.h"	// lerp()
 #include <sstream>
 #include <iostream>
 
@@ -71,6 +71,16 @@ void LODSelection::setDistancesAndSort() {
 				"; distance " << n.minDistanceTocamera << '\n';
 	}
 	std::cout << s.str();*/
+}
+
+void LODSelection::print_selection() const {
+	std::ostringstream s;
+	for( int i = 0; i < m_selectionCount; ++i ) {
+		const selectedNode_t *n = &m_selectedNodes[i];
+		s << "Selected node #" << i << " lod level " << n->lodLevel <<" BB " <<
+				*(n->p_node->getBoundingBox()) << '\n';
+	}
+	orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
 }
 
 const omath::vec4 LODSelection::getMorphConsts( const int lodLevel ) const {

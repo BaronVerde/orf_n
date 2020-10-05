@@ -124,6 +124,8 @@ void TerrainLOD::render() {
 	}
 	m_lodSelection->setDistancesAndSort();
 
+	m_lodSelection->print_selection();
+
 	// Debug: draw bounding boxes
 	bool refreshUniforms{ refreshUI() };
 	if( m_showTileBoxes || m_showLowestLevelBoxes || m_showSelectedBoxes )
@@ -151,7 +153,6 @@ void TerrainLOD::render() {
 	orf_n::setViewProjectionMatrix( cam->get_view_perspective__matrix() );
 	orf_n::set_uniform( m_shaderTerrain->getProgram(), "debugColor", orf_n::color::gray );
 	orf_n::setCameraPosition( cam->get_position() );
-
 	// Draw tile by tile
 	GLint drawMode{ cam->get_wireframe_mode() ? GL_LINES : GL_TRIANGLES };
 	for( size_t i{0}; i < m_terrainTiles.size(); ++i ) {

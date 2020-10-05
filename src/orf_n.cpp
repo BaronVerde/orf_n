@@ -13,7 +13,6 @@ extern double globals::delta_time = 0.0;
 extern bool globals::show_app_ui = false;
 
 int main( int argc, char *argv[] ) {
-
 	//return converter::asc2png( "/home/kemde/Downloads/OpenGL/srtm/big/cut_n30e000.asc", 2048 ) ? EXIT_SUCCESS : EXIT_FAILURE;
 
 	logbook::set_log_filename( "orfnlog.log" );
