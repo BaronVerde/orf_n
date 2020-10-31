@@ -1,8 +1,10 @@
 
 #pragma once
 
-#include <applications/terrain_lod/settings.h>
-#include <scene/renderable.h>
+#include "gridmesh.h"
+#include "quadtree.h"
+#include "settings.h"
+#include "scene/renderable.h"
 #include "renderer/Color.h"
 #include "renderer/DrawPrimitives.h"
 #include "renderer/VertexArray3D.h"
@@ -34,9 +36,9 @@ public:
 private:
 	const std::vector<std::string> TERRAIN_FILES {
 		"resources/textures/terrain/area_52_06/tile_2048_1",
-		/*"resources/textures/Terrain/Area_52_06/tile_2048_2",
+		"resources/textures/Terrain/Area_52_06/tile_2048_2",
 		"resources/textures/Terrain/Area_52_06/tile_2048_3",
-		"resources/textures/Terrain/Area_52_06/tile_2048_4"*/
+		"resources/textures/Terrain/Area_52_06/tile_2048_4"
 	};
 
 	// Maximum number of tiles simultaneously loaded in memory.

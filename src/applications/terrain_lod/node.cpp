@@ -1,8 +1,9 @@
 
-#include <applications/terrain_lod/heightmap.h>
-#include <applications/terrain_lod/LODSelection.h>
-#include <applications/terrain_lod/node.h>
-#include <applications/terrain_lod/TerrainTile.h>
+#include "heightmap.h"
+#include "LODSelection.h"
+#include "node.h"
+#include "TerrainTile.h"
+#include "quadtree.h"
 #include "base/logbook.h"
 #include "geometry/aabb.h"
 #include "geometry/view_frustum.h"

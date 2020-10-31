@@ -1,15 +1,15 @@
 
-#include <applications/camera/camera.h>
+#include "applications/camera/camera.h"
 #include "gridmesh.h"
 #include "LODSelection.h"
 #include "node.h"
 #include "quadtree.h"
 #include "TerrainLOD.h"
 #include "TerrainTile.h"
-#include <geometry/ellipsoid.h>
-#include <renderer/uniform.h>
+#include "geometry/ellipsoid.h"
+#include "renderer/uniform.h"
 #include "base/globals.h"
-#include <scene/scene.h>
+#include "scene/scene.h"
 #include "base/logbook.h"
 #include "geometry/aabb.h"
 #include "omath/mat4.h"
@@ -124,7 +124,7 @@ void TerrainLOD::render() {
 	}
 	m_lodSelection->setDistancesAndSort();
 
-	m_lodSelection->print_selection();
+	//m_lodSelection->print_selection();
 
 	// Debug: draw bounding boxes
 	bool refreshUniforms{ refreshUI() };

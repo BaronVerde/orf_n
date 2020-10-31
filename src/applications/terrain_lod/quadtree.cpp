@@ -73,7 +73,6 @@ quad_tree::quad_tree( const TerrainTile *const terrainTile ) :
 		}
 		orf_n::logbook::log_msg( orf_n::logbook::TERRAIN, orf_n::logbook::INFO, s.str() );
 	}*/
-
 }
 
 quad_tree::~quad_tree() {

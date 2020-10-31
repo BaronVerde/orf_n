@@ -1,7 +1,7 @@
 
-#include <base/globals.h>
-#include <base/logbook.h>
-#include <renderer/renderer.h>
+#include "base/globals.h"
+#include "base/logbook.h"
+#include "renderer/renderer.h"
 #include "glad/glad.h"
 #include <iostream>
 #include <cstring>	// strcmp()
@@ -9,8 +9,8 @@
 
 using namespace orf_n;
 
-extern double globals::delta_time = 0.0;
-extern bool globals::show_app_ui = false;
+double globals::delta_time = 0.0;
+bool globals::show_app_ui = false;
 
 int main( int argc, char *argv[] ) {
 	//return converter::asc2png( "/home/kemde/Downloads/OpenGL/srtm/big/cut_n30e000.asc", 2048 ) ? EXIT_SUCCESS : EXIT_FAILURE;

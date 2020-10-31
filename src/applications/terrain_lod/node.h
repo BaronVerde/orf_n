@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <applications/terrain_lod/settings.h>
+#include "settings.h"
 #include "geometry/aabb.h"
 #include "omath/vec2.h"
 #include <memory>

@@ -10,7 +10,7 @@ namespace terrain {
 /**
  * No more than 15 lod levels !
  */
-static const int NUMBER_OF_LOD_LEVELS{ 3 };
+static const int NUMBER_OF_LOD_LEVELS{ 5 };
 
 // @todo: Is there a connection at all ?
 static const int NUMBER_OF_GRID_MESHES{ NUMBER_OF_LOD_LEVELS + 1 };
@@ -20,12 +20,12 @@ static const int MAX_NUMBER_SELECTED_NODES{ 1024 };
 
 // @todo: calc from number of lod levels and heightmap size. Memory usage rises for small nodes.
 // Must be power of 2.
-static const int LEAF_NODE_SIZE{ 128 };
+static const int LEAF_NODE_SIZE{ 64 };
 
 // Size x/z of terrain tiles
 // @todo: in a future version this could be handled dynamically,
 // also perform check on heightmap loading !
-static const omath::uvec2 TILE_SIZE{ 4096, 4096 };
+static const omath::uvec2 TILE_SIZE{ 2048, 2048 };
 
 /**
  * Determines rendering LOD level distribution based on distance from the viewer.
@@ -41,7 +41,7 @@ static const float LOD_LEVEL_DISTANCE_RATIO{ 2.5f };
 static const float MORPH_START_RATIO{ 0.7f };
 
 // texel to grid ratio
-static const int RENDER_GRID_RESULUTION_MULT{ 4 };
+static const int RENDER_GRID_RESULUTION_MULT{ 1 };
 
 static const float HEIGHT_FACTOR{2.0f};
 
