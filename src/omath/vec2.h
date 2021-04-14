@@ -66,13 +66,6 @@ struct vec2_t {
 	}
 
 	template<typename U>
-	vec2_t &operator=( vec2_t<U> const &v ) {
-		x = static_cast<T>(v.x);
-		y = static_cast<T>(v.y);
-		return *this;
-	}
-
-	template<typename U>
 	vec2_t & operator+=( const U scalar ) {
 		x += static_cast<T>(scalar );
 		y += static_cast<T>(scalar );

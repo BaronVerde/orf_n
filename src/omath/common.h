@@ -6,7 +6,6 @@
 #include <limits>
 #include <cmath>
 #include <iostream>
-#include <cmath>
 
 namespace omath {
 
@@ -107,7 +106,7 @@ static inline bool compare_float( const T x, const T y ) {
 		std::cerr << "Only floating point numbers can be float-compared.\n";
 		return false;
 	}
-	return std::abs( x - y ) <= std::numeric_limits<T>::epsilon() *
+	return std::fabs( x - y ) <= std::numeric_limits<T>::epsilon() *
 		   std::max( static_cast<T>( 1 ), std::max( std::fabs( x ), std::fabs( y ) ) );
 }
 

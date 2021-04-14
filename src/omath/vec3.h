@@ -246,7 +246,7 @@ inline T abs_dot( const vec3_t<T> &v1, const vec3_t<T> &v2) {
 template <typename T>
 inline vec3_t<T> cross( const vec3_t<T> &l, const vec3_t<T> &r ) {
 	return vec3_t<T> { l.y * r.z - l.z * r.y,
-					 l.z * r.x - l.x * r.z,
+					 l.z * r.x - l.x * r.z, // -(l.z * r.x - l.x * r.z)
 					 l.x * r.y - l.y * r.x };
 }
 

@@ -36,9 +36,9 @@ public:
 private:
 	const std::vector<std::string> TERRAIN_FILES {
 		"resources/textures/terrain/area_52_06/tile_2048_1",
-		"resources/textures/Terrain/Area_52_06/tile_2048_2",
-		"resources/textures/Terrain/Area_52_06/tile_2048_3",
-		"resources/textures/Terrain/Area_52_06/tile_2048_4"
+		"resources/textures/terrain/area_52_06/tile_2048_2",
+		"resources/textures/terrain/area_52_06/tile_2048_3",
+		"resources/textures/terrain/area_52_06/tile_2048_4"
 	};
 
 	// Maximum number of tiles simultaneously loaded in memory.

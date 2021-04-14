@@ -20,7 +20,7 @@ static const int MAX_NUMBER_SELECTED_NODES{ 1024 };
 
 // @todo: calc from number of lod levels and heightmap size. Memory usage rises for small nodes.
 // Must be power of 2.
-static const int LEAF_NODE_SIZE{ 64 };
+static const int LEAF_NODE_SIZE{ 32 };
 
 // Size x/z of terrain tiles
 // @todo: in a future version this could be handled dynamically,
@@ -41,7 +41,7 @@ static const float LOD_LEVEL_DISTANCE_RATIO{ 2.5f };
 static const float MORPH_START_RATIO{ 0.7f };
 
 // texel to grid ratio
-static const int RENDER_GRID_RESULUTION_MULT{ 1 };
+static const int RENDER_GRID_RESULUTION_MULT{ 8 };
 
 static const float HEIGHT_FACTOR{2.0f};
 
