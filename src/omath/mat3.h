@@ -1,4 +1,5 @@
 
+
 #pragma once
 
 #include <omath/mat2.h>
@@ -21,12 +22,12 @@ struct mat3_t {
 
 	mat3_t &operator=( mat3_t<T> &&rhs ) = default;
 
-	explicit mat3_t( const T &s ) :
+	mat3_t( const T &s ) :
 		value{ { s, 0, 0 }, { 0, s, 0 }, { 0, 0, s } } {}
 
-	explicit mat3_t( const T &x0, const T &y0, const T &z0,
-					 const T &x1, const T &y1, const T &z1,
-					 const T &x2, const T &y2, const T &z2 ) :
+	mat3_t( const T &x0, const T &y0, const T &z0,
+			const T &x1, const T &y1, const T &z1,
+			const T &x2, const T &y2, const T &z2 ) :
 		value{ { x0, x1, x2 }, { y0, y1, y2 }, { z0, z1, z2 } } {}
 
 	mat3_t(	const vec3_t<T> &v0,
