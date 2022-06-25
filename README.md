@@ -1,5 +1,7 @@
 
-(21.Nov.2020 I abandon this project in favour of corf_n because I switched to C)
+Edit: June 2022: This repository is abandoned.
+-------------------------
+
 
 This is wip. A documentation will follow.
 
